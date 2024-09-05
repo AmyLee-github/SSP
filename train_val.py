@@ -115,7 +115,7 @@ def val(val_loader, model, epoch, save_path):
         f'Epoch:{epoch},Accuracy:{total_accu}, bestEpoch:{best_epoch}, bestAccu:{best_accu}')
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':# @note if_main
     set_random_seed()
     # train and val options
     opt = TrainOptions().parse()

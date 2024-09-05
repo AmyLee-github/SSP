@@ -41,6 +41,8 @@ class TrainOptions():
         parser.add_argument('--val_interval', default=1,
                             type=int, help='val per interval')
         parser.add_argument('--val_batchsize', default=64, type=int)
+        # vit setting
+        parser.add_argument('--channel', default=3, type=int)
         return parser
 
     def gather_options(self):

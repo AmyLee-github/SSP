@@ -11,7 +11,7 @@ import torch.nn as nn
 import numpy as np
 import time
 from timm.models.layers import DropPath, to_2tuple, trunc_normal_
-from tools.utils import vision_features, save_image_heat_map, save_image_heat_map_list
+# from tools.utils import vision_features, save_image_heat_map, save_image_heat_map_list
 
 
 class Padding_tensor(nn.Module):

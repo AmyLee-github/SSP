@@ -70,7 +70,7 @@ def val(val_loader, model, save_path):
     print(f'Accuracy:{total_accu}')
 
 
-if __name__ == '__main__':
+if __name__ == '__main__': #@note if_main
     set_random_seed()
     # train and val options
     opt = TrainOptions().parse()

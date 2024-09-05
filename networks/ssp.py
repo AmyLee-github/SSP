@@ -5,9 +5,10 @@ from networks.srm_conv import SRMConv2d_simple
 import torch.nn.functional as F
 
 
-class ssp(nn.Module):
+class PFViT(nn.Module):
     def __init__(self, pretrain=True):
         super().__init__()
+        
         self.srm = SRMConv2d_simple()
         self.disc = resnet50(pretrained=True)
         self.disc.fc = nn.Linear(2048, 1)
@@ -20,5 +21,5 @@ class ssp(nn.Module):
 
 
 if __name__ == '__main__':
-    model = ssp(pretrain=True)
+    model = PFViT(pretrain=True)
     print(model)
