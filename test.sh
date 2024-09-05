@@ -1,1 +1,1 @@
-python test.py --blur_prob=0 --jpg_prob=0 --val_batchsize=64 --patchsize=32 --load='snapshots/xxx'
+python -W ignore test.py --blur_prob=0 --jpg_prob=0 --val_batchsize=64 --patch_size=32 --load='/hxp/ly/L40/SSP-AI-Generated-Image-Detection/snapshot/sortnet/Net_epoch_best.pth'

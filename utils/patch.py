@@ -19,6 +19,8 @@ def compute(patch):
 
 def patch_img(img, patch_size, height):
     img_width, img_height = img.size
+    height = int(height)
+    patch_size = int(patch_size)
     num_patch = (height // patch_size) * (height // patch_size)
     patch_list = []
     min_len = min(img_height, img_width)

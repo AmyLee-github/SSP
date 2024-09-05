@@ -29,13 +29,13 @@ class TrainOptions():
         parser.add_argument('--load', type=str,
                             default=None)
         parser.add_argument('--image_root', type=str,
-                            default='/data/chenjiaxuan/data/genImage')
+                            default='/hxp/dataset/genImage')
         parser.add_argument('--save_path', type=str,
                             default='./snapshot/sortnet/')
         parser.add_argument('--isPatch', action='store_false')
         parser.add_argument('--patch_size', default=32)
         parser.add_argument('--aug', action='store_false')
-        parser.add_argument('--gpu_id', type=str, default='3')
+        parser.add_argument('--gpu_id', type=str, default='0')
         parser.add_argument('--log_name', default='log3.log',
                             help='rename the logfile', type=str)
         parser.add_argument('--val_interval', default=1,

@@ -4,6 +4,7 @@ import random
 
 
 def poly_lr(optimizer, init_lr, curr_iter, max_iter, power=0.9):
+    init_lr = float(init_lr)
     lr = init_lr * (1 - float(curr_iter) / max_iter) ** power
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr

@@ -79,6 +79,7 @@ if __name__ == '__main__':
     # load data
     print('load data...')
 
+
     val_loader = get_val_loader(val_opt)
 
     # cuda config
