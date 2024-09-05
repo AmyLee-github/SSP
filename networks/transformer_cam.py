@@ -62,40 +62,7 @@ class PatchEmbed_tensor(nn.Module):
         return patch_matrix, patches_paddings
     
     
-class Recons_tensor(nn.Module):
-    def __init__(self, patch_size):
-        super().__init__()
-        self.patch_size = patch_size
 
-    def forward(self, patches_tensor, patches_paddings):
-        B, C, N, Ph, Pw = patches_tensor.shape
-        h_patches = patches_paddings[0]
-        w_patches = patches_paddings[1]
-        h_padding = patches_paddings[2]
-        w_padding = patches_paddings[3]
-        assert N == h_patches * w_patches, \
-            f"The number of patches ({N}) doesn't match the Patched_embed operation ({h_patches}*{w_patches})."
-        assert Ph == self.patch_size and Pw == self.patch_size, \
-            f"The size of patch tensor ({Ph}*{Pw}) doesn't match the patched size ({self.patch_size}*{self.patch_size})."
-
-        patches_tensor = patches_tensor.view(-1, C, N, self.patch_size, self.patch_size)
-        # ----------------------------------------
-        pic_all = None
-        for i in range(h_patches):
-            pic_c = None
-            for j in range(w_patches):
-                if j == 0:
-                    pic_c = patches_tensor[:, :, i * w_patches + j, :, :]
-                else:
-                    pic_c = torch.cat((pic_c, patches_tensor[:, :, i * w_patches + j, :, :]), dim=3)
-            if i == 0:
-                pic_all = pic_c
-            else:
-                pic_all = torch.cat((pic_all, pic_c), dim=2)
-        b, c, h, w = pic_all.shape
-        pic_all = pic_all[:, :, 0:(h-h_padding), 0:(w-w_padding)]
-        return pic_all
-# -----------------------------------------------------------------------
 
 
 class MLP(nn.Module):
@@ -291,7 +258,6 @@ class self_atten(nn.Module):
         self.num_patches = num_patches
         self.patch_size = patch_size
         self.patch_embed_tensor = PatchEmbed_tensor(patch_size)
-        self.recons_tensor = Recons_tensor(patch_size)
         self.self_atten1 = self_atten_module(embed_dim, num_patches, depth_self,
                                               n_heads, mlp_ratio, qkv_bias, p, attn_p)
         self.self_atten2 = self_atten_module(embed_dim, num_patches, depth_self,
@@ -330,7 +296,7 @@ class cross_atten(nn.Module):
         self.num_patches = num_patches
         self.patch_size = patch_size
         self.patch_embed_tensor = PatchEmbed_tensor(patch_size)
-        self.recons_tensor = Recons_tensor(patch_size)
+
         
         self.cross_atten1 = cross_atten_module(embed_dim, num_patches, depth_cross,
                                                      n_heads, mlp_ratio, qkv_bias, p, attn_p)
