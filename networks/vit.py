@@ -1,407 +1,472 @@
-# -*- encoding: utf-8 -*-
-'''
-@Author  :   Hui Li, Jiangnan University
-@Contact :   lihui.cv@jiangnan.edu.cn
-@File    :   transformer_cam.py
-@Time    :   2023/03/30 18:00:20
-'''
+"""
+original code from rwightman:
+https://github.com/rwightman/pytorch-image-models/blob/master/timm/models/vision_transformer.py
+"""
+from functools import partial
+from collections import OrderedDict
+import math
 
 import torch
 import torch.nn as nn
-import numpy as np
-import time
-from timm.models.layers import DropPath, to_2tuple, trunc_normal_
-# from tools.utils import vision_features, save_image_heat_map, save_image_heat_map_list
+import sys
+sys.path.append(r"D:\Test\Kansformer")
+ 
+def drop_path(x, drop_prob: float = 0., training: bool = False):
+    """
+    Drop paths (Stochastic Depth) per sample (when applied in main path of residual blocks).
+    This is the same as the DropConnect impl I created for EfficientNet, etc networks, however,
+    the original name is misleading as 'Drop Connect' is a different form of dropout in a separate paper...
+    See discussion: https://github.com/tensorflow/tpu/issues/494#issuecomment-532968956 ... I've opted for
+    changing the layer and argument names to 'drop path' rather than mix DropConnect as a layer name and use
+    'survival rate' as the argument.
+    """
+    if drop_prob == 0. or not training:
+        return x
+    keep_prob = 1 - drop_prob
+    shape = (x.shape[0],) + (1,) * (x.ndim - 1)  # work with diff dim tensors, not just 2D ConvNets
+    random_tensor = keep_prob + torch.rand(shape, dtype=x.dtype, device=x.device)
+    random_tensor.floor_()  # binarize
+    output = x.div(keep_prob) * random_tensor
+    return output
 
 
-class Padding_tensor(nn.Module):
-    def __init__(self, patch_size):
-        super(Padding_tensor, self).__init__()
-        self.patch_size = patch_size
+class DropPath(nn.Module):
+    """
+    Drop paths (Stochastic Depth) per sample  (when applied in main path of residual blocks).
+    """
+    def __init__(self, drop_prob=None):
+        super(DropPath, self).__init__()
+        self.drop_prob = drop_prob
 
     def forward(self, x):
-        b, c, h, w = x.shape
-        # 计算出能分成多少个patch
-        h_patches = int(np.ceil(h / self.patch_size))
-        w_patches = int(np.ceil(w / self.patch_size))
-        # 计算出需要padding的大小
-        h_padding = np.abs(h - h_patches * self.patch_size)
-        w_padding = np.abs(w - w_patches * self.patch_size)
-        # 进行反射填充
-        reflection_padding = [0, w_padding, 0, h_padding]
-        reflection_pad = nn.ReflectionPad2d(reflection_padding)
-        x = reflection_pad(x)
-        return x, [h_patches, w_patches, h_padding, w_padding]# 返回填充后的图片和patch信息
-    
-    
-class PatchEmbed_tensor(nn.Module):
-    def __init__(self, patch_size=16):
+        return drop_path(x, self.drop_prob, self.training)
+
+
+class PatchEmbed(nn.Module):
+    """
+    2D Image to Patch Embedding
+    """
+    def __init__(self, img_size=224, patch_size=16, in_c=3, embed_dim=768, norm_layer=None):
         super().__init__()
+        img_size = (img_size, img_size)
+        patch_size = (patch_size, patch_size)
+        self.img_size = img_size
         self.patch_size = patch_size
-        self.padding_tensor = Padding_tensor(patch_size)
+        self.grid_size = (img_size[0] // patch_size[0], img_size[1] // patch_size[1])
+        self.num_patches = self.grid_size[0] * self.grid_size[1]
+
+        self.proj = nn.Conv2d(in_c, embed_dim, kernel_size=patch_size, stride=patch_size)
+        self.norm = norm_layer(embed_dim) if norm_layer else nn.Identity()
 
     def forward(self, x):
-        b, c, h, w = x.shape
-        x, patches_paddings = self.padding_tensor(x)# 对图片进行填充，得到填充后的图片和patch信息
-        h_patches = patches_paddings[0]
-        w_patches = patches_paddings[1]
-        # -------------------------------------------
-        patch_matrix = None
-        for i in range(h_patches):
-            for j in range(w_patches):
-                patch_one = x[:, :, i * self.patch_size: (i + 1) * self.patch_size,
-                            j * self.patch_size: (j + 1) * self.patch_size]
-                # patch_one = patch_one.flatten(1)
-                # patch_one = patch_one.unsqueeze(2)
-                patch_one = patch_one.reshape(-1, c, 1, self.patch_size, self.patch_size)
-                if i == 0 and j == 0:
-                    patch_matrix = patch_one
-                else:
-                    patch_matrix = torch.cat((patch_matrix, patch_one), dim=2)
-        # patch_matrix  # (b, c, N, patch_size, patch_size)
-        return patch_matrix, patches_paddings
-    
-    
+        B, C, H, W = x.shape
+        assert H == self.img_size[0] and W == self.img_size[1], \
+            f"Input image size ({H}*{W}) doesn't match model ({self.img_size[0]}*{self.img_size[1]})."
 
-
-
-class MLP(nn.Module):
-    def __init__(self, in_features, hidden_features, out_features, p=0.):
-        super().__init__()
-        self.fc1 = nn.Linear(in_features, hidden_features)
-        self.act = nn.GELU()
-        self.fc2 = nn.Linear(hidden_features, out_features)
-        self.drop = nn.Dropout(p)
-
-    def forward(self, x):
-        # x = x + 1e-6
-        x = self.fc1(x)  # (n_samples, n_patches + 1, hidden_features)
-        x = self.act(x)  # (n_samples, n_patches + 1, hidden_features)
-        x = self.drop(x)  # (n_samples, n_patches + 1, hidden_features)
-        x = self.fc2(x)  # (n_samples, n_patches + 1, hidden_features)
-        x = self.drop(x)  # (n_samples, n_patches + 1, hidden_features)
-
+        # flatten: [B, C, H, W] -> [B, C, HW]
+        # transpose: [B, C, HW] -> [B, HW, C]
+        x = self.proj(x).flatten(2).transpose(1, 2)
+        x = self.norm(x)
         return x
 
 
-# self or cross attention
 class Attention(nn.Module):
-    def __init__(self, dim, n_heads=16, qkv_bias=True, attn_p=0., proj_p=0., cross=False):
-        super().__init__()
-        self.n_heads = n_heads
-        self.dim = dim
-        self.head_dim = dim // n_heads
-        self.scale = self.head_dim ** -0.5
-        
-        # self.recons_tensor = Recons_tensor(2)
-        
+    def __init__(self,
+                 dim,   # 输入token的dim
+                 num_heads=8,
+                 qkv_bias=False,
+                 qk_scale=None,
+                 attn_drop_ratio=0.,
+                 proj_drop_ratio=0.):
+        super(Attention, self).__init__()
+        self.num_heads = num_heads
+        head_dim = dim // num_heads
+        self.scale = qk_scale or head_dim ** -0.5
         self.qkv = nn.Linear(dim, dim * 3, bias=qkv_bias)
-        self.cross = cross
-        if cross:
-            self.q_linear = nn.Linear(dim, dim, bias=qkv_bias)
-            self.k_linear = nn.Linear(dim, dim, bias=qkv_bias)
-            self.v_linear = nn.Linear(dim, dim, bias=qkv_bias)
-        self.attn_drop = nn.Dropout(attn_p)
+        self.attn_drop = nn.Dropout(attn_drop_ratio)
         self.proj = nn.Linear(dim, dim)
-        self.proj_drop = nn.Dropout(proj_p)
+        self.proj_drop = nn.Dropout(proj_drop_ratio)
 
     def forward(self, x):
+        # [batch_size, num_patches + 1, total_embed_dim]
+        B, N, C = x.shape
 
-        if self.cross:
-            n_samples, n_tokens, dim = x[0].shape
-            if dim != self.dim:
-                raise ValueError
+        # qkv(): -> [batch_size, num_patches + 1, 3 * total_embed_dim]
+        # reshape: -> [batch_size, num_patches + 1, 3, num_heads, embed_dim_per_head]
+        # permute: -> [3, batch_size, num_heads, num_patches + 1, embed_dim_per_head]
+        qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, C // self.num_heads).permute(2, 0, 3, 1, 4)
+        # [batch_size, num_heads, num_patches + 1, embed_dim_per_head]
+        q, k, v = qkv[0], qkv[1], qkv[2]  # make torchscript happy (cannot use tensor as tuple)
 
-            n_tokens_en = n_tokens
-            q = self.q_linear(x[0]).reshape(n_samples, n_tokens, self.n_heads, self.head_dim).permute(0, 2, 1, 3)
-            k = self.k_linear(x[1]).reshape(n_samples, n_tokens_en, self.n_heads, self.head_dim).permute(0, 2, 1, 3)
-            v = self.v_linear(x[2]).reshape(n_samples, n_tokens_en, self.n_heads, self.head_dim).permute(0, 2, 1, 3)
-        else:
-            n_samples, n_tokens, dim = x.shape
-            if dim != self.dim:
-                raise ValueError
-
-            qkv = self.qkv(x)  # (n_samples, n_patches, 3 * dim)
-            qkv = qkv.reshape(
-                n_samples, n_tokens, 3, self.n_heads, self.head_dim
-            )  # (n_smaples, n_patches, 3, n_heads, head_dim)
-            qkv = qkv.permute(
-                2, 0, 3, 1, 4
-            )  # (3, n_samples, n_heads, n_patches, head_dim)
-            q, k, v = qkv[0], qkv[1], qkv[2]
-
-        k_t = k.transpose(-2, -1)  # (n_samples, n_heads, head_dim, n_patches + 1)
-        dp = (q @ k_t) * self.scale  # (n_samples, n_heads, n_patches, n_patches)
-        # exp(-x)
-        # dp 过大，softmax之后数值可能溢出
-        if self.cross:
-            # t_str = time.time()
-            # dp_s = dp.softmax(dim=-1)
-            # vision_features(dp_s, 'atten', 'dp_'+str(t_str))
-            dp = -1 * dp
-            # attn = dp.softmax(dim=-1)
-            # vision_features(attn, 'atten', 'dp_v_'+str(t_str))
-        attn = dp.softmax(dim=-1)  # (n_samples, n_heads, n_patches, n_patches)
+        # transpose: -> [batch_size, num_heads, embed_dim_per_head, num_patches + 1]
+        # @: multiply -> [batch_size, num_heads, num_patches + 1, num_patches + 1]
+        attn = (q @ k.transpose(-2, -1)) * self.scale
+        attn = attn.softmax(dim=-1)
         attn = self.attn_drop(attn)
 
-        weighted_avg = attn @ v  # (n_samples, n_heads, n_patches +1, head_dim)
-        weighted_avg = weighted_avg.transpose(1, 2)  # (n_samples, n_patches + 1, n_heads, head_dim)
-        weighted_avg = weighted_avg.flatten(2)  # (n_samples, n_patches + 1, dim)
+        # @: multiply -> [batch_size, num_heads, num_patches + 1, embed_dim_per_head]
+        # transpose: -> [batch_size, num_patches + 1, num_heads, embed_dim_per_head]
+        # reshape: -> [batch_size, num_patches + 1, total_embed_dim]
+        x = (attn @ v).transpose(1, 2).reshape(B, N, C)
+        x = self.proj(x)
+        x = self.proj_drop(x)
+        return x
 
-        x = self.proj(weighted_avg)  # (n_samples, n_patches + 1, dim)
-        x = self.proj_drop(x)  # (n_samples, n_patches + 1, dim)
 
-        # if self.cross:
-        #     x_temp = x.view(1, 256, 128, 2, 2).permute(0, 2, 1, 3, 4)
-        #     x_temp = self.recons_tensor(x_temp, [16,16,0,0])  # B, C, H, W
-        #     vision_features(x_temp, 'atten', 'attn_x')
-        
+class Mlp(nn.Module):
+    """
+    MLP as used in Vision Transformer, MLP-Mixer and related networks
+    """
+    def __init__(self, in_features, hidden_features=None, out_features=None, act_layer=nn.GELU, drop=0.):
+        super().__init__()
+        out_features = out_features or in_features
+        hidden_features = hidden_features or in_features
+        self.fc1 = nn.Linear(in_features, hidden_features)
+        self.act = act_layer()
+        self.fc2 = nn.Linear(hidden_features, out_features)
+        self.drop = nn.Dropout(drop)
+
+    def forward(self, x):
+        x = self.fc1(x)
+        x = self.act(x)
+        x = self.drop(x)
+        x = self.fc2(x)
+        x = self.drop(x)
         return x
 
 
 class Block(nn.Module):
-    def __init__(self, dim, n_heads, mlp_ratio=4.0, qkv_bias=True, p=0., attn_p=0., cross=False):
-        super().__init__()
-        self.cross = cross
-        self.norm1 = nn.LayerNorm(dim, eps=1e-6)
-        self.attn = Attention(
-            dim,
-            n_heads=n_heads,
-            qkv_bias=qkv_bias,
-            attn_p=attn_p,
-            proj_p=p,
-            cross=cross
-        )
-        self.norm2 = nn.LayerNorm(dim, eps=1e-6)
-        hidden_features = int(dim * mlp_ratio)
-        self.mlp = MLP(
-            in_features=dim,
-            hidden_features=hidden_features,
-            out_features=dim,
-        )
+    def __init__(self,
+                 dim,
+                 num_heads,
+                 mlp_ratio=4.,
+                 qkv_bias=False,
+                 qk_scale=None,
+                 drop_ratio=0.,
+                 attn_drop_ratio=0.,
+                 drop_path_ratio=0.,
+                 act_layer=nn.GELU,
+                 norm_layer=nn.LayerNorm):
+        super(Block, self).__init__()
+        self.norm1 = norm_layer(dim)
+        self.attn = Attention(dim, num_heads=num_heads, qkv_bias=qkv_bias, qk_scale=qk_scale,
+                              attn_drop_ratio=attn_drop_ratio, proj_drop_ratio=drop_ratio)
+        # NOTE: drop path for stochastic depth, we shall see if this is better than dropout here
+        self.drop_path = DropPath(drop_path_ratio) if drop_path_ratio > 0. else nn.Identity()
+        self.norm2 = norm_layer(dim)
+        mlp_hidden_dim = int(dim * mlp_ratio)
+        self.mlp = Mlp(in_features=dim, hidden_features=mlp_hidden_dim, act_layer=act_layer, drop=drop_ratio)
 
     def forward(self, x):
-        if self.cross:
-            x_ = [self.norm1(_x) for _x in x]
-            # x_ = x
-            out = x[2] + self.attn(x_)
-            out = out + self.mlp(self.norm2(out))
-            out = [x_[0], out, out]
+        x = x + self.drop_path(self.attn(self.norm1(x)))
+        x = x + self.drop_path(self.mlp(self.norm2(x)))
+        return x
+
+
+class VisionTransformer(nn.Module):
+    def __init__(self, img_size=224, patch_size=16, in_c=3, num_classes=1000,
+                 embed_dim=768, depth=12, num_heads=12, mlp_ratio=4.0, qkv_bias=True,
+                 qk_scale=None, representation_size=None, distilled=False, drop_ratio=0.,
+                 attn_drop_ratio=0., drop_path_ratio=0., embed_layer=PatchEmbed, norm_layer=None,
+                 act_layer=None):
+        """
+        Args:
+            img_size (int, tuple): input image size
+            patch_size (int, tuple): patch size
+            in_c (int): number of input channels
+            num_classes (int): number of classes for classification head
+            embed_dim (int): embedding dimension
+            depth (int): depth of transformer
+            num_heads (int): number of attention heads
+            mlp_ratio (int): ratio of mlp hidden dim to embedding dim
+            qkv_bias (bool): enable bias for qkv if True
+            qk_scale (float): override default qk scale of head_dim ** -0.5 if set
+            representation_size (Optional[int]): enable and set representation layer (pre-logits) to this value if set
+            distilled (bool): model includes a distillation token and head as in DeiT models
+            drop_ratio (float): dropout rate
+            attn_drop_ratio (float): attention dropout rate
+            drop_path_ratio (float): stochastic depth rate
+            embed_layer (nn.Module): patch embedding layer
+            norm_layer: (nn.Module): normalization layer
+        """
+        super(VisionTransformer, self).__init__()
+        self.num_classes = num_classes
+        self.num_features = self.embed_dim = embed_dim  # num_features for consistency with other models
+        self.num_tokens = 2 if distilled else 1
+        norm_layer = norm_layer or partial(nn.LayerNorm, eps=1e-6)
+        act_layer = act_layer or nn.GELU
+
+        self.patch_embed = embed_layer(img_size=img_size, patch_size=patch_size, in_c=in_c, embed_dim=embed_dim)
+        num_patches = self.patch_embed.num_patches
+
+        self.cls_token = nn.Parameter(torch.zeros(1, 1, embed_dim))
+        self.dist_token = nn.Parameter(torch.zeros(1, 1, embed_dim)) if distilled else None
+        self.pos_embed = nn.Parameter(torch.zeros(1, num_patches + self.num_tokens, embed_dim))
+        self.pos_drop = nn.Dropout(p=drop_ratio)
+
+        dpr = [x.item() for x in torch.linspace(0, drop_path_ratio, depth)]  # stochastic depth decay rule
+        self.blocks = nn.Sequential(*[
+            Block(dim=embed_dim, num_heads=num_heads, mlp_ratio=mlp_ratio, qkv_bias=qkv_bias, qk_scale=qk_scale,
+                  drop_ratio=drop_ratio, attn_drop_ratio=attn_drop_ratio, drop_path_ratio=dpr[i],
+                  norm_layer=norm_layer, act_layer=act_layer)
+            for i in range(depth)
+        ])
+        self.norm = norm_layer(embed_dim)
+
+        # Representation layer
+        if representation_size and not distilled:
+            self.has_logits = True
+            self.num_features = representation_size
+            self.pre_logits = nn.Sequential(OrderedDict([
+                ("fc", nn.Linear(embed_dim, representation_size)),
+                ("act", nn.Tanh())
+            ]))
         else:
-            out = x + self.attn(self.norm1(x))
-            out = out + self.mlp(self.norm2(out))
-        
-        return out
-# --------------------------------------------------------------------------------------
+            self.has_logits = False
+            self.pre_logits = nn.Identity()
 
+        # Classifier head(s)
+        self.head = nn.Linear(self.num_features, num_classes) if num_classes > 0 else nn.Identity()
+        self.head_dist = None
+        if distilled:
+            self.head_dist = nn.Linear(self.embed_dim, self.num_classes) if num_classes > 0 else nn.Identity()
 
-class self_atten_module(nn.Module):
-    def __init__(self, embed_dim, num_p, depth, n_heads=16,
-                 mlp_ratio=4., qkv_bias=True, p=0., attn_p=0.):
-        super().__init__()
-        self.pos_drop = nn.Dropout(p=p)
-        self.blocks = nn.ModuleList(
-            [
-                Block(dim=embed_dim, n_heads=n_heads,
-                      mlp_ratio=mlp_ratio, qkv_bias=qkv_bias, p=p, attn_p=attn_p, cross=False)
-                for _ in range(depth)
-            ]
-        )
-        self.norm = nn.LayerNorm(embed_dim, eps=1e-6)
+        # Weight init
+        nn.init.trunc_normal_(self.pos_embed, std=0.02)
+        if self.dist_token is not None:
+            nn.init.trunc_normal_(self.dist_token, std=0.02)
 
-    def forward(self, x_in):
-        # x_ori = x_in
-        x = x_in
-        x = self.pos_drop(x)
+        nn.init.trunc_normal_(self.cls_token, std=0.02)
+        self.apply(_init_vit_weights)
+        # self.senet = senet
+        # self.ema = EMA(channels=3,factor=1)
+        # self.mlca = MLCA(in_size=768)
+        self.bra = BRA(3,num_heads=1)
 
-        for block in self.blocks:
-            x = block(x)
-        x_self = x
-        # x_self = x_in + x
-        return x_self
-
-
-class cross_atten_module(nn.Module):
-    def __init__(self, embed_dim, num_patches, depth, n_heads=16,
-                 mlp_ratio=4., qkv_bias=True, p=0., attn_p=0.):
-        super().__init__()
-        self.pos_drop = nn.Dropout(p=p)
-        self.blocks = nn.ModuleList(
-            [
-                Block(dim=embed_dim, n_heads=n_heads, mlp_ratio=mlp_ratio, qkv_bias=qkv_bias, p=p, attn_p=attn_p,
-                      cross=True)
-                if i == 0 else
-                Block(dim=embed_dim, n_heads=n_heads, mlp_ratio=mlp_ratio, qkv_bias=qkv_bias, p=p, attn_p=attn_p,
-                      cross=True)
-                for i in range(depth)
-            ]
-        )
-        self.norm = nn.LayerNorm(embed_dim, eps=1e-6)
-
-    def forward(self, x1_ori, x2_ori):
-        x1 = x1_ori
-        x2 = x2_ori
-        x2 = self.pos_drop(x2)
-        x = [x1, x2, x2]
-        for block in self.blocks:
-            x = block(x)
-            x[2] = self.norm(x[2])
-        x_self = x[2]
-        # x_self = x2_ori + x[2]
-        return x_self
-    
-
-class self_atten(nn.Module):
-    def __init__(self, patch_size, embed_dim, num_patches, depth_self, n_heads=16,
-                 mlp_ratio=4., qkv_bias=True, p=0., attn_p=0.):
-        super().__init__()
-        self.num_patches = num_patches
-        self.patch_size = patch_size
-        self.patch_embed_tensor = PatchEmbed_tensor(patch_size)
-        self.self_atten1 = self_atten_module(embed_dim, num_patches, depth_self,
-                                              n_heads, mlp_ratio, qkv_bias, p, attn_p)
-        self.self_atten2 = self_atten_module(embed_dim, num_patches, depth_self,
-                                                   n_heads, mlp_ratio, qkv_bias, p, attn_p)
-
-    def forward(self, x1, x2, last=False):
-        # patch
-        x_patched1, patches_paddings = self.patch_embed_tensor(x1)
-        # B, C, N, Ph, Pw = x_patched1.shape
-        x_patched2, _ = self.patch_embed_tensor(x2)
-        # B, C, N, Ph, Pw = x_patched1.shape
-        b, c, n, h, w = x_patched1.shape
-        # b, n, c*h*w
-        x_patched1 = x_patched1.transpose(2, 1).contiguous().view(b, n, c * h * w)
-        x_patched2 = x_patched2.transpose(2, 1).contiguous().view(b, n, c * h * w)
-        x1_self_patch = self.self_atten1(x_patched1)
-        x2_self_patch = self.self_atten2(x_patched2)
-       
-        # reconstruct
-        if last is False:
-            x1_self_patch = x1_self_patch.view(b, n, c, h, w).permute(0, 2, 1, 3, 4)
-            x_self1 = self.recons_tensor(x1_self_patch, patches_paddings)  # B, C, H, W
-            x2_self_patch = x2_self_patch.view(b, n, c, h, w).permute(0, 2, 1, 3, 4)
-            x_self2 = self.recons_tensor(x2_self_patch, patches_paddings)  # B, C, H, W
+    def forward_features(self, x):
+        # [B, C, H, W] -> [B, num_patches, embed_dim]
+        x = self.patch_embed(x)  # [B, 196, 768]
+        # [1, 1, 768] -> [B, 1, 768]
+        cls_token = self.cls_token.expand(x.shape[0], -1, -1)
+        if self.dist_token is None:
+            x = torch.cat((cls_token, x), dim=1)  # [B, 197, 768]
         else:
-            x_self1 = x1_self_patch
-            x_self2 = x2_self_patch
+            x = torch.cat((cls_token, self.dist_token.expand(x.shape[0], -1, -1), x), dim=1)
 
-        return x_self1, x_self2, patches_paddings
+        x = self.pos_drop(x + self.pos_embed)
+        """
+        在 Patch Embedding 之后，进入 Transformer Blocks 之前:
+        优点: SENet 可以在图像被切分成补丁并进行嵌入后，直接增强这些补丁的特征，这有助于模型在进入Transformer编码器块前就关注重要特征。
+        """
+        # # # print(x.shape) # torch.Size([32, 197, 768])
+        # B, N, D = x.shape  # 32, 197, 768
+        # # 将 class token 移除以匹配网格形状
+        # patches = x[:, 1:, :]  # 去掉 cls token，形状变为 [B, 196, D]
+        # # 假设 D = C，即嵌入维度作为通道数
+        # # 将每个patch嵌入变成适合SENet的形状 [B, C, H, W]，在这里我们假设 H = W = 14
+        # patch_size = int(math.sqrt(N - 1))  # 196 -> sqrt(196) = 14
+        # x = patches.view(B, patch_size, patch_size, D).permute(0, 3, 1, 2)  # [B, 196, D] -> [B, C=D, H=14, W=14] c=d=768
+        # x_senet = self.mlca(x) # [B, C, H, W] -> [B, C, H, W]
+        # # 将SENet的输出重新调整为原始的维度
+        # x_senet = x_senet.permute(0, 2, 3, 1).view(B, patch_size * patch_size, D)  # [B, H,w,c] -> [B, 196, D]
+        # # 重新添加 cls token
+        # cls_token = self.cls_token.expand(B, -1, -1)  # [B, 1, D]
+        # x = torch.cat((cls_token, x_senet), dim=1)  # [B, 1, D] + [B, 196, D] -> [B, 197, D]   32, 197, 768
+        # # 到此为止
 
-
-class cross_atten(nn.Module):
-    def __init__(self, patch_size, embed_dim, num_patches, depth_self, depth_cross, n_heads=16,
-                 mlp_ratio=4., qkv_bias=True, p=0., attn_p=0.):
-        super().__init__()
-        self.num_patches = num_patches
-        self.patch_size = patch_size
-        self.patch_embed_tensor = PatchEmbed_tensor(patch_size)
-
-        
-        self.cross_atten1 = cross_atten_module(embed_dim, num_patches, depth_cross,
-                                                     n_heads, mlp_ratio, qkv_bias, p, attn_p)
-        self.cross_atten2 = cross_atten_module(embed_dim, num_patches, depth_cross,
-                                                     n_heads, mlp_ratio, qkv_bias, p, attn_p)
-        # self.cross_atten = patch_cross_atten_module(img_size, patch_size, embed_dim, num_patches, depth_cross,
-        #                                              n_heads, mlp_ratio, qkv_bias, p, attn_p)
-
-    def forward(self, x1, x2, patches_paddings):
-        # patch
-        x_patched1, patches_paddings = self.patch_embed_tensor(x1)
-        # B, C, N, Ph, Pw = x_patched1.shape
-        x_patched2, _ = self.patch_embed_tensor(x2)
-        # B, C, N, Ph, Pw = x_patched1.shape
-        b, c, n, h, w = x_patched1.shape
-        # b, n, c*h*w
-        x1_self_patch = x_patched1.transpose(2, 1).contiguous().view(b, n, c * h * w)
-        x2_self_patch = x_patched2.transpose(2, 1).contiguous().view(b, n, c * h * w)
-        
-        x_in1 = x1_self_patch
-        x_in2 = x2_self_patch
-        cross1 = self.cross_atten1(x_in1, x_in2)
-        cross2 = self.cross_atten2(x_in2, x_in1)
-        out = cross1 + cross2
-        
-        # reconstruct
-        x1_self_patch = x1_self_patch.view(b, n, c, h, w).permute(0, 2, 1, 3, 4)
-        x_self1 = self.recons_tensor(x1_self_patch, patches_paddings)  # B, C, H, W
-        x2_self_patch = x2_self_patch.view(b, n, c, h, w).permute(0, 2, 1, 3, 4)
-        x_self2 = self.recons_tensor(x2_self_patch, patches_paddings)  # B, C, H, W
-        
-        cross1 = cross1.view(b, n, c, h, w).permute(0, 2, 1, 3, 4)
-        cross1_all = self.recons_tensor(cross1, patches_paddings)  # B, C, H, W
-        
-        cross2 = cross2.view(b, n, c, h, w).permute(0, 2, 1, 3, 4)
-        cross2_all = self.recons_tensor(cross2, patches_paddings)  # B, C, H, W
-        
-        out = out.view(b, n, c, h, w).permute(0, 2, 1, 3, 4)
-        out_all = self.recons_tensor(out, patches_paddings)  # B, C, H, W
-        
-        return out_all, x_self1, x_self2, cross1_all, cross2_all
-
-
-class cross_encoder(nn.Module):
-    def __init__(self, img_size, patch_size, embed_dim, num_patches, depth_self, depth_cross, n_heads=16,
-                 mlp_ratio=4., qkv_bias=True, p=0., attn_p=0.):
-        super().__init__()
-        self.num_patches = num_patches
-        self.img_size = img_size
-        self.patch_size = patch_size
-        self.shift_size = int(img_size / 2)
-        self.depth_cross = depth_cross
-        # self.depth_cross = 0
-
-        self.self_atten_block1 = self_atten(self.patch_size, embed_dim, num_patches, depth_self,
-                                              n_heads, mlp_ratio, qkv_bias, p, attn_p)
-        self.self_atten_block2 = self_atten(self.patch_size, embed_dim, num_patches, depth_self,
-                                                   n_heads, mlp_ratio, qkv_bias, p, attn_p)
-        
-        self.cross_atten_block = cross_atten(self.patch_size, embed_dim, self.num_patches, depth_self,
-                                               depth_cross, n_heads, mlp_ratio, qkv_bias, p, attn_p)
-
-    def forward(self, x1, x2, shift_flag=True):
-        # x1 -->> ir, x2 -->> vi
-        # self-attention
-        x1_atten, x2_atten, paddings = self.self_atten_block1(x1, x2)
-        x1_a, x2_a = x1_atten, x2_atten
-        # shift
-        if shift_flag:
-            shifted_x1 = torch.roll(x1_atten, shifts=(-self.shift_size, -self.shift_size), dims=(2, 3))
-            shifted_x2 = torch.roll(x2_atten, shifts=(-self.shift_size, -self.shift_size), dims=(2, 3))
-            x1_atten, x2_atten, _ = self.self_atten_block2(shifted_x1, shifted_x2)
-            roll_x_self1 = torch.roll(x1_atten, shifts=(self.shift_size, self.shift_size), dims=(2, 3))
-            roll_x_self2 = torch.roll(x2_atten, shifts=(self.shift_size, self.shift_size), dims=(2, 3))
+        x = self.blocks(x)
+        x = self.norm(x)
+        if self.dist_token is None:
+            return self.pre_logits(x[:, 0])
         else:
-            x1_atten, x2_atten, _ = self.self_atten_block2(x1_atten, x2_atten)
-            roll_x_self1 = x1_atten
-            roll_x_self2 = x2_atten
-        # -------------------------------------
-        # cross attention
-        if self.depth_cross > 0:
-            out, x_self1, x_self2, x_cross1, x_cross2 = self.cross_atten_block(roll_x_self1, roll_x_self2, paddings)
-        else:
-            out = roll_x_self1 + roll_x_self2
-            x_self1, x_self2, x_cross1, x_cross2 = roll_x_self1, roll_x_self2, roll_x_self1, roll_x_self2
-        # -------------------------------------
-        # recons
-        return out, x1_a, x2_a, roll_x_self1, roll_x_self2, x_cross1, x_cross2
+            return x[:, 0], x[:, 1]
 
-# 类之间的关系图：
-# cross_encoder
-#   ├── self_atten
-#   │     ├── PatchEmbed_tensor
-#   │     │     └── Padding_tensor
-#   │     ├── self_atten_module
-#   │     │     └── Block
-#   │     │           ├── Attention
-#   │     │           └── MLP
-#   │     └── Recons_tensor
-#   ├── cross_atten
-#   │     ├── PatchEmbed_tensor
-#   │     │     └── Padding_tensor
-#   │     ├── cross_atten_module
-#   │     │     └── Block
-#   │     │           ├── Attention
-#   │     │           └── MLP
-#   │     └── Recons_tensor
-#   └── Recons_tensor
+    def forward(self, x):
+        # print(f"之前前前的形状为{x.shape}") # ([32, 3, 224, 224])
+        """
+        进入ViT主干网络之前对输入图像的各个通道进行权重调整。
+        有助于在网络的最早阶段就对重要特征进行增强，使得模型能够从一开始就更好地捕捉到图像的关键信息。
+        """
+        # x = self.senet(x)
+        # x = self.ema(x)
+        # x = self.mlca(x)
+        x = self.bra(x)
+        x = self.forward_features(x)
+        # print(f"之后的形状为{x.shape}") #  ([32, 768])
+
+        if self.head_dist is not None:
+            x, x_dist = self.head(x[0]), self.head_dist(x[1])
+            if self.training and not torch.jit.is_scripting():
+                # during inference, return the average of both classifier predictions
+                return x, x_dist
+            else:
+                return (x + x_dist) / 2
+        else:
+            """
+            在全局平均池化之后，分类头之前:
+            优点: 可以利用 SENet 对全局特征进行增强，有助于模型在最后的分类阶段之前进行重要通道的权重调整。
+            """
+            # if x.shape[0]!=32:
+            #     pass
+            # else:
+            # # print(x.shape)  # x Size([32, 768])
+            #     x = x.view(32, 3, 16, 16)  # [batch_size, channels, height, width]
+            #     x = self.mlca(x)  # 32, 3, 16, 16
+            #     x = x.view(32,-1)
+            # #  到此为止
+            # # # print(x.shape)
+            x = self.head(x) #  x Size([32, 5])
+        return x
+
+
+def _init_vit_weights(m):
+    """
+    ViT weight initialization
+    :param m: module
+    """
+    if isinstance(m, nn.Linear):
+        nn.init.trunc_normal_(m.weight, std=.01)
+        if m.bias is not None:
+            nn.init.zeros_(m.bias)
+    elif isinstance(m, nn.Conv2d):
+        nn.init.kaiming_normal_(m.weight, mode="fan_out")
+        if m.bias is not None:
+            nn.init.zeros_(m.bias)
+    elif isinstance(m, nn.LayerNorm):
+        nn.init.zeros_(m.bias)
+        nn.init.ones_(m.weight)
+
+
+def vit_base_patch16_224(num_classes: int = 1000):
+    """
+    ViT-Base model (ViT-B/16) from original paper (https://arxiv.org/abs/2010.11929).
+    ImageNet-1k weights @ 224x224, source https://github.com/google-research/vision_transformer.
+    weights ported from official Google JAX impl:
+    链接: https://pan.baidu.com/s/1zqb08naP0RPqqfSXfkB2EA  密码: eu9f
+    """
+    model = VisionTransformer(img_size=224,
+                              patch_size=16,
+                              embed_dim=768,
+                              depth=12,
+                              num_heads=12,
+                              representation_size=None,
+                              num_classes=num_classes)
+    return model
+
+
+def vit_base_patch16_224_in21k(num_classes: int = 21843, has_logits: bool = True):
+    """
+    ViT-Base model (ViT-B/16) from original paper (https://arxiv.org/abs/2010.11929).
+    ImageNet-21k weights @ 224x224, source https://github.com/google-research/vision_transformer.
+    weights ported from official Google JAX impl:
+    https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-vitjx/jx_vit_base_patch16_224_in21k-e5005f0a.pth
+    """
+    model = VisionTransformer(img_size=224,
+                              patch_size=16,
+                              embed_dim=768,
+                              depth=12,
+                              num_heads=12,
+                              representation_size=768 if has_logits else None,
+                              num_classes=num_classes)
+    return model
+
+
+def vit_base_patch32_224(num_classes: int = 1000):
+    """
+    ViT-Base model (ViT-B/32) from original paper (https://arxiv.org/abs/2010.11929).
+    ImageNet-1k weights @ 224x224, source https://github.com/google-research/vision_transformer.
+    weights ported from official Google JAX impl:
+    链接: https://pan.baidu.com/s/1hCv0U8pQomwAtHBYc4hmZg  密码: s5hl
+    """
+    model = VisionTransformer(img_size=224,
+                              patch_size=32,
+                              embed_dim=768,
+                              depth=12,
+                              num_heads=12,
+                              representation_size=None,
+                              num_classes=num_classes)
+    return model
+
+
+def vit_base_patch32_224_in21k(num_classes: int = 21843, has_logits: bool = True):
+    """
+    ViT-Base model (ViT-B/32) from original paper (https://arxiv.org/abs/2010.11929).
+    ImageNet-21k weights @ 224x224, source https://github.com/google-research/vision_transformer.
+    weights ported from official Google JAX impl:
+    https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-vitjx/jx_vit_base_patch32_224_in21k-8db57226.pth
+    """
+    model = VisionTransformer(img_size=224,
+                              patch_size=32,
+                              embed_dim=768,
+                              depth=12,
+                              num_heads=12,
+                              representation_size=768 if has_logits else None,
+                              num_classes=num_classes)
+    return model
+
+
+def vit_large_patch16_224(num_classes: int = 1000):
+    """
+    ViT-Large model (ViT-L/16) from original paper (https://arxiv.org/abs/2010.11929).
+    ImageNet-1k weights @ 224x224, source https://github.com/google-research/vision_transformer.
+    weights ported from official Google JAX impl:
+    链接: https://pan.baidu.com/s/1cxBgZJJ6qUWPSBNcE4TdRQ  密码: qqt8
+    """
+    model = VisionTransformer(img_size=224,
+                              patch_size=16,
+                              embed_dim=1024,
+                              depth=24,
+                              num_heads=16,
+                              representation_size=None,
+                              num_classes=num_classes)
+    return model
+
+
+def vit_large_patch16_224_in21k(num_classes: int = 21843, has_logits: bool = True):
+    """
+    ViT-Large model (ViT-L/16) from original paper (https://arxiv.org/abs/2010.11929).
+    ImageNet-21k weights @ 224x224, source https://github.com/google-research/vision_transformer.
+    weights ported from official Google JAX impl:
+    https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-vitjx/jx_vit_large_patch16_224_in21k-606da67d.pth
+    """
+    model = VisionTransformer(img_size=224,
+                              patch_size=16,
+                              embed_dim=1024,
+                              depth=24,
+                              num_heads=16,
+                              representation_size=1024 if has_logits else None,
+                              num_classes=num_classes)
+    return model
+
+
+def vit_large_patch32_224_in21k(num_classes: int = 21843, has_logits: bool = True):
+    """
+    ViT-Large model (ViT-L/32) from original paper (https://arxiv.org/abs/2010.11929).
+    ImageNet-21k weights @ 224x224, source https://github.com/google-research/vision_transformer.
+    weights ported from official Google JAX impl:
+    https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-vitjx/jx_vit_large_patch32_224_in21k-9046d2e7.pth
+    """
+    model = VisionTransformer(img_size=224,
+                              patch_size=32,
+                              embed_dim=1024,
+                              depth=24,
+                              num_heads=16,
+                              representation_size=1024 if has_logits else None,
+                              num_classes=num_classes)
+    return model
+
+
+def vit_huge_patch14_224_in21k(num_classes: int = 21843, has_logits: bool = True):
+    """
+    ViT-Huge model (ViT-H/14) from original paper (https://arxiv.org/abs/2010.11929).
+    ImageNet-21k weights @ 224x224, source https://github.com/google-research/vision_transformer.
+    NOTE: converted weights not currently available, too large for github release hosting.
+    """
+    model = VisionTransformer(img_size=224,
+                              patch_size=14,
+                              embed_dim=1280,
+                              depth=32,
+                              num_heads=16,
+                              representation_size=1280 if has_logits else None,
+                              num_classes=num_classes)
+    return model

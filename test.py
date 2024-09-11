@@ -3,7 +3,7 @@ import torch
 from utils.util import set_random_seed, poly_lr
 from utils.tdataloader import get_loader, get_val_loader
 from options import TrainOptions
-from networks.ssp import ssp
+from networks.pfvit import ssp
 from utils.loss import bceLoss
 from datetime import datetime
 import numpy as np

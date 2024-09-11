@@ -1,9 +1,10 @@
+# @note import
 import os
 import torch
 from utils.util import set_random_seed, poly_lr
 from utils.tdataloader import get_loader, get_val_loader
 from options import TrainOptions
-from networks.ssp import ssp
+from networks.pfvit import PFViT
 from utils.loss import bceLoss
 from datetime import datetime
 import numpy as np
@@ -143,7 +144,7 @@ if __name__ == '__main__':# @note if_main
         print('USE GPU 3')
 
     # load model
-    model = ssp().cuda()
+    model = PFViT(opt.img_size,opt.patch_size, opt.part_out, opt.depth_self, opt.depth_cross).cuda()
     if opt.load is not None:
         model.load_state_dict(torch.load(opt.load))
         print('load model from', opt.load)

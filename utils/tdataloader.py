@@ -143,6 +143,21 @@ class genImageTrainDataset(Dataset):
         with open(path, 'rb') as f:
             img = Image.open(f)
             return img.convert('RGB')
+        
+    def hfreqWH(self, x, scale):
+        assert scale>2
+        #print(f'input shape: {x.shape}, min: {x.min()}, max: {x.max()}, mean: {x.mean()}')
+        x = torch.fft.fft2(x, norm="ortho")#,norm='forward'
+        x = torch.fft.fftshift(x, dim=[-2, -1]) 
+        b,c,h,w = x.shape
+        x[:,:,h//2-h//scale:h//2+h//scale,w//2-w//scale:w//2+w//scale ] = 0.0
+        x = torch.fft.ifftshift(x, dim=[-2, -1])
+        x = torch.fft.ifft2(x, norm="ortho")
+        x = torch.real(x)
+        # x = F.relu(x, inplace=True)
+        #print(f'output shape: {x.shape}, min: {x.min()}, max: {x.max()}, mean: {x.mean()}')
+        #print()
+        return x
 
     def __getitem__(self, index):
         try:
