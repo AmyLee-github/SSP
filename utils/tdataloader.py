@@ -1,8 +1,9 @@
 from torch.utils.data import Dataset, DataLoader
 import torch
+from torch.nn import functional as F
 from torchvision import transforms
 import os
-from utils.patch import patch_img
+# from utils.patch import patch_img
 from PIL import Image
 import numpy as np
 import cv2
@@ -94,6 +95,63 @@ def data_augment(img, opt):
 
     return Image.fromarray(img)
 
+def compute(patch):
+    weight, height = patch[0].size
+    m = weight
+    res = 0
+    patch_np = np.array(patch[0]).astype(np.int64)
+    diff_horizontal = np.sum(np.abs(patch_np[:, :-1, :] - patch_np[:, 1:, :]))
+    diff_vertical = np.sum(np.abs(patch_np[:-1, :, :] - patch_np[1:, :, :]))
+    diff_diagonal = np.sum(np.abs(patch_np[:-1, :-1, :] - patch_np[1:, 1:, :]))
+    diff_diagonal += np.sum(np.abs(patch_np[1:, :-1, :] - patch_np[:-1, 1:, :]))
+    res = diff_horizontal + diff_vertical + diff_diagonal
+    return res.sum()
+
+
+def patch_img(img, img_f, patch_size, height):
+    img_width, img_height = img.size
+    height = int(height)
+    patch_size = int(patch_size)
+    num_patch = (height // patch_size) * (height // patch_size)
+    patch_list = []
+    min_len = min(img_height, img_width)
+    rz = transforms.Resize((height, height))
+    if min_len < patch_size:
+        img = rz(img)
+        img_f = rz(img_f)
+    rp = transforms.RandomCrop(patch_size)
+    # 随机生成num_patch个不重复随机种子
+    seeds = np.random.choice(100000, num_patch, replace=False)
+    for i in range(num_patch):
+        seed = seeds[i]
+        torch.random.manual_seed(seed)
+        rp_img = rp(img)
+        torch.random.manual_seed(seed)
+        rp_img_f = rp(img_f)
+        patch_list.append([rp_img, rp_img_f])
+    patch_list.sort(key=lambda x: compute(x), reverse=False)
+    new_img, new_img_f = patch_list[0][0], patch_list[0][1]
+    # 把new_img和new_img_f转成tensor
+    new_img = transforms.ToTensor()(new_img)
+    new_img_f = transforms.ToTensor()(new_img_f)
+    return new_img, new_img_f
+
+def fft(x, scale):
+    assert scale>2
+    x = torch.fft.fft2(x, norm="ortho")#,norm='forward'
+    x = torch.fft.fftshift(x, dim=[-2, -1]) 
+    c,h,w = x.shape
+    x[:,h//2-h//scale:h//2+h//scale,w//2-w//scale:w//2+w//scale ] = 0.0
+    x = torch.fft.ifftshift(x, dim=[-2, -1])
+    x = torch.fft.ifft2(x, norm="ortho")
+    x = torch.real(x)
+    x = F.relu(x, inplace=True) #TODO: 要不要加这个relu函数
+    # 转回图片
+    x = x.permute(1,2,0).numpy() #TODO: 不知道加上批量的时候会不会有问题
+    x = (x - x.min()) / (x.max() - x.min())
+    x = (x * 255).astype('uint8')
+    x = Image.fromarray(x)
+    return x
 
 def processing(img, opt):
     if opt.aug:
@@ -105,12 +163,24 @@ def processing(img, opt):
             lambda img: img
         )
 
-    if opt.isPatch:
-        patch_func = transforms.Lambda(
-            lambda img: patch_img(img, opt.patch_size, opt.trainsize))
-    else:
-        patch_func = transforms.Resize((256, 256))
+    img_aug = aug(img)
 
+    trans_tensor = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406],
+                             [0.229, 0.224, 0.225]),
+    ])
+
+    img_tensor = trans_tensor(img_aug)
+    img_f = fft(img_tensor, 4) #TODO: scale调一下试试哪个值好
+
+    if opt.isPatch:
+        img_aug_p, img_f_p = patch_img(img_aug, img_f, opt.patch_size, opt.trainsize)
+    else:
+        img_aug_p = transforms.Resize((256, 256))(img_aug)
+        img_f_p = transforms.Resize((256, 256))(img_f)
+
+    """
     trans = transforms.Compose([
         aug,
         patch_func,
@@ -118,9 +188,8 @@ def processing(img, opt):
         transforms.Normalize([0.485, 0.456, 0.406],
                              [0.229, 0.224, 0.225]),
     ])
-
-    return trans(img)
-
+    """
+    return img_aug_p, img_f_p
 
 class genImageTrainDataset(Dataset):
     def __init__(self, image_root, image_dir, opt):
@@ -143,21 +212,6 @@ class genImageTrainDataset(Dataset):
         with open(path, 'rb') as f:
             img = Image.open(f)
             return img.convert('RGB')
-        
-    def hfreqWH(self, x, scale):
-        assert scale>2
-        #print(f'input shape: {x.shape}, min: {x.min()}, max: {x.max()}, mean: {x.mean()}')
-        x = torch.fft.fft2(x, norm="ortho")#,norm='forward'
-        x = torch.fft.fftshift(x, dim=[-2, -1]) 
-        b,c,h,w = x.shape
-        x[:,:,h//2-h//scale:h//2+h//scale,w//2-w//scale:w//2+w//scale ] = 0.0
-        x = torch.fft.ifftshift(x, dim=[-2, -1])
-        x = torch.fft.ifft2(x, norm="ortho")
-        x = torch.real(x)
-        # x = F.relu(x, inplace=True)
-        #print(f'output shape: {x.shape}, min: {x.min()}, max: {x.max()}, mean: {x.mean()}')
-        #print()
-        return x
 
     def __getitem__(self, index):
         try:
@@ -168,8 +222,8 @@ class genImageTrainDataset(Dataset):
             image = self.rgb_loader(
                 self.images[max(0, new_index)])
             label = self.labels[max(0, new_index)]
-        image = processing(image, self.opt)
-        return image, label
+        image, image_f = processing(image, self.opt)
+        return (image, image_f), label
 
     def __len__(self):
         return self.nature_size + self.ai_size
@@ -201,8 +255,8 @@ class genImageValDataset(Dataset):
     def __getitem__(self, index):
         image = self.rgb_loader(self.img_list[index])
         label = self.labels[index]
-        image = processing(image, self.opt)
-        return image, label
+        image, image_f = processing(image, self.opt)
+        return (image, image_f), label
 
     def __len__(self):
         return self.img_len
@@ -239,8 +293,8 @@ class genImageTestDataset(Dataset):
             image = self.rgb_loader(
                 self.images[max(0, new_index)])
             label = self.labels[max(0, new_index)]
-        image = processing(image, self.opt)
-        return image, label, self.images[index]
+        image, image_f = processing(image, self.opt)
+        return (image, image_f), label, self.images[index]
 
     def __len__(self):
         return self.nature_size + self.ai_size
@@ -318,7 +372,7 @@ def get_loader(opt):
 
     train_dataset = torch.utils.data.ConcatDataset(datasets)
     train_loader = DataLoader(train_dataset, batch_size=opt.batchsize,
-                              shuffle=True, num_workers=4, pin_memory=True)
+                              shuffle=True, num_workers=1, pin_memory=True) #TODO: 这里num_workers改成1试试
     return train_loader
 
 

@@ -51,14 +51,11 @@ class PatchEmbed_tensor(nn.Module):
             for j in range(w_patches):
                 patch_one = x[:, :, i * self.patch_size: (i + 1) * self.patch_size,
                             j * self.patch_size: (j + 1) * self.patch_size]
-                # patch_one = patch_one.flatten(1)
-                # patch_one = patch_one.unsqueeze(2)
                 patch_one = patch_one.reshape(-1, c, 1, self.patch_size, self.patch_size)
                 if i == 0 and j == 0:
                     patch_matrix = patch_one
                 else:
                     patch_matrix = torch.cat((patch_matrix, patch_one), dim=2)
-        # patch_matrix  # (b, c, N, patch_size, patch_size)
         return patch_matrix, patches_paddings
     
     
@@ -271,7 +268,7 @@ class cross_atten_module(nn.Module):
         )
         self.norm = nn.LayerNorm(embed_dim, eps=1e-6)
 
-    def forward(self, x1_ori, x2_ori):
+    def forward(self, x1_ori, x2_ori): # 传的时候注意，x1是freq，x2是patch
         x1 = x1_ori
         x2 = x2_ori
         x2 = self.pos_drop(x2)
@@ -332,14 +329,16 @@ class cross_atten(nn.Module):
         self.patch_embed_tensor = PatchEmbed_tensor(patch_size)
         self.recons_tensor = Recons_tensor(patch_size)
         
-        self.cross_atten1 = cross_atten_module(embed_dim, num_patches, depth_cross,
+        self.cross_atten = cross_atten_module(embed_dim, num_patches, depth_cross,
                                                      n_heads, mlp_ratio, qkv_bias, p, attn_p)
-        self.cross_atten2 = cross_atten_module(embed_dim, num_patches, depth_cross,
-                                                     n_heads, mlp_ratio, qkv_bias, p, attn_p)
+        # self.cross_atten1 = cross_atten_module(embed_dim, num_patches, depth_cross,
+        #                                              n_heads, mlp_ratio, qkv_bias, p, attn_p)
+        # self.cross_atten2 = cross_atten_module(embed_dim, num_patches, depth_cross,
+        #                                              n_heads, mlp_ratio, qkv_bias, p, attn_p)
         # self.cross_atten = patch_cross_atten_module(img_size, patch_size, embed_dim, num_patches, depth_cross,
         #                                              n_heads, mlp_ratio, qkv_bias, p, attn_p)
 
-    def forward(self, x1, x2, patches_paddings):
+    def forward(self, x1, x2, patches_paddings): # x1是freq，x2是patch
         # patch
         x_patched1, patches_paddings = self.patch_embed_tensor(x1)
         # B, C, N, Ph, Pw = x_patched1.shape
@@ -352,26 +351,13 @@ class cross_atten(nn.Module):
         
         x_in1 = x1_self_patch
         x_in2 = x2_self_patch
-        cross1 = self.cross_atten1(x_in1, x_in2)
-        cross2 = self.cross_atten2(x_in2, x_in1)
-        out = cross1 + cross2
-        
-        # reconstruct
-        x1_self_patch = x1_self_patch.view(b, n, c, h, w).permute(0, 2, 1, 3, 4)
-        x_self1 = self.recons_tensor(x1_self_patch, patches_paddings)  # B, C, H, W
-        x2_self_patch = x2_self_patch.view(b, n, c, h, w).permute(0, 2, 1, 3, 4)
-        x_self2 = self.recons_tensor(x2_self_patch, patches_paddings)  # B, C, H, W
-        
-        cross1 = cross1.view(b, n, c, h, w).permute(0, 2, 1, 3, 4)
-        cross1_all = self.recons_tensor(cross1, patches_paddings)  # B, C, H, W
-        
-        cross2 = cross2.view(b, n, c, h, w).permute(0, 2, 1, 3, 4)
-        cross2_all = self.recons_tensor(cross2, patches_paddings)  # B, C, H, W
+        out = self.cross_atten(x_in1, x_in2)
         
         out = out.view(b, n, c, h, w).permute(0, 2, 1, 3, 4)
         out_all = self.recons_tensor(out, patches_paddings)  # B, C, H, W
         
-        return out_all, x_self1, x_self2, cross1_all, cross2_all
+        return out_all
+        # return out_all, x_self1, x_self2, cross1_all, cross2_all
 
 
 class cross_encoder(nn.Module):
@@ -381,7 +367,7 @@ class cross_encoder(nn.Module):
         self.num_patches = num_patches
         self.img_size = img_size
         self.patch_size = patch_size
-        self.shift_size = int(img_size / 2)
+        # self.shift_size = int(img_size / 2)
         self.depth_cross = depth_cross
         # self.depth_cross = 0
 
@@ -393,38 +379,75 @@ class cross_encoder(nn.Module):
         self.cross_atten_block = cross_atten(self.patch_size, embed_dim, self.num_patches, depth_self,
                                                depth_cross, n_heads, mlp_ratio, qkv_bias, p, attn_p)
 
-    def forward(self, x1, x2, shift_flag=False):
+    def forward(self, x1, x2):
         # x1 -->> ir, x2 -->> vi
         # self-attention
         x1_atten, x2_atten, paddings = self.self_atten_block1(x1, x2)
         x1_a, x2_a = x1_atten, x2_atten
-        # shift
-        if shift_flag:
-            shifted_x1 = torch.roll(x1_atten, shifts=(-self.shift_size, -self.shift_size), dims=(2, 3))
-            shifted_x2 = torch.roll(x2_atten, shifts=(-self.shift_size, -self.shift_size), dims=(2, 3))
-            x1_atten, x2_atten, _ = self.self_atten_block2(shifted_x1, shifted_x2)
-            roll_x_self1 = torch.roll(x1_atten, shifts=(self.shift_size, self.shift_size), dims=(2, 3))
-            roll_x_self2 = torch.roll(x2_atten, shifts=(self.shift_size, self.shift_size), dims=(2, 3))
-        else:
-            x1_atten, x2_atten, _ = self.self_atten_block2(x1_atten, x2_atten)
-            roll_x_self1 = x1_atten
-            roll_x_self2 = x2_atten
+        x1_atten, x2_atten, _ = self.self_atten_block2(x1_atten, x2_atten)
+        roll_x_self1 = x1_atten
+        roll_x_self2 = x2_atten
         # -------------------------------------
         # cross attention
         if self.depth_cross > 0:
-            out, x_self1, x_self2, x_cross1, x_cross2 = self.cross_atten_block(roll_x_self1, roll_x_self2, paddings)
+            out = self.cross_atten_block(x1_atten, x2_atten, paddings)
         else:
             out = roll_x_self1 + roll_x_self2
             x_self1, x_self2, x_cross1, x_cross2 = roll_x_self1, roll_x_self2, roll_x_self1, roll_x_self2
         # -------------------------------------
         # recons
-        return out, x1_a, x2_a, roll_x_self1, roll_x_self2, x_cross1, x_cross2
+        return out
     
+class CAM(nn.Module):
+    def __init__(self, img_size, patch_size, part_out,  
+                 depth_self, depth_cross, n_heads, mlp_ratio, qkv_bias, p, attn_p):
+        super().__init__()
+        self.img_size = img_size  # 32*32
+        self.patch_size = patch_size  # 2*2
+        self.part_out = part_out  # 3
+        self.patch_embed_tensor = PatchEmbed_tensor(img_size)
+        self.recons_tensor = Recons_tensor(img_size)
+        self.embed_dim = part_out * patch_size * patch_size  # 512
+        self.num_patches = int(img_size / patch_size) * int(img_size / patch_size)  # 16*16
+        
+        self.cross_atten_block = cross_encoder(self.img_size, self.patch_size, self.embed_dim, self.num_patches, depth_self,
+                                               depth_cross, n_heads, mlp_ratio, qkv_bias, p, attn_p)
+
+    def forward(self, x_f, x_p):
+        x_f_patched, patches_paddings = self.patch_embed_tensor(x_f)
+        b, c, N, h, w = x_f_patched.shape
+        x_p_patched, _ = self.patch_embed_tensor(x_p)
+        out = []
+        x_f_cross = []
+        x_p_cross = []
+        for i in range(N):
+            out_p = self.cross_atten_block(x_f_patched[:, :, i, :, :], x_p_patched[:, :, i, :, :])
+            # x_f_cross.append(x_f_cross_p)
+            # x_p_cross.append(x_p_cross_p)
+            out.append(out_p)
+        if b == 1:
+            # x_f_cross = torch.cat(x_f_cross, dim=0).unsqueeze(dim=1)
+            # x_p_cross = torch.cat(x_p_cross, dim=0).unsqueeze(dim=1)
+            out = torch.cat(out, dim=0)
+        else:
+            # x_f_cross = torch.cat(x_f_cross, dim=0)
+            # x_p_cross = torch.cat(x_p_cross, dim=0)
+            out = torch.cat(out, dim=0)
+
+        # out = out.permute(1, 2, 0, 3, 4)  # b, c, N, h, w
+        # out = self.recons_tensor(out, patches_paddings)
+        out[..., :2] = out[..., :2] * 255
+        # out = out * 255
+        # outputs = {'out': out}
+
+        return out
+            
 if __name__ == '__main__': #@note if_main
-    model = cross_encoder(256, 16, 128, 256, 1, 1)
-    x = torch.randn(1, 3, 256, 256)
-    y = torch.randn(1, 3, 256, 256)
-    out, x1_a, x2_a, roll_x_self1, roll_x_self2, x_cross1, x_cross2 = model(x, y)
+    model = CAM(img_size=32, patch_size=2, part_out=3,  
+                 depth_self=1, depth_cross=1, n_heads=4, mlp_ratio=4., qkv_bias=True, p=0., attn_p=0)
+    x_f = torch.randn(1, 3, 32, 32)
+    x_p = torch.randn(1, 3, 32, 32)
+    out = model(x_f, x_p)
     print(out.shape)
     # print(model)
 

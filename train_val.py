@@ -1,10 +1,11 @@
 # @note import
 import os
 import torch
+from tensorboardX import SummaryWriter
 from utils.util import set_random_seed, poly_lr
 from utils.tdataloader import get_loader, get_val_loader
 from options import TrainOptions
-from networks.pfvit import PFViT
+from networks.pf_cam import PF_CAM
 from utils.loss import bceLoss
 from datetime import datetime
 import numpy as np
@@ -40,10 +41,11 @@ def train(train_loader, model, optimizer, epoch, save_path):
     epoch_step = 0
     loss_all = 0
     try:
-        for i, (images, labels) in enumerate(train_loader, start=1):
+        for i, ((images, images_f), labels) in enumerate(train_loader, start=1): #@note bug
             optimizer.zero_grad()
             images = images.cuda()
-            preds = model(images).ravel()
+            images_f = images_f.cuda()
+            preds = model(images_f, images).ravel()
             labels = labels.cuda()
             loss1 = bceLoss()
             loss = loss1(preds, labels)
@@ -75,20 +77,22 @@ def val(val_loader, model, epoch, save_path):
                 'val_ai_loader'], loader['ai_size'], loader['val_nature_loader'], loader['nature_size']
             print("val on:", name)
             # for images, labels in tqdm(val_ai_loader, desc='val_ai'):
-            for images, labels in val_ai_loader:
+            for (images, images_f), labels in val_ai_loader:
                 images = images.cuda()
+                images_f = images_f.cuda()
                 labels = labels.cuda()
-                res = model(images)
+                res = model(images_f, images)
                 res = torch.sigmoid(res).ravel()
                 right_ai_image += (((res > 0.5) & (labels == 1))
                                    | ((res < 0.5) & (labels == 0))).sum()
 
             print(f'ai accu: {right_ai_image/ai_size}')
             # for images,labels in tqdm(val_nature_loader,desc='val_nature'):
-            for images, labels in val_nature_loader:
+            for (images, images_f), labels in val_nature_loader:
                 images = images.cuda()
+                images_f = images_f.cuda()
                 labels = labels.cuda()
-                res = model(images)
+                res = model(images_f, images)
                 res = torch.sigmoid(res).ravel()
                 right_nature_image += (((res > 0.5) & (labels == 1))
                                        | ((res < 0.5) & (labels == 0))).sum()
@@ -142,9 +146,16 @@ if __name__ == '__main__':# @note if_main
     elif opt.gpu_id == '3':
         os.environ["CUDA_VISIBLE_DEVICES"] = "3"
         print('USE GPU 3')
-
+    
     # load model
-    model = PFViT(opt.img_size,opt.patch_size, opt.part_out, opt.depth_self, opt.depth_cross).cuda()
+    model = PF_CAM(opt.img_size,opt.vit_patch_size, opt.part_out, opt.depth_self, opt.depth_cross).cuda()
+    # log_dir = '/hexp/ly/PF_CAM/Log'
+    # writer = SummaryWriter(log_dir=log_dir)
+    # input_f = torch.randn(1, 3, 32, 32).cuda()
+    # input_p = torch.randn(1, 3, 32, 32).cuda()
+    # writer.add_graph(model, (input_f, input_p))
+    # writer.close()
+    # print(model)
     if opt.load is not None:
         model.load_state_dict(torch.load(opt.load))
         print('load model from', opt.load)

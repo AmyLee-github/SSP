@@ -12,12 +12,11 @@ class TrainOptions():
         parser.add_argument('--name', type=str, default='experiment_name',
                             help='name of the experiment. It decides where to store samples and models')
         parser.add_argument('--rz_interp', default='bilinear')
-        # parser.add_argument('--blur_prob', type=float, default=0)
-        # parser.add_argument('--blur_sig', default=[0, 1])
-        # parser.add_argument('--jpg_prob', type=float, default=0)
-        # parser.add_argument('--jpg_method', default=['pil', 'cv2'])
-        # parser.add_argument('--jpg_qual', default=[90, 100])
-
+        parser.add_argument('--blur_prob', type=float, default=0)
+        parser.add_argument('--blur_sig', default=[0, 1])
+        parser.add_argument('--jpg_prob', type=float, default=0)
+        parser.add_argument('--jpg_method', default=['pil', 'cv2'])
+        parser.add_argument('--jpg_qual', default=[90, 100])
         parser.add_argument('--CropSize', type=int,
                             default=224, help='scale images to this size')
         # train setting
@@ -30,7 +29,7 @@ class TrainOptions():
         parser.add_argument('--load', type=str,
                             default=None)
         parser.add_argument('--image_root', type=str,
-                            default='/hxp/dataset/genImage')
+                            default='/hexp/data/genImage')
         parser.add_argument('--save_path', type=str,
                             default='./snapshot/sortnet/')
         parser.add_argument('--isPatch', action='store_false')
@@ -43,53 +42,11 @@ class TrainOptions():
                             type=int, help='val per interval')
         parser.add_argument('--val_batchsize', default=64, type=int)
         # vit setting
-        parser.add_argument('--img_size', default=32, type=int)
-        parser.add_argument('--patch_size', default=2, type=int)
-        parser.add_argument('--part_out', default=128, type=int)
+        parser.add_argument('--img_size', default=32, type=int) # 可以不用定义了，就是patch_size
+        parser.add_argument('--vit_patch_size', default=2, type=int)
+        parser.add_argument('--part_out', default=3, type=int)
         parser.add_argument('--depth_self', default=1, type=int)
         parser.add_argument('--depth_cross', default=1, type=int)
-        # self.img_size=img_size
-        # self.patch_size=patch_size
-        # self.embed_dim=embed_dim
-        # self.num_patches=num_patches
-        # self.depth_self=depth_self
-        # self.depth_cross=depth_cross
-        # custom_config_auto = {
-# 	"in_channels": 1,
-# 	"out_channels": 1,
-# 	"en_out_channels1": 32,
-# 	"en_out_channels": 64,
-# 	"num_layers": 3,
-# 	"dense_out": 128,
-# 	"part_out": 128,
-# 	"train_flag": True,
-# }
-# # @note Trans module config
-# custom_config = {
-# 	"en_out_channels1": 32,
-# 	"out_channels": 1,
-# 	"part_out": 128,
-# 	"train_flag": True,
-	
-# 	"img_size": 32,
-# 	"patch_size": 2,
-# 	"depth_self": 1,
-# 	"depth_cross": 1,
-# 	"n_heads": 16,
-# 	"qkv_bias": True,
-# 	"mlp_ratio": 4,
-# 	"p": 0.,
-# 	"attn_p": 0.,
-# }
-    #     "img_size": 32,
-	# "patch_size": 2,
-	# "depth_self": 1,
-	# "depth_cross": 1,
-	# "n_heads": 16,
-	# "qkv_bias": True,
-	# "mlp_ratio": 4,
-	# "p": 0.,
-	# "attn_p": 0.,
         return parser
 
     def gather_options(self):
