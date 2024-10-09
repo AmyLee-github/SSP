@@ -372,7 +372,7 @@ def get_loader(opt):
 
     train_dataset = torch.utils.data.ConcatDataset(datasets)
     train_loader = DataLoader(train_dataset, batch_size=opt.batchsize,
-                              shuffle=True, num_workers=1, pin_memory=True) #TODO: 这里num_workers改成1试试
+                              shuffle=True, num_workers=4, pin_memory=True) #TODO: 这里num_workers改成1试试
     return train_loader
 
 

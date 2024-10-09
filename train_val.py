@@ -1,7 +1,7 @@
 # @note import
 import os
 import torch
-from tensorboardX import SummaryWriter
+# from tensorboardX import SummaryWriter
 from utils.util import set_random_seed, poly_lr
 from utils.tdataloader import get_loader, get_val_loader
 from options import TrainOptions
@@ -119,6 +119,15 @@ def val(val_loader, model, epoch, save_path):
     print(
         f'Epoch:{epoch},Accuracy:{total_accu}, bestEpoch:{best_epoch}, bestAccu:{best_accu}')
 
+# 检查训练数据集和验证数据集的平衡性
+def check_data_balance(loader):
+    ai_count = 0
+    nature_count = 0
+    for data in loader:
+        labels = data[1]
+        ai_count += (labels == 1).sum().item()
+        nature_count += (labels == 0).sum().item()
+    print(f"AI images: {ai_count}, Nature images: {nature_count}")
 
 if __name__ == '__main__':# @note if_main
     set_random_seed()
@@ -131,6 +140,12 @@ if __name__ == '__main__':# @note if_main
     train_loader = get_loader(opt)
     total_step = len(train_loader)
     val_loader = get_val_loader(val_opt)
+    
+    # 在加载数据后检查数据平衡性
+    print('Checking training data balance...')
+    check_data_balance(train_loader)
+    print('Checking validation data balance...')
+    check_data_balance(val_loader)
 
     # cuda config
     # set the device for training

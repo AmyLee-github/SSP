@@ -1,1 +1,1 @@
-python -W ignore train_val.py --blur_prob=0 --jpg_prob=0 --batchsize=64 --epoch=30 --lr=1e-4 --patch_size=32 
+python -W ignore train_val.py | tee "/hexp/ly/PF_CAM/Log/train_val_$(date +%Y-%m-%d_%H-%M-%S).txt"
