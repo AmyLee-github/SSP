@@ -30,6 +30,8 @@ class TrainOptions():
                             default=None)
         parser.add_argument('--image_root', type=str,
                             default='/hexp/data/genImage')
+        parser.add_argument('--image_f_root', type=str,
+                            default='/hexp/data/genImage_filtered')
         parser.add_argument('--save_path', type=str,
                             default='./snapshot/sortnet/')
         parser.add_argument('--isPatch', action='store_false')
@@ -41,7 +43,7 @@ class TrainOptions():
         parser.add_argument('--val_interval', default=1,
                             type=int, help='val per interval')
         parser.add_argument('--val_batchsize', default=64, type=int)
-        # vit setting
+        # cam setting
         parser.add_argument('--img_size', default=32, type=int) # 可以不用定义了，就是patch_size
         parser.add_argument('--vit_patch_size', default=2, type=int)
         parser.add_argument('--part_out', default=3, type=int)
