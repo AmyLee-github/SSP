@@ -43,7 +43,7 @@ def val(val_loader, model, save_path):
                 'val_ai_loader'], loader['ai_size'], loader['val_nature_loader'], loader['nature_size']
             print("val on:", name)
             # for images, labels in tqdm(val_ai_loader, desc='val_ai'):
-            for images, images_f, labels in val_ai_loader:
+            for (images, images_f), labels in val_ai_loader:
                 images = images.cuda()
                 images_f = images_f.cuda()
                 labels = labels.cuda()
@@ -54,7 +54,7 @@ def val(val_loader, model, save_path):
 
             print(f'ai accu: {right_ai_image/ai_size}')
             # for images,labels in tqdm(val_nature_loader,desc='val_nature'):
-            for images, images_f, labels in val_nature_loader:
+            for (images, images_f), labels in val_nature_loader:
                 images = images.cuda()
                 images_f = images_f.cuda()
                 labels = labels.cuda()
