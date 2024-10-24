@@ -1,7 +1,7 @@
 # @note import
 import os
 import torch
-from tensorboardX import SummaryWriter
+# from tensorboardX import SummaryWriter
 from utils.util import set_random_seed, poly_lr
 from utils.tdataloader import get_loader, get_val_loader
 from options import TrainOptions
@@ -49,7 +49,7 @@ def train(train_loader, model, optimizer, epoch, save_path, writer):
             loss_all += loss.data
 
             # Log loss to TensorBoard
-            writer.add_scalar('Train/Loss', loss.data, step)
+            # writer.add_scalar('Train/Loss', loss.data, step)
 
             if i % 200 == 0 or i == total_step or i == 1:
                 print(
@@ -100,7 +100,7 @@ def val(val_loader, model, epoch, save_path, writer):
     total_accu = total_right_image / total_image
 
     # Log accuracy to TensorBoard
-    writer.add_scalar('Val/Accuracy', total_accu, epoch)
+    # writer.add_scalar('Val/Accuracy', total_accu, epoch)
 
     if epoch == 1:
         best_accu = total_accu
@@ -156,8 +156,8 @@ if __name__ == '__main__':
         os.makedirs(save_path)
 
     # Initialize TensorBoard writer
-    log_dir = '/hexp/ly/PF_CAM/log/tensorboard'
-    writer = SummaryWriter(log_dir=log_dir)
+    # log_dir = '/hexp/ly/PF_CAM/log/tensorboard'
+    # writer = SummaryWriter(log_dir=log_dir)
 
     step = 0
     best_epoch = 0
@@ -165,7 +165,7 @@ if __name__ == '__main__':
     print("Start train")
     for epoch in range(1, opt.epoch + 1):
         cur_lr = poly_lr(optimizer, opt.lr, epoch, opt.epoch)
-        train(train_loader, model, optimizer, epoch, save_path, writer)
-        val(val_loader, model, epoch, save_path, writer)
+        train(train_loader, model, optimizer, epoch, save_path, None)
+        val(val_loader, model, epoch, save_path, None)
 
-    writer.close()
+    # writer.close()

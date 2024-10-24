@@ -43,9 +43,9 @@ val on: imagenet_ai_0419_vqdm
 val on: imagenet_ai_0424_wukong
 USE GPU 0
 Start train
-2024-10-24 06:15:45.276839 Epoch [001/030], Step [0001/0267], Total_loss: 0.6116
-2024-10-24 06:17:36.857944 Epoch [001/030], Step [0200/0267], Total_loss: 0.2907
-2024-10-24 06:18:12.892686 Epoch [001/030], Step [0267/0267], Total_loss: 0.4240
+2024-10-24 09:14:44.754361 Epoch [001/030], Step [0001/0267], Total_loss: 0.6116
+2024-10-24 09:15:33.317974 Epoch [001/030], Step [0200/0267], Total_loss: 0.2771
+2024-10-24 09:15:49.993846 Epoch [001/030], Step [0267/0267], Total_loss: 0.4334
 val on: imagenet_ai_0508_adm
 ai accu: 0.0
 nature accu:1.0
@@ -80,9 +80,9 @@ nature accu:1.0
 val on:imagenet_ai_0424_wukong, Epoch:1, Accuracy:0.5
 Save state_dict successfully! Best epoch:1.
 Epoch:1,Accuracy:0.5, bestEpoch:1, bestAccu:0.5
-2024-10-24 06:19:33.245485 Epoch [002/030], Step [0001/0267], Total_loss: 0.1606
-2024-10-24 06:20:21.931563 Epoch [002/030], Step [0200/0267], Total_loss: 0.2839
-2024-10-24 06:20:38.535059 Epoch [002/030], Step [0267/0267], Total_loss: 0.0878
+2024-10-24 09:16:52.483496 Epoch [002/030], Step [0001/0267], Total_loss: 0.1555
+2024-10-24 09:17:41.756616 Epoch [002/030], Step [0200/0267], Total_loss: 0.2534
+2024-10-24 09:17:57.935351 Epoch [002/030], Step [0267/0267], Total_loss: 0.0827
 val on: imagenet_ai_0508_adm
 ai accu: 0.0
 nature accu:1.0
@@ -116,9 +116,9 @@ ai accu: 0.0
 nature accu:1.0
 val on:imagenet_ai_0424_wukong, Epoch:2, Accuracy:0.5
 Epoch:2,Accuracy:0.5, bestEpoch:1, bestAccu:0.5
-2024-10-24 06:21:41.265593 Epoch [003/030], Step [0001/0267], Total_loss: 0.1136
-2024-10-24 06:22:30.816732 Epoch [003/030], Step [0200/0267], Total_loss: 0.3121
-2024-10-24 06:22:47.140411 Epoch [003/030], Step [0267/0267], Total_loss: 0.1952
+2024-10-24 09:19:00.693467 Epoch [003/030], Step [0001/0267], Total_loss: 0.1154
+2024-10-24 09:19:50.788200 Epoch [003/030], Step [0200/0267], Total_loss: 0.3235
+2024-10-24 09:20:07.008877 Epoch [003/030], Step [0267/0267], Total_loss: 0.2064
 val on: imagenet_ai_0508_adm
 ai accu: 0.0
 nature accu:1.0
@@ -152,986 +152,986 @@ ai accu: 0.0
 nature accu:1.0
 val on:imagenet_ai_0424_wukong, Epoch:3, Accuracy:0.5
 Epoch:3,Accuracy:0.5, bestEpoch:1, bestAccu:0.5
-2024-10-24 06:23:49.647614 Epoch [004/030], Step [0001/0267], Total_loss: 0.0636
-2024-10-24 06:24:38.836335 Epoch [004/030], Step [0200/0267], Total_loss: 0.4143
-2024-10-24 06:24:54.948652 Epoch [004/030], Step [0267/0267], Total_loss: 0.2224
+2024-10-24 09:21:09.668821 Epoch [004/030], Step [0001/0267], Total_loss: 0.0641
+2024-10-24 09:21:59.072836 Epoch [004/030], Step [0200/0267], Total_loss: 0.4197
+2024-10-24 09:22:15.633660 Epoch [004/030], Step [0267/0267], Total_loss: 0.2658
 val on: imagenet_ai_0508_adm
-ai accu: 0.1300000101327896
-nature accu:0.9933333396911621
-val on:imagenet_ai_0508_adm, Epoch:4, Accuracy:0.5616666674613953
+ai accu: 0.006666666828095913
+nature accu:1.0
+val on:imagenet_ai_0508_adm, Epoch:4, Accuracy:0.503333330154419
 val on: imagenet_ai_0419_biggan
-ai accu: 0.06000000238418579
-nature accu:0.9916666746139526
-val on:imagenet_ai_0419_biggan, Epoch:4, Accuracy:0.5258333683013916
+ai accu: 0.0
+nature accu:0.9983333349227905
+val on:imagenet_ai_0419_biggan, Epoch:4, Accuracy:0.49916666746139526
 val on: imagenet_glide
-ai accu: 0.18166667222976685
-nature accu:0.9900000095367432
-val on:imagenet_glide, Epoch:4, Accuracy:0.5858333706855774
+ai accu: 0.0033333334140479565
+nature accu:0.9983333349227905
+val on:imagenet_glide, Epoch:4, Accuracy:0.5008333325386047
 val on: imagenet_midjourney
-ai accu: 0.11500000208616257
-nature accu:0.9900000095367432
-val on:imagenet_midjourney, Epoch:4, Accuracy:0.5525000095367432
+ai accu: 0.0033333334140479565
+nature accu:0.9983333349227905
+val on:imagenet_midjourney, Epoch:4, Accuracy:0.5008333325386047
 val on: imagenet_ai_0419_sdv4
-ai accu: 0.1550000011920929
-nature accu:0.9833333492279053
-val on:imagenet_ai_0419_sdv4, Epoch:4, Accuracy:0.5691666603088379
+ai accu: 0.015000000596046448
+nature accu:0.996666669845581
+val on:imagenet_ai_0419_sdv4, Epoch:4, Accuracy:0.5058333277702332
 val on: imagenet_ai_0424_sdv5
-ai accu: 0.14499999582767487
-nature accu:0.9774999618530273
-val on:imagenet_ai_0424_sdv5, Epoch:4, Accuracy:0.5612499713897705
+ai accu: 0.0024999999441206455
+nature accu:0.9950000047683716
+val on:imagenet_ai_0424_sdv5, Epoch:4, Accuracy:0.4987500011920929
 val on: imagenet_ai_0419_vqdm
-ai accu: 0.08166667073965073
-nature accu:0.9900000095367432
-val on:imagenet_ai_0419_vqdm, Epoch:4, Accuracy:0.5358333587646484
+ai accu: 0.006666666828095913
+nature accu:1.0
+val on:imagenet_ai_0419_vqdm, Epoch:4, Accuracy:0.503333330154419
 val on: imagenet_ai_0424_wukong
-ai accu: 0.11666666716337204
-nature accu:0.9833333492279053
-val on:imagenet_ai_0424_wukong, Epoch:4, Accuracy:0.550000011920929
+ai accu: 0.006666666828095913
+nature accu:1.0
+val on:imagenet_ai_0424_wukong, Epoch:4, Accuracy:0.503333330154419
 Save state_dict successfully! Best epoch:4.
-Epoch:4,Accuracy:0.5554999709129333, bestEpoch:4, bestAccu:0.5554999709129333
-2024-10-24 06:25:57.172306 Epoch [005/030], Step [0001/0267], Total_loss: 0.2230
-2024-10-24 06:26:45.481188 Epoch [005/030], Step [0200/0267], Total_loss: 0.2425
-2024-10-24 06:27:02.222683 Epoch [005/030], Step [0267/0267], Total_loss: 0.0518
+Epoch:4,Accuracy:0.501800000667572, bestEpoch:4, bestAccu:0.501800000667572
+2024-10-24 09:23:18.615463 Epoch [005/030], Step [0001/0267], Total_loss: 0.2604
+2024-10-24 09:24:07.734337 Epoch [005/030], Step [0200/0267], Total_loss: 0.2758
+2024-10-24 09:24:24.934404 Epoch [005/030], Step [0267/0267], Total_loss: 0.0607
 val on: imagenet_ai_0508_adm
-ai accu: 0.13333334028720856
+ai accu: 0.011666666716337204
 nature accu:1.0
-val on:imagenet_ai_0508_adm, Epoch:5, Accuracy:0.5666666626930237
+val on:imagenet_ai_0508_adm, Epoch:5, Accuracy:0.5058333277702332
 val on: imagenet_ai_0419_biggan
-ai accu: 0.038333334028720856
-nature accu:0.9983333349227905
-val on:imagenet_ai_0419_biggan, Epoch:5, Accuracy:0.518333375453949
-val on: imagenet_glide
-ai accu: 0.28166666626930237
-nature accu:0.996666669845581
-val on:imagenet_glide, Epoch:5, Accuracy:0.6391666531562805
-val on: imagenet_midjourney
-ai accu: 0.04500000178813934
-nature accu:0.9950000047683716
-val on:imagenet_midjourney, Epoch:5, Accuracy:0.5200000405311584
-val on: imagenet_ai_0419_sdv4
-ai accu: 0.16833333671092987
-nature accu:0.996666669845581
-val on:imagenet_ai_0419_sdv4, Epoch:5, Accuracy:0.5825000405311584
-val on: imagenet_ai_0424_sdv5
-ai accu: 0.1525000035762787
+ai accu: 0.008333333767950535
 nature accu:1.0
-val on:imagenet_ai_0424_sdv5, Epoch:5, Accuracy:0.5762500166893005
+val on:imagenet_ai_0419_biggan, Epoch:5, Accuracy:0.5041666626930237
+val on: imagenet_glide
+ai accu: 0.03999999910593033
+nature accu:1.0
+val on:imagenet_glide, Epoch:5, Accuracy:0.5200000405311584
+val on: imagenet_midjourney
+ai accu: 0.0016666667070239782
+nature accu:1.0
+val on:imagenet_midjourney, Epoch:5, Accuracy:0.5008333325386047
+val on: imagenet_ai_0419_sdv4
+ai accu: 0.02666666731238365
+nature accu:1.0
+val on:imagenet_ai_0419_sdv4, Epoch:5, Accuracy:0.5133333206176758
+val on: imagenet_ai_0424_sdv5
+ai accu: 0.02499999850988388
+nature accu:1.0
+val on:imagenet_ai_0424_sdv5, Epoch:5, Accuracy:0.512499988079071
 val on: imagenet_ai_0419_vqdm
-ai accu: 0.07999999821186066
-nature accu:0.9983333349227905
-val on:imagenet_ai_0419_vqdm, Epoch:5, Accuracy:0.5391666889190674
+ai accu: 0.015000000596046448
+nature accu:1.0
+val on:imagenet_ai_0419_vqdm, Epoch:5, Accuracy:0.5074999928474426
 val on: imagenet_ai_0424_wukong
-ai accu: 0.17000000178813934
-nature accu:0.9833333492279053
-val on:imagenet_ai_0424_wukong, Epoch:5, Accuracy:0.5766666531562805
+ai accu: 0.03166666626930237
+nature accu:1.0
+val on:imagenet_ai_0424_wukong, Epoch:5, Accuracy:0.51583331823349
 Save state_dict successfully! Best epoch:5.
-Epoch:5,Accuracy:0.5652999877929688, bestEpoch:5, bestAccu:0.5652999877929688
-2024-10-24 06:28:04.366413 Epoch [006/030], Step [0001/0267], Total_loss: 0.0458
-2024-10-24 06:28:52.832501 Epoch [006/030], Step [0200/0267], Total_loss: 0.1767
-2024-10-24 06:29:09.141275 Epoch [006/030], Step [0267/0267], Total_loss: 0.1132
+Epoch:5,Accuracy:0.5101000070571899, bestEpoch:5, bestAccu:0.5101000070571899
+2024-10-24 09:25:27.453048 Epoch [006/030], Step [0001/0267], Total_loss: 0.0745
+2024-10-24 09:26:16.859728 Epoch [006/030], Step [0200/0267], Total_loss: 0.1842
+2024-10-24 09:26:33.542211 Epoch [006/030], Step [0267/0267], Total_loss: 0.1557
 val on: imagenet_ai_0508_adm
-ai accu: 0.28833332657814026
-nature accu:0.9933333396911621
-val on:imagenet_ai_0508_adm, Epoch:6, Accuracy:0.6408333778381348
-val on: imagenet_ai_0419_biggan
-ai accu: 0.17666667699813843
-nature accu:0.9950000047683716
-val on:imagenet_ai_0419_biggan, Epoch:6, Accuracy:0.5858333706855774
-val on: imagenet_glide
-ai accu: 0.45000001788139343
-nature accu:0.9933333396911621
-val on:imagenet_glide, Epoch:6, Accuracy:0.721666693687439
-val on: imagenet_midjourney
-ai accu: 0.17499999701976776
-nature accu:0.9883333444595337
-val on:imagenet_midjourney, Epoch:6, Accuracy:0.5816667079925537
-val on: imagenet_ai_0419_sdv4
-ai accu: 0.4566666781902313
-nature accu:0.9850000143051147
-val on:imagenet_ai_0419_sdv4, Epoch:6, Accuracy:0.7208333611488342
-val on: imagenet_ai_0424_sdv5
-ai accu: 0.42624998092651367
-nature accu:0.9874999523162842
-val on:imagenet_ai_0424_sdv5, Epoch:6, Accuracy:0.7068749666213989
-val on: imagenet_ai_0419_vqdm
-ai accu: 0.273333340883255
-nature accu:0.9950000047683716
-val on:imagenet_ai_0419_vqdm, Epoch:6, Accuracy:0.6341666579246521
-val on: imagenet_ai_0424_wukong
-ai accu: 0.39000001549720764
-nature accu:0.9866666793823242
-val on:imagenet_ai_0424_wukong, Epoch:6, Accuracy:0.6883333325386047
-Save state_dict successfully! Best epoch:6.
-Epoch:6,Accuracy:0.661899983882904, bestEpoch:6, bestAccu:0.661899983882904
-2024-10-24 06:30:11.008452 Epoch [007/030], Step [0001/0267], Total_loss: 0.1308
-2024-10-24 06:30:59.340663 Epoch [007/030], Step [0200/0267], Total_loss: 0.0830
-2024-10-24 06:31:15.817299 Epoch [007/030], Step [0267/0267], Total_loss: 0.1531
-val on: imagenet_ai_0508_adm
-ai accu: 0.3816666901111603
-nature accu:0.9933333396911621
-val on:imagenet_ai_0508_adm, Epoch:7, Accuracy:0.6875
-val on: imagenet_ai_0419_biggan
-ai accu: 0.1733333319425583
-nature accu:0.9883333444595337
-val on:imagenet_ai_0419_biggan, Epoch:7, Accuracy:0.580833375453949
-val on: imagenet_glide
-ai accu: 0.7150000333786011
-nature accu:0.996666669845581
-val on:imagenet_glide, Epoch:7, Accuracy:0.8558333516120911
-val on: imagenet_midjourney
-ai accu: 0.2616666853427887
-nature accu:0.996666669845581
-val on:imagenet_midjourney, Epoch:7, Accuracy:0.6291666626930237
-val on: imagenet_ai_0419_sdv4
-ai accu: 0.503333330154419
-nature accu:0.9950000047683716
-val on:imagenet_ai_0419_sdv4, Epoch:7, Accuracy:0.7491666674613953
-val on: imagenet_ai_0424_sdv5
-ai accu: 0.5137500166893005
-nature accu:0.9950000047683716
-val on:imagenet_ai_0424_sdv5, Epoch:7, Accuracy:0.7543749809265137
-val on: imagenet_ai_0419_vqdm
-ai accu: 0.3316666781902313
-nature accu:0.9883333444595337
-val on:imagenet_ai_0419_vqdm, Epoch:7, Accuracy:0.6600000262260437
-val on: imagenet_ai_0424_wukong
-ai accu: 0.5149999856948853
-nature accu:0.9916666746139526
-val on:imagenet_ai_0424_wukong, Epoch:7, Accuracy:0.753333330154419
-Save state_dict successfully! Best epoch:7.
-Epoch:7,Accuracy:0.710599958896637, bestEpoch:7, bestAccu:0.710599958896637
-2024-10-24 06:32:18.581573 Epoch [008/030], Step [0001/0267], Total_loss: 0.1122
-2024-10-24 06:33:06.826824 Epoch [008/030], Step [0200/0267], Total_loss: 0.1938
-2024-10-24 06:33:23.622254 Epoch [008/030], Step [0267/0267], Total_loss: 0.0664
-val on: imagenet_ai_0508_adm
-ai accu: 0.3616666793823242
+ai accu: 0.11500000208616257
 nature accu:0.9983333349227905
-val on:imagenet_ai_0508_adm, Epoch:8, Accuracy:0.6800000071525574
+val on:imagenet_ai_0508_adm, Epoch:6, Accuracy:0.5566666722297668
 val on: imagenet_ai_0419_biggan
-ai accu: 0.1850000023841858
+ai accu: 0.0833333358168602
 nature accu:0.9950000047683716
-val on:imagenet_ai_0419_biggan, Epoch:8, Accuracy:0.5900000333786011
+val on:imagenet_ai_0419_biggan, Epoch:6, Accuracy:0.5391666889190674
 val on: imagenet_glide
-ai accu: 0.6366666555404663
-nature accu:0.9900000095367432
-val on:imagenet_glide, Epoch:8, Accuracy:0.8133333325386047
+ai accu: 0.35500001907348633
+nature accu:1.0
+val on:imagenet_glide, Epoch:6, Accuracy:0.6775000095367432
 val on: imagenet_midjourney
-ai accu: 0.1733333319425583
-nature accu:0.9933333396911621
-val on:imagenet_midjourney, Epoch:8, Accuracy:0.5833333730697632
-val on: imagenet_ai_0419_sdv4
-ai accu: 0.5733333230018616
+ai accu: 0.05000000074505806
 nature accu:0.9950000047683716
-val on:imagenet_ai_0419_sdv4, Epoch:8, Accuracy:0.784166693687439
+val on:imagenet_midjourney, Epoch:6, Accuracy:0.5225000381469727
+val on: imagenet_ai_0419_sdv4
+ai accu: 0.20666667819023132
+nature accu:0.9933333396911621
+val on:imagenet_ai_0419_sdv4, Epoch:6, Accuracy:0.6000000238418579
 val on: imagenet_ai_0424_sdv5
-ai accu: 0.5199999809265137
-nature accu:0.9987499713897705
-val on:imagenet_ai_0424_sdv5, Epoch:8, Accuracy:0.7593749761581421
+ai accu: 0.1837499886751175
+nature accu:0.9950000047683716
+val on:imagenet_ai_0424_sdv5, Epoch:6, Accuracy:0.5893749594688416
 val on: imagenet_ai_0419_vqdm
-ai accu: 0.3400000035762787
-nature accu:0.996666669845581
-val on:imagenet_ai_0419_vqdm, Epoch:8, Accuracy:0.6683333516120911
+ai accu: 0.10166666656732559
+nature accu:0.9983333349227905
+val on:imagenet_ai_0419_vqdm, Epoch:6, Accuracy:0.550000011920929
 val on: imagenet_ai_0424_wukong
-ai accu: 0.48000001907348633
-nature accu:0.9933333396911621
-val on:imagenet_ai_0424_wukong, Epoch:8, Accuracy:0.7366666793823242
-Epoch:8,Accuracy:0.7041999697685242, bestEpoch:7, bestAccu:0.710599958896637
-2024-10-24 06:34:25.585294 Epoch [009/030], Step [0001/0267], Total_loss: 0.1430
-2024-10-24 06:35:14.258787 Epoch [009/030], Step [0200/0267], Total_loss: 0.0713
-2024-10-24 06:35:30.542700 Epoch [009/030], Step [0267/0267], Total_loss: 0.0146
+ai accu: 0.1550000011920929
+nature accu:0.9983333349227905
+val on:imagenet_ai_0424_wukong, Epoch:6, Accuracy:0.5766666531562805
+Save state_dict successfully! Best epoch:6.
+Epoch:6,Accuracy:0.5769999623298645, bestEpoch:6, bestAccu:0.5769999623298645
+2024-10-24 09:27:35.785199 Epoch [007/030], Step [0001/0267], Total_loss: 0.1383
+2024-10-24 09:28:24.190740 Epoch [007/030], Step [0200/0267], Total_loss: 0.0603
+2024-10-24 09:28:41.235426 Epoch [007/030], Step [0267/0267], Total_loss: 0.2060
 val on: imagenet_ai_0508_adm
-ai accu: 0.4416666626930237
-nature accu:0.9933333396911621
-val on:imagenet_ai_0508_adm, Epoch:9, Accuracy:0.7175000309944153
+ai accu: 0.125
+nature accu:0.9983333349227905
+val on:imagenet_ai_0508_adm, Epoch:7, Accuracy:0.5616666674613953
 val on: imagenet_ai_0419_biggan
 ai accu: 0.14500001072883606
-nature accu:0.9916666746139526
-val on:imagenet_ai_0419_biggan, Epoch:9, Accuracy:0.5683333277702332
+nature accu:1.0
+val on:imagenet_ai_0419_biggan, Epoch:7, Accuracy:0.5724999904632568
 val on: imagenet_glide
-ai accu: 0.8383333683013916
-nature accu:0.9950000047683716
-val on:imagenet_glide, Epoch:9, Accuracy:0.9166666865348816
+ai accu: 0.3216666877269745
+nature accu:0.9983333349227905
+val on:imagenet_glide, Epoch:7, Accuracy:0.6600000262260437
 val on: imagenet_midjourney
-ai accu: 0.26333335041999817
-nature accu:0.9950000047683716
-val on:imagenet_midjourney, Epoch:9, Accuracy:0.6291666626930237
+ai accu: 0.05833333358168602
+nature accu:1.0
+val on:imagenet_midjourney, Epoch:7, Accuracy:0.5291666984558105
 val on: imagenet_ai_0419_sdv4
-ai accu: 0.574999988079071
-nature accu:0.9916666746139526
-val on:imagenet_ai_0419_sdv4, Epoch:9, Accuracy:0.7833333611488342
+ai accu: 0.273333340883255
+nature accu:0.9950000047683716
+val on:imagenet_ai_0419_sdv4, Epoch:7, Accuracy:0.6341666579246521
 val on: imagenet_ai_0424_sdv5
-ai accu: 0.5262500047683716
-nature accu:0.9962499737739563
-val on:imagenet_ai_0424_sdv5, Epoch:9, Accuracy:0.7612499594688416
+ai accu: 0.2524999976158142
+nature accu:0.9987499713897705
+val on:imagenet_ai_0424_sdv5, Epoch:7, Accuracy:0.6256250143051147
 val on: imagenet_ai_0419_vqdm
-ai accu: 0.3149999976158142
-nature accu:0.9916666746139526
-val on:imagenet_ai_0419_vqdm, Epoch:9, Accuracy:0.6533333659172058
+ai accu: 0.1550000011920929
+nature accu:1.0
+val on:imagenet_ai_0419_vqdm, Epoch:7, Accuracy:0.5774999856948853
 val on: imagenet_ai_0424_wukong
-ai accu: 0.4950000047683716
+ai accu: 0.23666667938232422
+nature accu:0.9983333349227905
+val on:imagenet_ai_0424_wukong, Epoch:7, Accuracy:0.6175000071525574
+Save state_dict successfully! Best epoch:7.
+Epoch:7,Accuracy:0.5983999967575073, bestEpoch:7, bestAccu:0.5983999967575073
+2024-10-24 09:29:43.535130 Epoch [008/030], Step [0001/0267], Total_loss: 0.1264
+2024-10-24 09:30:32.497999 Epoch [008/030], Step [0200/0267], Total_loss: 0.2021
+2024-10-24 09:30:50.571310 Epoch [008/030], Step [0267/0267], Total_loss: 0.0623
+val on: imagenet_ai_0508_adm
+ai accu: 0.31333333253860474
 nature accu:0.9883333444595337
-val on:imagenet_ai_0424_wukong, Epoch:9, Accuracy:0.7416666746139526
+val on:imagenet_ai_0508_adm, Epoch:8, Accuracy:0.6508333683013916
+val on: imagenet_ai_0419_biggan
+ai accu: 0.2616666853427887
+nature accu:0.9933333396911621
+val on:imagenet_ai_0419_biggan, Epoch:8, Accuracy:0.6274999976158142
+val on: imagenet_glide
+ai accu: 0.44333335757255554
+nature accu:0.9866666793823242
+val on:imagenet_glide, Epoch:8, Accuracy:0.7150000333786011
+val on: imagenet_midjourney
+ai accu: 0.12333333492279053
+nature accu:0.9833333492279053
+val on:imagenet_midjourney, Epoch:8, Accuracy:0.5533333420753479
+val on: imagenet_ai_0419_sdv4
+ai accu: 0.5600000023841858
+nature accu:0.9933333396911621
+val on:imagenet_ai_0419_sdv4, Epoch:8, Accuracy:0.7766667008399963
+val on: imagenet_ai_0424_sdv5
+ai accu: 0.5212500095367432
+nature accu:0.9862499833106995
+val on:imagenet_ai_0424_sdv5, Epoch:8, Accuracy:0.7537499666213989
+val on: imagenet_ai_0419_vqdm
+ai accu: 0.3466666638851166
+nature accu:0.9916666746139526
+val on:imagenet_ai_0419_vqdm, Epoch:8, Accuracy:0.6691666841506958
+val on: imagenet_ai_0424_wukong
+ai accu: 0.4333333373069763
+nature accu:0.9833333492279053
+val on:imagenet_ai_0424_wukong, Epoch:8, Accuracy:0.7083333730697632
+Save state_dict successfully! Best epoch:8.
+Epoch:8,Accuracy:0.6847000122070312, bestEpoch:8, bestAccu:0.6847000122070312
+2024-10-24 09:31:52.949355 Epoch [009/030], Step [0001/0267], Total_loss: 0.1654
+2024-10-24 09:32:42.535663 Epoch [009/030], Step [0200/0267], Total_loss: 0.0684
+2024-10-24 09:32:59.684361 Epoch [009/030], Step [0267/0267], Total_loss: 0.0108
+val on: imagenet_ai_0508_adm
+ai accu: 0.34166666865348816
+nature accu:0.9950000047683716
+val on:imagenet_ai_0508_adm, Epoch:9, Accuracy:0.6683333516120911
+val on: imagenet_ai_0419_biggan
+ai accu: 0.1599999964237213
+nature accu:0.9950000047683716
+val on:imagenet_ai_0419_biggan, Epoch:9, Accuracy:0.5774999856948853
+val on: imagenet_glide
+ai accu: 0.7599999904632568
+nature accu:0.9950000047683716
+val on:imagenet_glide, Epoch:9, Accuracy:0.8774999976158142
+val on: imagenet_midjourney
+ai accu: 0.19500000774860382
+nature accu:0.9916666746139526
+val on:imagenet_midjourney, Epoch:9, Accuracy:0.59333336353302
+val on: imagenet_ai_0419_sdv4
+ai accu: 0.5049999952316284
+nature accu:0.9950000047683716
+val on:imagenet_ai_0419_sdv4, Epoch:9, Accuracy:0.75
+val on: imagenet_ai_0424_sdv5
+ai accu: 0.45624998211860657
+nature accu:0.9962499737739563
+val on:imagenet_ai_0424_sdv5, Epoch:9, Accuracy:0.7262499928474426
+val on: imagenet_ai_0419_vqdm
+ai accu: 0.2566666603088379
+nature accu:0.9950000047683716
+val on:imagenet_ai_0419_vqdm, Epoch:9, Accuracy:0.6258333325386047
+val on: imagenet_ai_0424_wukong
+ai accu: 0.4283333420753479
+nature accu:0.9933333396911621
+val on:imagenet_ai_0424_wukong, Epoch:9, Accuracy:0.7108333706855774
 Save state_dict successfully! Best epoch:9.
-Epoch:9,Accuracy:0.7229999899864197, bestEpoch:9, bestAccu:0.7229999899864197
-2024-10-24 06:36:33.986198 Epoch [010/030], Step [0001/0267], Total_loss: 0.1217
-2024-10-24 06:37:23.737762 Epoch [010/030], Step [0200/0267], Total_loss: 0.0949
-2024-10-24 06:37:39.983834 Epoch [010/030], Step [0267/0267], Total_loss: 0.0245
+Epoch:9,Accuracy:0.6926000118255615, bestEpoch:9, bestAccu:0.6926000118255615
+2024-10-24 09:34:01.747290 Epoch [010/030], Step [0001/0267], Total_loss: 0.1386
+2024-10-24 09:34:51.125443 Epoch [010/030], Step [0200/0267], Total_loss: 0.1219
+2024-10-24 09:35:07.864391 Epoch [010/030], Step [0267/0267], Total_loss: 0.0396
 val on: imagenet_ai_0508_adm
-ai accu: 0.3516666889190674
-nature accu:0.9950000047683716
-val on:imagenet_ai_0508_adm, Epoch:10, Accuracy:0.6733333468437195
-val on: imagenet_ai_0419_biggan
-ai accu: 0.16333334147930145
-nature accu:0.9933333396911621
-val on:imagenet_ai_0419_biggan, Epoch:10, Accuracy:0.57833331823349
-val on: imagenet_glide
-ai accu: 0.7366666793823242
-nature accu:0.996666669845581
-val on:imagenet_glide, Epoch:10, Accuracy:0.8666666746139526
-val on: imagenet_midjourney
-ai accu: 0.24500000476837158
-nature accu:0.9916666746139526
-val on:imagenet_midjourney, Epoch:10, Accuracy:0.6183333396911621
-val on: imagenet_ai_0419_sdv4
-ai accu: 0.5900000333786011
-nature accu:0.9983333349227905
-val on:imagenet_ai_0419_sdv4, Epoch:10, Accuracy:0.7941666841506958
-val on: imagenet_ai_0424_sdv5
-ai accu: 0.5737499594688416
-nature accu:0.9937499761581421
-val on:imagenet_ai_0424_sdv5, Epoch:10, Accuracy:0.7837499976158142
-val on: imagenet_ai_0419_vqdm
-ai accu: 0.35333335399627686
-nature accu:0.996666669845581
-val on:imagenet_ai_0419_vqdm, Epoch:10, Accuracy:0.675000011920929
-val on: imagenet_ai_0424_wukong
-ai accu: 0.5633333325386047
-nature accu:0.9916666746139526
-val on:imagenet_ai_0424_wukong, Epoch:10, Accuracy:0.7775000333786011
-Save state_dict successfully! Best epoch:10.
-Epoch:10,Accuracy:0.7233999967575073, bestEpoch:10, bestAccu:0.7233999967575073
-2024-10-24 06:38:43.635191 Epoch [011/030], Step [0001/0267], Total_loss: 0.0134
-2024-10-24 06:39:33.386500 Epoch [011/030], Step [0200/0267], Total_loss: 0.0157
-2024-10-24 06:39:50.222496 Epoch [011/030], Step [0267/0267], Total_loss: 0.0235
-val on: imagenet_ai_0508_adm
-ai accu: 0.30666667222976685
-nature accu:0.9983333349227905
-val on:imagenet_ai_0508_adm, Epoch:11, Accuracy:0.6525000333786011
-val on: imagenet_ai_0419_biggan
-ai accu: 0.16833333671092987
-nature accu:0.996666669845581
-val on:imagenet_ai_0419_biggan, Epoch:11, Accuracy:0.5825000405311584
-val on: imagenet_glide
-ai accu: 0.6399999856948853
-nature accu:0.9983333349227905
-val on:imagenet_glide, Epoch:11, Accuracy:0.8191666603088379
-val on: imagenet_midjourney
-ai accu: 0.15000000596046448
-nature accu:0.9983333349227905
-val on:imagenet_midjourney, Epoch:11, Accuracy:0.5741666555404663
-val on: imagenet_ai_0419_sdv4
-ai accu: 0.57833331823349
-nature accu:0.9983333349227905
-val on:imagenet_ai_0419_sdv4, Epoch:11, Accuracy:0.7883333563804626
-val on: imagenet_ai_0424_sdv5
-ai accu: 0.5762500166893005
-nature accu:0.9950000047683716
-val on:imagenet_ai_0424_sdv5, Epoch:11, Accuracy:0.7856249809265137
-val on: imagenet_ai_0419_vqdm
-ai accu: 0.35333335399627686
-nature accu:0.996666669845581
-val on:imagenet_ai_0419_vqdm, Epoch:11, Accuracy:0.675000011920929
-val on: imagenet_ai_0424_wukong
-ai accu: 0.5716666579246521
-nature accu:0.9933333396911621
-val on:imagenet_ai_0424_wukong, Epoch:11, Accuracy:0.7825000286102295
-Epoch:11,Accuracy:0.710599958896637, bestEpoch:10, bestAccu:0.7233999967575073
-2024-10-24 06:40:53.072064 Epoch [012/030], Step [0001/0267], Total_loss: 0.0098
-2024-10-24 06:41:42.223040 Epoch [012/030], Step [0200/0267], Total_loss: 0.0663
-2024-10-24 06:41:59.164657 Epoch [012/030], Step [0267/0267], Total_loss: 0.0772
-val on: imagenet_ai_0508_adm
-ai accu: 0.42166668176651
-nature accu:0.9950000047683716
-val on:imagenet_ai_0508_adm, Epoch:12, Accuracy:0.7083333730697632
-val on: imagenet_ai_0419_biggan
-ai accu: 0.1783333420753479
-nature accu:0.9933333396911621
-val on:imagenet_ai_0419_biggan, Epoch:12, Accuracy:0.5858333706855774
-val on: imagenet_glide
-ai accu: 0.7750000357627869
-nature accu:0.9933333396911621
-val on:imagenet_glide, Epoch:12, Accuracy:0.8841667175292969
-val on: imagenet_midjourney
-ai accu: 0.3050000071525574
-nature accu:0.9916666746139526
-val on:imagenet_midjourney, Epoch:12, Accuracy:0.6483333706855774
-val on: imagenet_ai_0419_sdv4
-ai accu: 0.6783333420753479
-nature accu:0.9983333349227905
-val on:imagenet_ai_0419_sdv4, Epoch:12, Accuracy:0.8383333683013916
-val on: imagenet_ai_0424_sdv5
-ai accu: 0.6499999761581421
-nature accu:0.9925000071525574
-val on:imagenet_ai_0424_sdv5, Epoch:12, Accuracy:0.8212499618530273
-val on: imagenet_ai_0419_vqdm
-ai accu: 0.4816666841506958
-nature accu:0.9950000047683716
-val on:imagenet_ai_0419_vqdm, Epoch:12, Accuracy:0.7383333444595337
-val on: imagenet_ai_0424_wukong
-ai accu: 0.6500000357627869
-nature accu:0.9900000095367432
-val on:imagenet_ai_0424_wukong, Epoch:12, Accuracy:0.8199999928474426
-Save state_dict successfully! Best epoch:12.
-Epoch:12,Accuracy:0.7581999897956848, bestEpoch:12, bestAccu:0.7581999897956848
-2024-10-24 06:43:01.382941 Epoch [013/030], Step [0001/0267], Total_loss: 0.0270
-2024-10-24 06:43:50.563985 Epoch [013/030], Step [0200/0267], Total_loss: 0.0104
-2024-10-24 06:44:07.286565 Epoch [013/030], Step [0267/0267], Total_loss: 0.0376
-val on: imagenet_ai_0508_adm
-ai accu: 0.5816667079925537
-nature accu:0.9933333396911621
-val on:imagenet_ai_0508_adm, Epoch:13, Accuracy:0.7875000238418579
+ai accu: 0.3583333492279053
+nature accu:1.0
+val on:imagenet_ai_0508_adm, Epoch:10, Accuracy:0.6791666746139526
 val on: imagenet_ai_0419_biggan
 ai accu: 0.2016666680574417
-nature accu:0.9900000095367432
-val on:imagenet_ai_0419_biggan, Epoch:13, Accuracy:0.5958333611488342
-val on: imagenet_glide
-ai accu: 0.871666669845581
 nature accu:0.996666669845581
-val on:imagenet_glide, Epoch:13, Accuracy:0.934166669845581
-val on: imagenet_midjourney
-ai accu: 0.3683333396911621
-nature accu:0.9883333444595337
-val on:imagenet_midjourney, Epoch:13, Accuracy:0.6783333420753479
-val on: imagenet_ai_0419_sdv4
-ai accu: 0.7116667032241821
-nature accu:0.9816666841506958
-val on:imagenet_ai_0419_sdv4, Epoch:13, Accuracy:0.846666693687439
-val on: imagenet_ai_0424_sdv5
-ai accu: 0.7087500095367432
-nature accu:0.9912499785423279
-val on:imagenet_ai_0424_sdv5, Epoch:13, Accuracy:0.8499999642372131
-val on: imagenet_ai_0419_vqdm
-ai accu: 0.4833333492279053
-nature accu:0.9916666746139526
-val on:imagenet_ai_0419_vqdm, Epoch:13, Accuracy:0.737500011920929
-val on: imagenet_ai_0424_wukong
-ai accu: 0.7066667079925537
-nature accu:0.9916666746139526
-val on:imagenet_ai_0424_wukong, Epoch:13, Accuracy:0.8491666913032532
-Save state_dict successfully! Best epoch:13.
-Epoch:13,Accuracy:0.7874999642372131, bestEpoch:13, bestAccu:0.7874999642372131
-2024-10-24 06:45:09.173049 Epoch [014/030], Step [0001/0267], Total_loss: 0.1377
-2024-10-24 06:45:58.341307 Epoch [014/030], Step [0200/0267], Total_loss: 0.0480
-2024-10-24 06:46:15.306824 Epoch [014/030], Step [0267/0267], Total_loss: 0.0289
-val on: imagenet_ai_0508_adm
-ai accu: 0.5016666650772095
-nature accu:0.996666669845581
-val on:imagenet_ai_0508_adm, Epoch:14, Accuracy:0.7491666674613953
-val on: imagenet_ai_0419_biggan
-ai accu: 0.23666667938232422
-nature accu:0.9900000095367432
-val on:imagenet_ai_0419_biggan, Epoch:14, Accuracy:0.6133333444595337
+val on:imagenet_ai_0419_biggan, Epoch:10, Accuracy:0.5991666913032532
 val on: imagenet_glide
-ai accu: 0.8383333683013916
-nature accu:0.9950000047683716
-val on:imagenet_glide, Epoch:14, Accuracy:0.9166666865348816
-val on: imagenet_midjourney
-ai accu: 0.28333333134651184
-nature accu:0.9916666746139526
-val on:imagenet_midjourney, Epoch:14, Accuracy:0.637499988079071
-val on: imagenet_ai_0419_sdv4
-ai accu: 0.7549999952316284
-nature accu:0.9983333349227905
-val on:imagenet_ai_0419_sdv4, Epoch:14, Accuracy:0.8766666650772095
-val on: imagenet_ai_0424_sdv5
-ai accu: 0.7274999618530273
-nature accu:0.9925000071525574
-val on:imagenet_ai_0424_sdv5, Epoch:14, Accuracy:0.85999995470047
-val on: imagenet_ai_0419_vqdm
-ai accu: 0.5266667008399963
-nature accu:0.996666669845581
-val on:imagenet_ai_0419_vqdm, Epoch:14, Accuracy:0.7616666555404663
-val on: imagenet_ai_0424_wukong
-ai accu: 0.7350000143051147
-nature accu:0.9883333444595337
-val on:imagenet_ai_0424_wukong, Epoch:14, Accuracy:0.8616666793823242
-Save state_dict successfully! Best epoch:14.
-Epoch:14,Accuracy:0.7875999808311462, bestEpoch:14, bestAccu:0.7875999808311462
-2024-10-24 06:47:17.641613 Epoch [015/030], Step [0001/0267], Total_loss: 0.0176
-2024-10-24 06:48:06.799752 Epoch [015/030], Step [0200/0267], Total_loss: 0.0092
-2024-10-24 06:48:23.911162 Epoch [015/030], Step [0267/0267], Total_loss: 0.0896
-val on: imagenet_ai_0508_adm
-ai accu: 0.5216667056083679
-nature accu:0.9900000095367432
-val on:imagenet_ai_0508_adm, Epoch:15, Accuracy:0.7558333277702332
-val on: imagenet_ai_0419_biggan
-ai accu: 0.23333333432674408
-nature accu:0.9933333396911621
-val on:imagenet_ai_0419_biggan, Epoch:15, Accuracy:0.6133333444595337
-val on: imagenet_glide
-ai accu: 0.79666668176651
-nature accu:0.9916666746139526
-val on:imagenet_glide, Epoch:15, Accuracy:0.8941667079925537
-val on: imagenet_midjourney
-ai accu: 0.35500001907348633
-nature accu:0.9933333396911621
-val on:imagenet_midjourney, Epoch:15, Accuracy:0.6741666793823242
-val on: imagenet_ai_0419_sdv4
-ai accu: 0.7700000405311584
-nature accu:0.9950000047683716
-val on:imagenet_ai_0419_sdv4, Epoch:15, Accuracy:0.8824999928474426
-val on: imagenet_ai_0424_sdv5
-ai accu: 0.7425000071525574
-nature accu:0.9962499737739563
-val on:imagenet_ai_0424_sdv5, Epoch:15, Accuracy:0.8693749904632568
-val on: imagenet_ai_0419_vqdm
-ai accu: 0.5416666865348816
-nature accu:0.9983333349227905
-val on:imagenet_ai_0419_vqdm, Epoch:15, Accuracy:0.7700000405311584
-val on: imagenet_ai_0424_wukong
 ai accu: 0.7366666793823242
-nature accu:0.9916666746139526
-val on:imagenet_ai_0424_wukong, Epoch:15, Accuracy:0.8641666769981384
-Save state_dict successfully! Best epoch:15.
-Epoch:15,Accuracy:0.7935999631881714, bestEpoch:15, bestAccu:0.7935999631881714
-2024-10-24 06:49:25.862699 Epoch [016/030], Step [0001/0267], Total_loss: 0.0300
-2024-10-24 06:50:15.049291 Epoch [016/030], Step [0200/0267], Total_loss: 0.0272
-2024-10-24 06:50:32.368912 Epoch [016/030], Step [0267/0267], Total_loss: 0.0271
-val on: imagenet_ai_0508_adm
-ai accu: 0.40666666626930237
-nature accu:0.9900000095367432
-val on:imagenet_ai_0508_adm, Epoch:16, Accuracy:0.6983333230018616
-val on: imagenet_ai_0419_biggan
-ai accu: 0.1666666716337204
-nature accu:0.9950000047683716
-val on:imagenet_ai_0419_biggan, Epoch:16, Accuracy:0.580833375453949
-val on: imagenet_glide
-ai accu: 0.7666667103767395
-nature accu:0.9933333396911621
-val on:imagenet_glide, Epoch:16, Accuracy:0.8799999952316284
+nature accu:1.0
+val on:imagenet_glide, Epoch:10, Accuracy:0.8683333396911621
 val on: imagenet_midjourney
-ai accu: 0.22500000894069672
-nature accu:0.996666669845581
-val on:imagenet_midjourney, Epoch:16, Accuracy:0.6108333468437195
-val on: imagenet_ai_0419_sdv4
-ai accu: 0.6916666626930237
-nature accu:0.996666669845581
-val on:imagenet_ai_0419_sdv4, Epoch:16, Accuracy:0.8441666960716248
-val on: imagenet_ai_0424_sdv5
-ai accu: 0.6787499785423279
-nature accu:0.9962499737739563
-val on:imagenet_ai_0424_sdv5, Epoch:16, Accuracy:0.8374999761581421
-val on: imagenet_ai_0419_vqdm
-ai accu: 0.4283333420753479
-nature accu:0.9983333349227905
-val on:imagenet_ai_0419_vqdm, Epoch:16, Accuracy:0.7133333683013916
-val on: imagenet_ai_0424_wukong
-ai accu: 0.6533333659172058
-nature accu:0.9933333396911621
-val on:imagenet_ai_0424_wukong, Epoch:16, Accuracy:0.8233333826065063
-Epoch:16,Accuracy:0.7520999908447266, bestEpoch:15, bestAccu:0.7935999631881714
-2024-10-24 06:51:33.867261 Epoch [017/030], Step [0001/0267], Total_loss: 0.0702
-2024-10-24 06:52:23.377774 Epoch [017/030], Step [0200/0267], Total_loss: 0.0994
-2024-10-24 06:52:40.094833 Epoch [017/030], Step [0267/0267], Total_loss: 0.1994
-val on: imagenet_ai_0508_adm
-ai accu: 0.6766666769981384
-nature accu:0.9733333587646484
-val on:imagenet_ai_0508_adm, Epoch:17, Accuracy:0.8250000476837158
-val on: imagenet_ai_0419_biggan
-ai accu: 0.3449999988079071
-nature accu:0.9816666841506958
-val on:imagenet_ai_0419_biggan, Epoch:17, Accuracy:0.6633333563804626
-val on: imagenet_glide
-ai accu: 0.8733333349227905
-nature accu:0.9783333539962769
-val on:imagenet_glide, Epoch:17, Accuracy:0.9258333444595337
-val on: imagenet_midjourney
-ai accu: 0.4033333361148834
-nature accu:0.9733333587646484
-val on:imagenet_midjourney, Epoch:17, Accuracy:0.6883333325386047
-val on: imagenet_ai_0419_sdv4
-ai accu: 0.8650000095367432
-nature accu:0.971666693687439
-val on:imagenet_ai_0419_sdv4, Epoch:17, Accuracy:0.9183333516120911
-val on: imagenet_ai_0424_sdv5
-ai accu: 0.8187499642372131
-nature accu:0.9799999594688416
-val on:imagenet_ai_0424_sdv5, Epoch:17, Accuracy:0.8993749618530273
-val on: imagenet_ai_0419_vqdm
-ai accu: 0.6600000262260437
-nature accu:0.9850000143051147
-val on:imagenet_ai_0419_vqdm, Epoch:17, Accuracy:0.8224999904632568
-val on: imagenet_ai_0424_wukong
-ai accu: 0.8450000286102295
-nature accu:0.9833333492279053
-val on:imagenet_ai_0424_wukong, Epoch:17, Accuracy:0.9141666889190674
-Save state_dict successfully! Best epoch:17.
-Epoch:17,Accuracy:0.8348000049591064, bestEpoch:17, bestAccu:0.8348000049591064
-2024-10-24 06:53:41.289644 Epoch [018/030], Step [0001/0267], Total_loss: 0.0240
-2024-10-24 06:54:30.777593 Epoch [018/030], Step [0200/0267], Total_loss: 0.0289
-2024-10-24 06:54:46.957416 Epoch [018/030], Step [0267/0267], Total_loss: 0.0153
-val on: imagenet_ai_0508_adm
-ai accu: 0.5300000309944153
-nature accu:0.996666669845581
-val on:imagenet_ai_0508_adm, Epoch:18, Accuracy:0.7633333802223206
-val on: imagenet_ai_0419_biggan
-ai accu: 0.2666666805744171
-nature accu:0.9933333396911621
-val on:imagenet_ai_0419_biggan, Epoch:18, Accuracy:0.6299999952316284
-val on: imagenet_glide
-ai accu: 0.8100000023841858
-nature accu:0.9950000047683716
-val on:imagenet_glide, Epoch:18, Accuracy:0.9025000333786011
-val on: imagenet_midjourney
-ai accu: 0.3583333492279053
-nature accu:0.9900000095367432
-val on:imagenet_midjourney, Epoch:18, Accuracy:0.6741666793823242
-val on: imagenet_ai_0419_sdv4
-ai accu: 0.7733333706855774
-nature accu:0.996666669845581
-val on:imagenet_ai_0419_sdv4, Epoch:18, Accuracy:0.8850000500679016
-val on: imagenet_ai_0424_sdv5
-ai accu: 0.7949999570846558
-nature accu:0.9937499761581421
-val on:imagenet_ai_0424_sdv5, Epoch:18, Accuracy:0.8943749666213989
-val on: imagenet_ai_0419_vqdm
-ai accu: 0.5516666769981384
-nature accu:0.996666669845581
-val on:imagenet_ai_0419_vqdm, Epoch:18, Accuracy:0.7741667032241821
-val on: imagenet_ai_0424_wukong
-ai accu: 0.7483333349227905
-nature accu:0.996666669845581
-val on:imagenet_ai_0424_wukong, Epoch:18, Accuracy:0.8725000023841858
-Epoch:18,Accuracy:0.8032999634742737, bestEpoch:17, bestAccu:0.8348000049591064
-2024-10-24 06:55:48.191406 Epoch [019/030], Step [0001/0267], Total_loss: 0.0157
-2024-10-24 06:56:38.449605 Epoch [019/030], Step [0200/0267], Total_loss: 0.0139
-2024-10-24 06:56:55.086047 Epoch [019/030], Step [0267/0267], Total_loss: 0.0399
-val on: imagenet_ai_0508_adm
-ai accu: 0.503333330154419
-nature accu:0.9916666746139526
-val on:imagenet_ai_0508_adm, Epoch:19, Accuracy:0.7475000023841858
-val on: imagenet_ai_0419_biggan
-ai accu: 0.24500000476837158
+ai accu: 0.20666667819023132
 nature accu:0.9883333444595337
-val on:imagenet_ai_0419_biggan, Epoch:19, Accuracy:0.6166666746139526
-val on: imagenet_glide
-ai accu: 0.7950000166893005
-nature accu:0.9950000047683716
-val on:imagenet_glide, Epoch:19, Accuracy:0.8950000405311584
-val on: imagenet_midjourney
-ai accu: 0.3199999928474426
-nature accu:0.9916666746139526
-val on:imagenet_midjourney, Epoch:19, Accuracy:0.65583336353302
+val on:imagenet_midjourney, Epoch:10, Accuracy:0.5975000262260437
 val on: imagenet_ai_0419_sdv4
-ai accu: 0.7916666865348816
-nature accu:0.9916666746139526
-val on:imagenet_ai_0419_sdv4, Epoch:19, Accuracy:0.8916667103767395
+ai accu: 0.57833331823349
+nature accu:0.996666669845581
+val on:imagenet_ai_0419_sdv4, Epoch:10, Accuracy:0.7875000238418579
 val on: imagenet_ai_0424_sdv5
-ai accu: 0.8299999833106995
-nature accu:0.9887499809265137
-val on:imagenet_ai_0424_sdv5, Epoch:19, Accuracy:0.9093749523162842
+ai accu: 0.5737499594688416
+nature accu:0.9962499737739563
+val on:imagenet_ai_0424_sdv5, Epoch:10, Accuracy:0.7849999666213989
 val on: imagenet_ai_0419_vqdm
-ai accu: 0.6083333492279053
-nature accu:0.9933333396911621
-val on:imagenet_ai_0419_vqdm, Epoch:19, Accuracy:0.8008333444595337
+ai accu: 0.3333333432674408
+nature accu:0.9983333349227905
+val on:imagenet_ai_0419_vqdm, Epoch:10, Accuracy:0.6658333539962769
 val on: imagenet_ai_0424_wukong
-ai accu: 0.7933333516120911
-nature accu:0.9916666746139526
-val on:imagenet_ai_0424_wukong, Epoch:19, Accuracy:0.8925000429153442
-Epoch:19,Accuracy:0.8054999709129333, bestEpoch:17, bestAccu:0.8348000049591064
-2024-10-24 06:57:56.160769 Epoch [020/030], Step [0001/0267], Total_loss: 0.0394
-2024-10-24 06:58:45.838983 Epoch [020/030], Step [0200/0267], Total_loss: 0.0236
-2024-10-24 06:59:02.359390 Epoch [020/030], Step [0267/0267], Total_loss: 0.0462
+ai accu: 0.5383333563804626
+nature accu:0.9900000095367432
+val on:imagenet_ai_0424_wukong, Epoch:10, Accuracy:0.7641667127609253
+Save state_dict successfully! Best epoch:10.
+Epoch:10,Accuracy:0.7209999561309814, bestEpoch:10, bestAccu:0.7209999561309814
+2024-10-24 09:36:09.935062 Epoch [011/030], Step [0001/0267], Total_loss: 0.0139
+2024-10-24 09:37:00.489569 Epoch [011/030], Step [0200/0267], Total_loss: 0.0397
+2024-10-24 09:37:17.626656 Epoch [011/030], Step [0267/0267], Total_loss: 0.0308
 val on: imagenet_ai_0508_adm
+ai accu: 0.16166667640209198
+nature accu:0.9983333349227905
+val on:imagenet_ai_0508_adm, Epoch:11, Accuracy:0.5800000429153442
+val on: imagenet_ai_0419_biggan
+ai accu: 0.17166666686534882
+nature accu:0.9950000047683716
+val on:imagenet_ai_0419_biggan, Epoch:11, Accuracy:0.5833333730697632
+val on: imagenet_glide
+ai accu: 0.34833332896232605
+nature accu:0.9983333349227905
+val on:imagenet_glide, Epoch:11, Accuracy:0.6733333468437195
+val on: imagenet_midjourney
+ai accu: 0.08666666597127914
+nature accu:1.0
+val on:imagenet_midjourney, Epoch:11, Accuracy:0.5433333516120911
+val on: imagenet_ai_0419_sdv4
+ai accu: 0.5116666555404663
+nature accu:0.9983333349227905
+val on:imagenet_ai_0419_sdv4, Epoch:11, Accuracy:0.7549999952316284
+val on: imagenet_ai_0424_sdv5
+ai accu: 0.48249998688697815
+nature accu:0.9975000023841858
+val on:imagenet_ai_0424_sdv5, Epoch:11, Accuracy:0.7400000095367432
+val on: imagenet_ai_0419_vqdm
+ai accu: 0.2800000011920929
+nature accu:0.996666669845581
+val on:imagenet_ai_0419_vqdm, Epoch:11, Accuracy:0.6383333206176758
+val on: imagenet_ai_0424_wukong
+ai accu: 0.4516666829586029
+nature accu:0.9983333349227905
+val on:imagenet_ai_0424_wukong, Epoch:11, Accuracy:0.7250000238418579
+Epoch:11,Accuracy:0.6581999659538269, bestEpoch:10, bestAccu:0.7209999561309814
+2024-10-24 09:38:19.837263 Epoch [012/030], Step [0001/0267], Total_loss: 0.0124
+2024-10-24 09:39:09.076409 Epoch [012/030], Step [0200/0267], Total_loss: 0.0480
+2024-10-24 09:39:25.365834 Epoch [012/030], Step [0267/0267], Total_loss: 0.0538
+val on: imagenet_ai_0508_adm
+ai accu: 0.54666668176651
+nature accu:0.9916666746139526
+val on:imagenet_ai_0508_adm, Epoch:12, Accuracy:0.7691667079925537
+val on: imagenet_ai_0419_biggan
+ai accu: 0.2983333468437195
+nature accu:0.9883333444595337
+val on:imagenet_ai_0419_biggan, Epoch:12, Accuracy:0.643333375453949
+val on: imagenet_glide
+ai accu: 0.8300000429153442
+nature accu:0.9883333444595337
+val on:imagenet_glide, Epoch:12, Accuracy:0.909166693687439
+val on: imagenet_midjourney
+ai accu: 0.3733333349227905
+nature accu:0.9816666841506958
+val on:imagenet_midjourney, Epoch:12, Accuracy:0.6775000095367432
+val on: imagenet_ai_0419_sdv4
+ai accu: 0.7483333349227905
+nature accu:0.9883333444595337
+val on:imagenet_ai_0419_sdv4, Epoch:12, Accuracy:0.8683333396911621
+val on: imagenet_ai_0424_sdv5
+ai accu: 0.7324999570846558
+nature accu:0.9824999570846558
+val on:imagenet_ai_0424_sdv5, Epoch:12, Accuracy:0.8574999570846558
+val on: imagenet_ai_0419_vqdm
+ai accu: 0.5333333611488342
+nature accu:0.9933333396911621
+val on:imagenet_ai_0419_vqdm, Epoch:12, Accuracy:0.7633333802223206
+val on: imagenet_ai_0424_wukong
+ai accu: 0.6916666626930237
+nature accu:0.9833333492279053
+val on:imagenet_ai_0424_wukong, Epoch:12, Accuracy:0.8375000357627869
+Save state_dict successfully! Best epoch:12.
+Epoch:12,Accuracy:0.79339998960495, bestEpoch:12, bestAccu:0.79339998960495
+2024-10-24 09:40:27.808392 Epoch [013/030], Step [0001/0267], Total_loss: 0.0314
+2024-10-24 09:41:17.576897 Epoch [013/030], Step [0200/0267], Total_loss: 0.0177
+2024-10-24 09:41:33.909788 Epoch [013/030], Step [0267/0267], Total_loss: 0.0765
+val on: imagenet_ai_0508_adm
+ai accu: 0.273333340883255
+nature accu:0.9883333444595337
+val on:imagenet_ai_0508_adm, Epoch:13, Accuracy:0.6308333277702332
+val on: imagenet_ai_0419_biggan
+ai accu: 0.1966666728258133
+nature accu:0.9916666746139526
+val on:imagenet_ai_0419_biggan, Epoch:13, Accuracy:0.5941666960716248
+val on: imagenet_glide
+ai accu: 0.5766666531562805
+nature accu:0.9983333349227905
+val on:imagenet_glide, Epoch:13, Accuracy:0.7875000238418579
+val on: imagenet_midjourney
+ai accu: 0.16833333671092987
+nature accu:0.996666669845581
+val on:imagenet_midjourney, Epoch:13, Accuracy:0.5825000405311584
+val on: imagenet_ai_0419_sdv4
 ai accu: 0.5766666531562805
 nature accu:0.9916666746139526
-val on:imagenet_ai_0508_adm, Epoch:20, Accuracy:0.784166693687439
-val on: imagenet_ai_0419_biggan
-ai accu: 0.3283333480358124
-nature accu:0.9883333444595337
-val on:imagenet_ai_0419_biggan, Epoch:20, Accuracy:0.6583333611488342
-val on: imagenet_glide
-ai accu: 0.8016666769981384
-nature accu:0.9833333492279053
-val on:imagenet_glide, Epoch:20, Accuracy:0.8925000429153442
-val on: imagenet_midjourney
-ai accu: 0.3199999928474426
-nature accu:0.9750000238418579
-val on:imagenet_midjourney, Epoch:20, Accuracy:0.6475000381469727
-val on: imagenet_ai_0419_sdv4
-ai accu: 0.8550000190734863
-nature accu:0.9766666889190674
-val on:imagenet_ai_0419_sdv4, Epoch:20, Accuracy:0.9158333539962769
+val on:imagenet_ai_0419_sdv4, Epoch:13, Accuracy:0.784166693687439
 val on: imagenet_ai_0424_sdv5
-ai accu: 0.8574999570846558
-nature accu:0.9799999594688416
-val on:imagenet_ai_0424_sdv5, Epoch:20, Accuracy:0.918749988079071
+ai accu: 0.550000011920929
+nature accu:0.9987499713897705
+val on:imagenet_ai_0424_sdv5, Epoch:13, Accuracy:0.7743749618530273
 val on: imagenet_ai_0419_vqdm
-ai accu: 0.6550000309944153
-nature accu:0.9916666746139526
-val on:imagenet_ai_0419_vqdm, Epoch:20, Accuracy:0.8233333826065063
-val on: imagenet_ai_0424_wukong
-ai accu: 0.8666666746139526
-nature accu:0.9850000143051147
-val on:imagenet_ai_0424_wukong, Epoch:20, Accuracy:0.9258333444595337
-Epoch:20,Accuracy:0.8246999979019165, bestEpoch:17, bestAccu:0.8348000049591064
-2024-10-24 07:00:03.827662 Epoch [021/030], Step [0001/0267], Total_loss: 0.0388
-2024-10-24 07:00:54.329751 Epoch [021/030], Step [0200/0267], Total_loss: 0.0086
-2024-10-24 07:01:10.469712 Epoch [021/030], Step [0267/0267], Total_loss: 0.0141
-val on: imagenet_ai_0508_adm
-ai accu: 0.4533333480358124
-nature accu:1.0
-val on:imagenet_ai_0508_adm, Epoch:21, Accuracy:0.7266666889190674
-val on: imagenet_ai_0419_biggan
-ai accu: 0.21000000834465027
-nature accu:0.9983333349227905
-val on:imagenet_ai_0419_biggan, Epoch:21, Accuracy:0.6041666865348816
-val on: imagenet_glide
-ai accu: 0.8483333587646484
-nature accu:0.9983333349227905
-val on:imagenet_glide, Epoch:21, Accuracy:0.9233333468437195
-val on: imagenet_midjourney
-ai accu: 0.2600000202655792
-nature accu:0.9933333396911621
-val on:imagenet_midjourney, Epoch:21, Accuracy:0.6266666650772095
-val on: imagenet_ai_0419_sdv4
-ai accu: 0.8083333373069763
-nature accu:0.9983333349227905
-val on:imagenet_ai_0419_sdv4, Epoch:21, Accuracy:0.9033333659172058
-val on: imagenet_ai_0424_sdv5
-ai accu: 0.7799999713897705
-nature accu:0.9975000023841858
-val on:imagenet_ai_0424_sdv5, Epoch:21, Accuracy:0.8887499570846558
-val on: imagenet_ai_0419_vqdm
-ai accu: 0.5400000214576721
-nature accu:0.9950000047683716
-val on:imagenet_ai_0419_vqdm, Epoch:21, Accuracy:0.7675000429153442
-val on: imagenet_ai_0424_wukong
-ai accu: 0.7850000262260437
-nature accu:0.9883333444595337
-val on:imagenet_ai_0424_wukong, Epoch:21, Accuracy:0.8866667151451111
-Epoch:21,Accuracy:0.7947999835014343, bestEpoch:17, bestAccu:0.8348000049591064
-2024-10-24 07:02:11.520698 Epoch [022/030], Step [0001/0267], Total_loss: 0.0069
-2024-10-24 07:03:01.593392 Epoch [022/030], Step [0200/0267], Total_loss: 0.0645
-2024-10-24 07:03:18.119677 Epoch [022/030], Step [0267/0267], Total_loss: 0.0613
-val on: imagenet_ai_0508_adm
-ai accu: 0.6100000143051147
+ai accu: 0.29666668176651
 nature accu:0.996666669845581
-val on:imagenet_ai_0508_adm, Epoch:22, Accuracy:0.8033333420753479
-val on: imagenet_ai_0419_biggan
-ai accu: 0.22833333909511566
-nature accu:0.9933333396911621
-val on:imagenet_ai_0419_biggan, Epoch:22, Accuracy:0.6108333468437195
-val on: imagenet_glide
-ai accu: 0.8816666603088379
-nature accu:0.9950000047683716
-val on:imagenet_glide, Epoch:22, Accuracy:0.9383333325386047
-val on: imagenet_midjourney
-ai accu: 0.39000001549720764
-nature accu:0.9850000143051147
-val on:imagenet_midjourney, Epoch:22, Accuracy:0.6875
-val on: imagenet_ai_0419_sdv4
-ai accu: 0.8016666769981384
-nature accu:0.9900000095367432
-val on:imagenet_ai_0419_sdv4, Epoch:22, Accuracy:0.8958333730697632
-val on: imagenet_ai_0424_sdv5
-ai accu: 0.7724999785423279
-nature accu:0.9925000071525574
-val on:imagenet_ai_0424_sdv5, Epoch:22, Accuracy:0.8824999928474426
-val on: imagenet_ai_0419_vqdm
-ai accu: 0.5533333420753479
-nature accu:1.0
-val on:imagenet_ai_0419_vqdm, Epoch:22, Accuracy:0.7766667008399963
+val on:imagenet_ai_0419_vqdm, Epoch:13, Accuracy:0.6466667056083679
 val on: imagenet_ai_0424_wukong
-ai accu: 0.7783333659172058
-nature accu:0.9883333444595337
-val on:imagenet_ai_0424_wukong, Epoch:22, Accuracy:0.8833333253860474
-Epoch:22,Accuracy:0.8126999735832214, bestEpoch:17, bestAccu:0.8348000049591064
-2024-10-24 07:04:19.715359 Epoch [023/030], Step [0001/0267], Total_loss: 0.0221
-2024-10-24 07:05:09.699715 Epoch [023/030], Step [0200/0267], Total_loss: 0.0292
-2024-10-24 07:05:25.921707 Epoch [023/030], Step [0267/0267], Total_loss: 0.0055
+ai accu: 0.5149999856948853
+nature accu:0.996666669845581
+val on:imagenet_ai_0424_wukong, Epoch:13, Accuracy:0.7558333277702332
+Epoch:13,Accuracy:0.6976999640464783, bestEpoch:12, bestAccu:0.79339998960495
+2024-10-24 09:42:36.054658 Epoch [014/030], Step [0001/0267], Total_loss: 0.1370
+2024-10-24 09:43:26.772191 Epoch [014/030], Step [0200/0267], Total_loss: 0.0209
+2024-10-24 09:43:42.794793 Epoch [014/030], Step [0267/0267], Total_loss: 0.0216
 val on: imagenet_ai_0508_adm
-ai accu: 0.4583333432674408
-nature accu:1.0
-val on:imagenet_ai_0508_adm, Epoch:23, Accuracy:0.7291666865348816
+ai accu: 0.48500001430511475
+nature accu:0.996666669845581
+val on:imagenet_ai_0508_adm, Epoch:14, Accuracy:0.7408333420753479
 val on: imagenet_ai_0419_biggan
-ai accu: 0.20499999821186066
-nature accu:0.9950000047683716
-val on:imagenet_ai_0419_biggan, Epoch:23, Accuracy:0.6000000238418579
+ai accu: 0.3083333373069763
+nature accu:0.9916666746139526
+val on:imagenet_ai_0419_biggan, Epoch:14, Accuracy:0.6500000357627869
 val on: imagenet_glide
-ai accu: 0.8183333277702332
+ai accu: 0.7450000047683716
+nature accu:0.9883333444595337
+val on:imagenet_glide, Epoch:14, Accuracy:0.8666666746139526
+val on: imagenet_midjourney
+ai accu: 0.2566666603088379
+nature accu:0.9916666746139526
+val on:imagenet_midjourney, Epoch:14, Accuracy:0.6241666674613953
+val on: imagenet_ai_0419_sdv4
+ai accu: 0.75
+nature accu:0.9950000047683716
+val on:imagenet_ai_0419_sdv4, Epoch:14, Accuracy:0.8725000023841858
+val on: imagenet_ai_0424_sdv5
+ai accu: 0.78125
+nature accu:0.9899999499320984
+val on:imagenet_ai_0424_sdv5, Epoch:14, Accuracy:0.8856250047683716
+val on: imagenet_ai_0419_vqdm
+ai accu: 0.5316666960716248
+nature accu:0.996666669845581
+val on:imagenet_ai_0419_vqdm, Epoch:14, Accuracy:0.7641667127609253
+val on: imagenet_ai_0424_wukong
+ai accu: 0.721666693687439
+nature accu:0.9916666746139526
+val on:imagenet_ai_0424_wukong, Epoch:14, Accuracy:0.8566666841506958
+Epoch:14,Accuracy:0.7866999506950378, bestEpoch:12, bestAccu:0.79339998960495
+2024-10-24 09:44:44.941936 Epoch [015/030], Step [0001/0267], Total_loss: 0.0131
+2024-10-24 09:45:34.456854 Epoch [015/030], Step [0200/0267], Total_loss: 0.0084
+2024-10-24 09:45:50.593027 Epoch [015/030], Step [0267/0267], Total_loss: 0.0787
+val on: imagenet_ai_0508_adm
+ai accu: 0.5383333563804626
+nature accu:0.9916666746139526
+val on:imagenet_ai_0508_adm, Epoch:15, Accuracy:0.76500004529953
+val on: imagenet_ai_0419_biggan
+ai accu: 0.33500000834465027
+nature accu:0.9916666746139526
+val on:imagenet_ai_0419_biggan, Epoch:15, Accuracy:0.6633333563804626
+val on: imagenet_glide
+ai accu: 0.7700000405311584
+nature accu:0.996666669845581
+val on:imagenet_glide, Epoch:15, Accuracy:0.8833333253860474
+val on: imagenet_midjourney
+ai accu: 0.3216666877269745
+nature accu:0.9833333492279053
+val on:imagenet_midjourney, Epoch:15, Accuracy:0.6525000333786011
+val on: imagenet_ai_0419_sdv4
+ai accu: 0.76500004529953
+nature accu:0.996666669845581
+val on:imagenet_ai_0419_sdv4, Epoch:15, Accuracy:0.8808333277702332
+val on: imagenet_ai_0424_sdv5
+ai accu: 0.7674999833106995
+nature accu:0.9950000047683716
+val on:imagenet_ai_0424_sdv5, Epoch:15, Accuracy:0.8812499642372131
+val on: imagenet_ai_0419_vqdm
+ai accu: 0.5316666960716248
+nature accu:0.9950000047683716
+val on:imagenet_ai_0419_vqdm, Epoch:15, Accuracy:0.7633333802223206
+val on: imagenet_ai_0424_wukong
+ai accu: 0.7266666889190674
+nature accu:0.9950000047683716
+val on:imagenet_ai_0424_wukong, Epoch:15, Accuracy:0.8608333468437195
+Save state_dict successfully! Best epoch:15.
+Epoch:15,Accuracy:0.7972999811172485, bestEpoch:15, bestAccu:0.7972999811172485
+2024-10-24 09:46:52.627695 Epoch [016/030], Step [0001/0267], Total_loss: 0.0724
+2024-10-24 09:47:43.084916 Epoch [016/030], Step [0200/0267], Total_loss: 0.0351
+2024-10-24 09:47:59.340719 Epoch [016/030], Step [0267/0267], Total_loss: 0.0268
+val on: imagenet_ai_0508_adm
+ai accu: 0.4866666793823242
 nature accu:0.9983333349227905
-val on:imagenet_glide, Epoch:23, Accuracy:0.9083333611488342
+val on:imagenet_ai_0508_adm, Epoch:16, Accuracy:0.7425000071525574
+val on: imagenet_ai_0419_biggan
+ai accu: 0.2683333456516266
+nature accu:0.9933333396911621
+val on:imagenet_ai_0419_biggan, Epoch:16, Accuracy:0.6308333277702332
+val on: imagenet_glide
+ai accu: 0.8016666769981384
+nature accu:0.9950000047683716
+val on:imagenet_glide, Epoch:16, Accuracy:0.8983333706855774
+val on: imagenet_midjourney
+ai accu: 0.2800000011920929
+nature accu:0.9950000047683716
+val on:imagenet_midjourney, Epoch:16, Accuracy:0.637499988079071
+val on: imagenet_ai_0419_sdv4
+ai accu: 0.7283333539962769
+nature accu:0.9933333396911621
+val on:imagenet_ai_0419_sdv4, Epoch:16, Accuracy:0.8608333468437195
+val on: imagenet_ai_0424_sdv5
+ai accu: 0.7112500071525574
+nature accu:0.9950000047683716
+val on:imagenet_ai_0424_sdv5, Epoch:16, Accuracy:0.8531249761581421
+val on: imagenet_ai_0419_vqdm
+ai accu: 0.4516666829586029
+nature accu:0.9983333349227905
+val on:imagenet_ai_0419_vqdm, Epoch:16, Accuracy:0.7250000238418579
+val on: imagenet_ai_0424_wukong
+ai accu: 0.643333375453949
+nature accu:0.996666669845581
+val on:imagenet_ai_0424_wukong, Epoch:16, Accuracy:0.8199999928474426
+Epoch:16,Accuracy:0.7742999792098999, bestEpoch:15, bestAccu:0.7972999811172485
+2024-10-24 09:49:00.992558 Epoch [017/030], Step [0001/0267], Total_loss: 0.0473
+2024-10-24 09:49:50.676417 Epoch [017/030], Step [0200/0267], Total_loss: 0.1251
+2024-10-24 09:50:07.156968 Epoch [017/030], Step [0267/0267], Total_loss: 0.1840
+val on: imagenet_ai_0508_adm
+ai accu: 0.6349999904632568
+nature accu:0.9866666793823242
+val on:imagenet_ai_0508_adm, Epoch:17, Accuracy:0.8108333349227905
+val on: imagenet_ai_0419_biggan
+ai accu: 0.4283333420753479
+nature accu:0.9850000143051147
+val on:imagenet_ai_0419_biggan, Epoch:17, Accuracy:0.7066667079925537
+val on: imagenet_glide
+ai accu: 0.8650000095367432
+nature accu:0.9816666841506958
+val on:imagenet_glide, Epoch:17, Accuracy:0.9233333468437195
+val on: imagenet_midjourney
+ai accu: 0.3799999952316284
+nature accu:0.9866666793823242
+val on:imagenet_midjourney, Epoch:17, Accuracy:0.6833333373069763
+val on: imagenet_ai_0419_sdv4
+ai accu: 0.8650000095367432
+nature accu:0.9800000190734863
+val on:imagenet_ai_0419_sdv4, Epoch:17, Accuracy:0.9225000143051147
+val on: imagenet_ai_0424_sdv5
+ai accu: 0.824999988079071
+nature accu:0.9862499833106995
+val on:imagenet_ai_0424_sdv5, Epoch:17, Accuracy:0.9056249856948853
+val on: imagenet_ai_0419_vqdm
+ai accu: 0.699999988079071
+nature accu:0.9916666746139526
+val on:imagenet_ai_0419_vqdm, Epoch:17, Accuracy:0.8458333611488342
+val on: imagenet_ai_0424_wukong
+ai accu: 0.8333333730697632
+nature accu:0.9883333444595337
+val on:imagenet_ai_0424_wukong, Epoch:17, Accuracy:0.9108333587646484
+Save state_dict successfully! Best epoch:17.
+Epoch:17,Accuracy:0.8412999510765076, bestEpoch:17, bestAccu:0.8412999510765076
+2024-10-24 09:51:09.613720 Epoch [018/030], Step [0001/0267], Total_loss: 0.0100
+2024-10-24 09:51:59.590128 Epoch [018/030], Step [0200/0267], Total_loss: 0.0139
+2024-10-24 09:52:16.073200 Epoch [018/030], Step [0267/0267], Total_loss: 0.0389
+val on: imagenet_ai_0508_adm
+ai accu: 0.49166667461395264
+nature accu:1.0
+val on:imagenet_ai_0508_adm, Epoch:18, Accuracy:0.7458333373069763
+val on: imagenet_ai_0419_biggan
+ai accu: 0.30000001192092896
+nature accu:0.996666669845581
+val on:imagenet_ai_0419_biggan, Epoch:18, Accuracy:0.6483333706855774
+val on: imagenet_glide
+ai accu: 0.8149999976158142
+nature accu:0.996666669845581
+val on:imagenet_glide, Epoch:18, Accuracy:0.90583336353302
 val on: imagenet_midjourney
 ai accu: 0.32500001788139343
-nature accu:0.9950000047683716
-val on:imagenet_midjourney, Epoch:23, Accuracy:0.6600000262260437
+nature accu:0.996666669845581
+val on:imagenet_midjourney, Epoch:18, Accuracy:0.6608333587646484
 val on: imagenet_ai_0419_sdv4
-ai accu: 0.800000011920929
-nature accu:0.9983333349227905
-val on:imagenet_ai_0419_sdv4, Epoch:23, Accuracy:0.8991667032241821
+ai accu: 0.7833333611488342
+nature accu:0.9933333396911621
+val on:imagenet_ai_0419_sdv4, Epoch:18, Accuracy:0.8883333802223206
 val on: imagenet_ai_0424_sdv5
-ai accu: 0.76624995470047
-nature accu:0.9975000023841858
-val on:imagenet_ai_0424_sdv5, Epoch:23, Accuracy:0.8818749785423279
+ai accu: 0.7737500071525574
+nature accu:0.9962499737739563
+val on:imagenet_ai_0424_sdv5, Epoch:18, Accuracy:0.8849999904632568
 val on: imagenet_ai_0419_vqdm
-ai accu: 0.4983333349227905
-nature accu:0.9983333349227905
-val on:imagenet_ai_0419_vqdm, Epoch:23, Accuracy:0.7483333349227905
+ai accu: 0.5383333563804626
+nature accu:0.996666669845581
+val on:imagenet_ai_0419_vqdm, Epoch:18, Accuracy:0.7675000429153442
 val on: imagenet_ai_0424_wukong
-ai accu: 0.7583333253860474
+ai accu: 0.7316666841506958
 nature accu:0.996666669845581
-val on:imagenet_ai_0424_wukong, Epoch:23, Accuracy:0.8774999976158142
-Epoch:23,Accuracy:0.7917999625205994, bestEpoch:17, bestAccu:0.8348000049591064
-2024-10-24 07:06:27.649161 Epoch [024/030], Step [0001/0267], Total_loss: 0.0152
-2024-10-24 07:07:18.519630 Epoch [024/030], Step [0200/0267], Total_loss: 0.0165
-2024-10-24 07:07:35.362149 Epoch [024/030], Step [0267/0267], Total_loss: 0.0287
+val on:imagenet_ai_0424_wukong, Epoch:18, Accuracy:0.8641666769981384
+Epoch:18,Accuracy:0.799299955368042, bestEpoch:17, bestAccu:0.8412999510765076
+2024-10-24 09:53:18.161940 Epoch [019/030], Step [0001/0267], Total_loss: 0.0198
+2024-10-24 09:54:07.978803 Epoch [019/030], Step [0200/0267], Total_loss: 0.0260
+2024-10-24 09:54:24.665392 Epoch [019/030], Step [0267/0267], Total_loss: 0.0354
 val on: imagenet_ai_0508_adm
-ai accu: 0.47833335399627686
-nature accu:1.0
-val on:imagenet_ai_0508_adm, Epoch:24, Accuracy:0.7391666769981384
+ai accu: 0.5666666626930237
+nature accu:0.9933333396911621
+val on:imagenet_ai_0508_adm, Epoch:19, Accuracy:0.7800000309944153
 val on: imagenet_ai_0419_biggan
-ai accu: 0.24000000953674316
-nature accu:0.9983333349227905
-val on:imagenet_ai_0419_biggan, Epoch:24, Accuracy:0.6191666722297668
+ai accu: 0.3766666650772095
+nature accu:0.9883333444595337
+val on:imagenet_ai_0419_biggan, Epoch:19, Accuracy:0.6825000047683716
 val on: imagenet_glide
-ai accu: 0.7850000262260437
+ai accu: 0.8300000429153442
+nature accu:0.9883333444595337
+val on:imagenet_glide, Epoch:19, Accuracy:0.909166693687439
+val on: imagenet_midjourney
+ai accu: 0.2983333468437195
+nature accu:0.9916666746139526
+val on:imagenet_midjourney, Epoch:19, Accuracy:0.6450000405311584
+val on: imagenet_ai_0419_sdv4
+ai accu: 0.8366667032241821
+nature accu:0.9933333396911621
+val on:imagenet_ai_0419_sdv4, Epoch:19, Accuracy:0.9150000214576721
+val on: imagenet_ai_0424_sdv5
+ai accu: 0.84375
+nature accu:0.9925000071525574
+val on:imagenet_ai_0424_sdv5, Epoch:19, Accuracy:0.9181249737739563
+val on: imagenet_ai_0419_vqdm
+ai accu: 0.6333333253860474
+nature accu:0.9883333444595337
+val on:imagenet_ai_0419_vqdm, Epoch:19, Accuracy:0.8108333349227905
+val on: imagenet_ai_0424_wukong
+ai accu: 0.7783333659172058
+nature accu:0.9950000047683716
+val on:imagenet_ai_0424_wukong, Epoch:19, Accuracy:0.8866667151451111
+Epoch:19,Accuracy:0.8223999738693237, bestEpoch:17, bestAccu:0.8412999510765076
+2024-10-24 09:55:26.775859 Epoch [020/030], Step [0001/0267], Total_loss: 0.0222
+2024-10-24 09:56:17.170609 Epoch [020/030], Step [0200/0267], Total_loss: 0.0307
+2024-10-24 09:56:33.877726 Epoch [020/030], Step [0267/0267], Total_loss: 0.0180
+val on: imagenet_ai_0508_adm
+ai accu: 0.6183333396911621
+nature accu:0.9950000047683716
+val on:imagenet_ai_0508_adm, Epoch:20, Accuracy:0.8066666722297668
+val on: imagenet_ai_0419_biggan
+ai accu: 0.46000000834465027
+nature accu:0.9950000047683716
+val on:imagenet_ai_0419_biggan, Epoch:20, Accuracy:0.7275000214576721
+val on: imagenet_glide
+ai accu: 0.875
+nature accu:0.9916666746139526
+val on:imagenet_glide, Epoch:20, Accuracy:0.9333333373069763
+val on: imagenet_midjourney
+ai accu: 0.36500000953674316
+nature accu:0.9883333444595337
+val on:imagenet_midjourney, Epoch:20, Accuracy:0.6766666769981384
+val on: imagenet_ai_0419_sdv4
+ai accu: 0.8700000047683716
+nature accu:0.9766666889190674
+val on:imagenet_ai_0419_sdv4, Epoch:20, Accuracy:0.9233333468437195
+val on: imagenet_ai_0424_sdv5
+ai accu: 0.8624999523162842
+nature accu:0.9887499809265137
+val on:imagenet_ai_0424_sdv5, Epoch:20, Accuracy:0.9256249666213989
+val on: imagenet_ai_0419_vqdm
+ai accu: 0.6766666769981384
+nature accu:0.9933333396911621
+val on:imagenet_ai_0419_vqdm, Epoch:20, Accuracy:0.8350000381469727
+val on: imagenet_ai_0424_wukong
+ai accu: 0.8500000238418579
+nature accu:0.9900000095367432
+val on:imagenet_ai_0424_wukong, Epoch:20, Accuracy:0.9200000166893005
+Save state_dict successfully! Best epoch:20.
+Epoch:20,Accuracy:0.8467999696731567, bestEpoch:20, bestAccu:0.8467999696731567
+2024-10-24 09:57:36.452218 Epoch [021/030], Step [0001/0267], Total_loss: 0.0343
+2024-10-24 09:58:26.173268 Epoch [021/030], Step [0200/0267], Total_loss: 0.0151
+2024-10-24 09:58:42.230715 Epoch [021/030], Step [0267/0267], Total_loss: 0.0132
+val on: imagenet_ai_0508_adm
+ai accu: 0.4000000059604645
 nature accu:0.996666669845581
-val on:imagenet_glide, Epoch:24, Accuracy:0.8908333778381348
+val on:imagenet_ai_0508_adm, Epoch:21, Accuracy:0.6983333230018616
+val on: imagenet_ai_0419_biggan
+ai accu: 0.2866666615009308
+nature accu:0.9983333349227905
+val on:imagenet_ai_0419_biggan, Epoch:21, Accuracy:0.6425000429153442
+val on: imagenet_glide
+ai accu: 0.7366666793823242
+nature accu:1.0
+val on:imagenet_glide, Epoch:21, Accuracy:0.8683333396911621
+val on: imagenet_midjourney
+ai accu: 0.22500000894069672
+nature accu:0.9933333396911621
+val on:imagenet_midjourney, Epoch:21, Accuracy:0.60916668176651
+val on: imagenet_ai_0419_sdv4
+ai accu: 0.7583333253860474
+nature accu:0.9983333349227905
+val on:imagenet_ai_0419_sdv4, Epoch:21, Accuracy:0.878333330154419
+val on: imagenet_ai_0424_sdv5
+ai accu: 0.7737500071525574
+nature accu:0.9987499713897705
+val on:imagenet_ai_0424_sdv5, Epoch:21, Accuracy:0.8862499594688416
+val on: imagenet_ai_0419_vqdm
+ai accu: 0.5416666865348816
+nature accu:0.9950000047683716
+val on:imagenet_ai_0419_vqdm, Epoch:21, Accuracy:0.768333375453949
+val on: imagenet_ai_0424_wukong
+ai accu: 0.7116667032241821
+nature accu:0.9950000047683716
+val on:imagenet_ai_0424_wukong, Epoch:21, Accuracy:0.8533333539962769
+Epoch:21,Accuracy:0.7799999713897705, bestEpoch:20, bestAccu:0.8467999696731567
+2024-10-24 09:59:44.106806 Epoch [022/030], Step [0001/0267], Total_loss: 0.0221
+2024-10-24 10:00:33.900047 Epoch [022/030], Step [0200/0267], Total_loss: 0.0757
+2024-10-24 10:00:50.433460 Epoch [022/030], Step [0267/0267], Total_loss: 0.0405
+val on: imagenet_ai_0508_adm
+ai accu: 0.5099999904632568
+nature accu:1.0
+val on:imagenet_ai_0508_adm, Epoch:22, Accuracy:0.7549999952316284
+val on: imagenet_ai_0419_biggan
+ai accu: 0.2849999964237213
+nature accu:1.0
+val on:imagenet_ai_0419_biggan, Epoch:22, Accuracy:0.6425000429153442
+val on: imagenet_glide
+ai accu: 0.75
+nature accu:0.996666669845581
+val on:imagenet_glide, Epoch:22, Accuracy:0.8733333349227905
 val on: imagenet_midjourney
 ai accu: 0.29500001668930054
-nature accu:0.9983333349227905
-val on:imagenet_midjourney, Epoch:24, Accuracy:0.6466667056083679
+nature accu:0.9916666746139526
+val on:imagenet_midjourney, Epoch:22, Accuracy:0.643333375453949
 val on: imagenet_ai_0419_sdv4
-ai accu: 0.7516666650772095
-nature accu:0.9983333349227905
-val on:imagenet_ai_0419_sdv4, Epoch:24, Accuracy:0.875
+ai accu: 0.7750000357627869
+nature accu:0.9916666746139526
+val on:imagenet_ai_0419_sdv4, Epoch:22, Accuracy:0.8833333253860474
 val on: imagenet_ai_0424_sdv5
-ai accu: 0.731249988079071
-nature accu:1.0
-val on:imagenet_ai_0424_sdv5, Epoch:24, Accuracy:0.8656249642372131
-val on: imagenet_ai_0419_vqdm
-ai accu: 0.5283333659172058
-nature accu:0.9983333349227905
-val on:imagenet_ai_0419_vqdm, Epoch:24, Accuracy:0.7633333802223206
-val on: imagenet_ai_0424_wukong
-ai accu: 0.7066667079925537
-nature accu:0.996666669845581
-val on:imagenet_ai_0424_wukong, Epoch:24, Accuracy:0.8516666889190674
-Epoch:24,Accuracy:0.7847999930381775, bestEpoch:17, bestAccu:0.8348000049591064
-2024-10-24 07:08:36.592250 Epoch [025/030], Step [0001/0267], Total_loss: 0.0369
-2024-10-24 07:09:26.106825 Epoch [025/030], Step [0200/0267], Total_loss: 0.0550
-2024-10-24 07:09:42.693079 Epoch [025/030], Step [0267/0267], Total_loss: 0.0354
-val on: imagenet_ai_0508_adm
-ai accu: 0.550000011920929
-nature accu:0.9983333349227905
-val on:imagenet_ai_0508_adm, Epoch:25, Accuracy:0.7741667032241821
-val on: imagenet_ai_0419_biggan
-ai accu: 0.24833333492279053
+ai accu: 0.7537499666213989
 nature accu:0.9950000047683716
-val on:imagenet_ai_0419_biggan, Epoch:25, Accuracy:0.621666669845581
-val on: imagenet_glide
-ai accu: 0.8616666793823242
+val on:imagenet_ai_0424_sdv5, Epoch:22, Accuracy:0.8743749856948853
+val on: imagenet_ai_0419_vqdm
+ai accu: 0.5400000214576721
+nature accu:0.996666669845581
+val on:imagenet_ai_0419_vqdm, Epoch:22, Accuracy:0.768333375453949
+val on: imagenet_ai_0424_wukong
+ai accu: 0.7400000095367432
+nature accu:0.9933333396911621
+val on:imagenet_ai_0424_wukong, Epoch:22, Accuracy:0.8666666746139526
+Epoch:22,Accuracy:0.7917999625205994, bestEpoch:20, bestAccu:0.8467999696731567
+2024-10-24 10:01:52.442425 Epoch [023/030], Step [0001/0267], Total_loss: 0.0161
+2024-10-24 10:02:42.795501 Epoch [023/030], Step [0200/0267], Total_loss: 0.0294
+2024-10-24 10:02:59.263632 Epoch [023/030], Step [0267/0267], Total_loss: 0.0082
+val on: imagenet_ai_0508_adm
+ai accu: 0.43166667222976685
 nature accu:0.9983333349227905
-val on:imagenet_glide, Epoch:25, Accuracy:0.9300000071525574
+val on:imagenet_ai_0508_adm, Epoch:23, Accuracy:0.7150000333786011
+val on: imagenet_ai_0419_biggan
+ai accu: 0.2800000011920929
+nature accu:0.9950000047683716
+val on:imagenet_ai_0419_biggan, Epoch:23, Accuracy:0.637499988079071
+val on: imagenet_glide
+ai accu: 0.8066666722297668
+nature accu:0.9950000047683716
+val on:imagenet_glide, Epoch:23, Accuracy:0.9008333683013916
 val on: imagenet_midjourney
 ai accu: 0.3266666829586029
 nature accu:0.9933333396911621
-val on:imagenet_midjourney, Epoch:25, Accuracy:0.6600000262260437
+val on:imagenet_midjourney, Epoch:23, Accuracy:0.6600000262260437
 val on: imagenet_ai_0419_sdv4
-ai accu: 0.8133333325386047
-nature accu:0.9950000047683716
-val on:imagenet_ai_0419_sdv4, Epoch:25, Accuracy:0.9041666984558105
+ai accu: 0.8333333730697632
+nature accu:0.996666669845581
+val on:imagenet_ai_0419_sdv4, Epoch:23, Accuracy:0.9150000214576721
 val on: imagenet_ai_0424_sdv5
-ai accu: 0.7999999523162842
-nature accu:0.9925000071525574
-val on:imagenet_ai_0424_sdv5, Epoch:25, Accuracy:0.8962500095367432
+ai accu: 0.8212499618530273
+nature accu:0.9987499713897705
+val on:imagenet_ai_0424_sdv5, Epoch:23, Accuracy:0.9099999666213989
 val on: imagenet_ai_0419_vqdm
-ai accu: 0.5166666507720947
-nature accu:1.0
-val on:imagenet_ai_0419_vqdm, Epoch:25, Accuracy:0.7583333253860474
+ai accu: 0.5266667008399963
+nature accu:0.996666669845581
+val on:imagenet_ai_0419_vqdm, Epoch:23, Accuracy:0.7616666555404663
 val on: imagenet_ai_0424_wukong
-ai accu: 0.8083333373069763
+ai accu: 0.7783333659172058
+nature accu:0.996666669845581
+val on:imagenet_ai_0424_wukong, Epoch:23, Accuracy:0.8875000476837158
+Epoch:23,Accuracy:0.802899956703186, bestEpoch:20, bestAccu:0.8467999696731567
+2024-10-24 10:04:00.944414 Epoch [024/030], Step [0001/0267], Total_loss: 0.0465
+2024-10-24 10:04:51.827940 Epoch [024/030], Step [0200/0267], Total_loss: 0.0461
+2024-10-24 10:05:08.480649 Epoch [024/030], Step [0267/0267], Total_loss: 0.0188
+val on: imagenet_ai_0508_adm
+ai accu: 0.4766666889190674
+nature accu:0.9983333349227905
+val on:imagenet_ai_0508_adm, Epoch:24, Accuracy:0.737500011920929
+val on: imagenet_ai_0419_biggan
+ai accu: 0.3216666877269745
+nature accu:0.996666669845581
+val on:imagenet_ai_0419_biggan, Epoch:24, Accuracy:0.659166693687439
+val on: imagenet_glide
+ai accu: 0.7583333253860474
+nature accu:0.9983333349227905
+val on:imagenet_glide, Epoch:24, Accuracy:0.878333330154419
+val on: imagenet_midjourney
+ai accu: 0.25833332538604736
 nature accu:0.9950000047683716
-val on:imagenet_ai_0424_wukong, Epoch:25, Accuracy:0.9016667008399963
-Epoch:25,Accuracy:0.8093999624252319, bestEpoch:17, bestAccu:0.8348000049591064
-2024-10-24 07:10:43.710146 Epoch [026/030], Step [0001/0267], Total_loss: 0.0061
-2024-10-24 07:11:33.996934 Epoch [026/030], Step [0200/0267], Total_loss: 0.0241
-2024-10-24 07:11:51.030924 Epoch [026/030], Step [0267/0267], Total_loss: 0.0111
+val on:imagenet_midjourney, Epoch:24, Accuracy:0.6266666650772095
+val on: imagenet_ai_0419_sdv4
+ai accu: 0.7833333611488342
+nature accu:0.9983333349227905
+val on:imagenet_ai_0419_sdv4, Epoch:24, Accuracy:0.8908333778381348
+val on: imagenet_ai_0424_sdv5
+ai accu: 0.762499988079071
+nature accu:0.9987499713897705
+val on:imagenet_ai_0424_sdv5, Epoch:24, Accuracy:0.8806250095367432
+val on: imagenet_ai_0419_vqdm
+ai accu: 0.5550000071525574
+nature accu:0.9983333349227905
+val on:imagenet_ai_0419_vqdm, Epoch:24, Accuracy:0.7766667008399963
+val on: imagenet_ai_0424_wukong
+ai accu: 0.6883333325386047
+nature accu:0.9950000047683716
+val on:imagenet_ai_0424_wukong, Epoch:24, Accuracy:0.8416666984558105
+Epoch:24,Accuracy:0.7901999950408936, bestEpoch:20, bestAccu:0.8467999696731567
+2024-10-24 10:06:10.328701 Epoch [025/030], Step [0001/0267], Total_loss: 0.0567
+2024-10-24 10:06:59.341696 Epoch [025/030], Step [0200/0267], Total_loss: 0.0706
+2024-10-24 10:07:16.067471 Epoch [025/030], Step [0267/0267], Total_loss: 0.0132
+val on: imagenet_ai_0508_adm
+ai accu: 0.5250000357627869
+nature accu:0.9983333349227905
+val on:imagenet_ai_0508_adm, Epoch:25, Accuracy:0.7616666555404663
+val on: imagenet_ai_0419_biggan
+ai accu: 0.3283333480358124
+nature accu:0.996666669845581
+val on:imagenet_ai_0419_biggan, Epoch:25, Accuracy:0.6625000238418579
+val on: imagenet_glide
+ai accu: 0.7900000214576721
+nature accu:0.9983333349227905
+val on:imagenet_glide, Epoch:25, Accuracy:0.8941667079925537
+val on: imagenet_midjourney
+ai accu: 0.28833332657814026
+nature accu:0.9933333396911621
+val on:imagenet_midjourney, Epoch:25, Accuracy:0.6408333778381348
+val on: imagenet_ai_0419_sdv4
+ai accu: 0.8199999928474426
+nature accu:0.996666669845581
+val on:imagenet_ai_0419_sdv4, Epoch:25, Accuracy:0.9083333611488342
+val on: imagenet_ai_0424_sdv5
+ai accu: 0.8037499785423279
+nature accu:0.9937499761581421
+val on:imagenet_ai_0424_sdv5, Epoch:25, Accuracy:0.8987500071525574
+val on: imagenet_ai_0419_vqdm
+ai accu: 0.5716666579246521
+nature accu:1.0
+val on:imagenet_ai_0419_vqdm, Epoch:25, Accuracy:0.7858333587646484
+val on: imagenet_ai_0424_wukong
+ai accu: 0.7883333563804626
+nature accu:0.996666669845581
+val on:imagenet_ai_0424_wukong, Epoch:25, Accuracy:0.8925000429153442
+Epoch:25,Accuracy:0.8093000054359436, bestEpoch:20, bestAccu:0.8467999696731567
+2024-10-24 10:08:18.979623 Epoch [026/030], Step [0001/0267], Total_loss: 0.0072
+2024-10-24 10:09:08.723051 Epoch [026/030], Step [0200/0267], Total_loss: 0.0108
+2024-10-24 10:09:25.843063 Epoch [026/030], Step [0267/0267], Total_loss: 0.0113
 val on: imagenet_ai_0508_adm
 ai accu: 0.57833331823349
 nature accu:0.9983333349227905
 val on:imagenet_ai_0508_adm, Epoch:26, Accuracy:0.7883333563804626
 val on: imagenet_ai_0419_biggan
-ai accu: 0.27166667580604553
-nature accu:0.9933333396911621
-val on:imagenet_ai_0419_biggan, Epoch:26, Accuracy:0.6324999928474426
-val on: imagenet_glide
-ai accu: 0.8983333706855774
-nature accu:0.9950000047683716
-val on:imagenet_glide, Epoch:26, Accuracy:0.9466667175292969
-val on: imagenet_midjourney
-ai accu: 0.3633333444595337
-nature accu:0.9933333396911621
-val on:imagenet_midjourney, Epoch:26, Accuracy:0.6783333420753479
-val on: imagenet_ai_0419_sdv4
-ai accu: 0.8350000381469727
-nature accu:0.996666669845581
-val on:imagenet_ai_0419_sdv4, Epoch:26, Accuracy:0.9158333539962769
-val on: imagenet_ai_0424_sdv5
-ai accu: 0.8324999809265137
-nature accu:0.9937499761581421
-val on:imagenet_ai_0424_sdv5, Epoch:26, Accuracy:0.9131249785423279
-val on: imagenet_ai_0419_vqdm
-ai accu: 0.6233333349227905
-nature accu:0.996666669845581
-val on:imagenet_ai_0419_vqdm, Epoch:26, Accuracy:0.8100000023841858
-val on: imagenet_ai_0424_wukong
-ai accu: 0.8166666626930237
-nature accu:0.9900000095367432
-val on:imagenet_ai_0424_wukong, Epoch:26, Accuracy:0.9033333659172058
-Epoch:26,Accuracy:0.8270999789237976, bestEpoch:17, bestAccu:0.8348000049591064
-2024-10-24 07:12:51.869416 Epoch [027/030], Step [0001/0267], Total_loss: 0.0079
-2024-10-24 07:13:41.205769 Epoch [027/030], Step [0200/0267], Total_loss: 0.0379
-2024-10-24 07:13:57.595620 Epoch [027/030], Step [0267/0267], Total_loss: 0.0211
-val on: imagenet_ai_0508_adm
-ai accu: 0.5516666769981384
-nature accu:0.9983333349227905
-val on:imagenet_ai_0508_adm, Epoch:27, Accuracy:0.7750000357627869
-val on: imagenet_ai_0419_biggan
-ai accu: 0.2383333444595337
-nature accu:1.0
-val on:imagenet_ai_0419_biggan, Epoch:27, Accuracy:0.6191666722297668
-val on: imagenet_glide
-ai accu: 0.9000000357627869
-nature accu:0.996666669845581
-val on:imagenet_glide, Epoch:27, Accuracy:0.9483333826065063
-val on: imagenet_midjourney
-ai accu: 0.39500001072883606
-nature accu:0.9933333396911621
-val on:imagenet_midjourney, Epoch:27, Accuracy:0.6941666603088379
-val on: imagenet_ai_0419_sdv4
-ai accu: 0.84333336353302
-nature accu:0.9950000047683716
-val on:imagenet_ai_0419_sdv4, Epoch:27, Accuracy:0.9191666841506958
-val on: imagenet_ai_0424_sdv5
-ai accu: 0.8162499666213989
-nature accu:0.9962499737739563
-val on:imagenet_ai_0424_sdv5, Epoch:27, Accuracy:0.90625
-val on: imagenet_ai_0419_vqdm
-ai accu: 0.5633333325386047
-nature accu:0.996666669845581
-val on:imagenet_ai_0419_vqdm, Epoch:27, Accuracy:0.7800000309944153
-val on: imagenet_ai_0424_wukong
-ai accu: 0.8100000023841858
-nature accu:0.9933333396911621
-val on:imagenet_ai_0424_wukong, Epoch:27, Accuracy:0.9016667008399963
-Epoch:27,Accuracy:0.8215000033378601, bestEpoch:17, bestAccu:0.8348000049591064
-2024-10-24 07:14:58.667336 Epoch [028/030], Step [0001/0267], Total_loss: 0.0103
-2024-10-24 07:15:48.392872 Epoch [028/030], Step [0200/0267], Total_loss: 0.0166
-2024-10-24 07:16:04.731813 Epoch [028/030], Step [0267/0267], Total_loss: 0.0082
-val on: imagenet_ai_0508_adm
-ai accu: 0.5616666674613953
-nature accu:1.0
-val on:imagenet_ai_0508_adm, Epoch:28, Accuracy:0.78083336353302
-val on: imagenet_ai_0419_biggan
-ai accu: 0.2433333396911621
-nature accu:1.0
-val on:imagenet_ai_0419_biggan, Epoch:28, Accuracy:0.621666669845581
-val on: imagenet_glide
-ai accu: 0.8666666746139526
-nature accu:0.9950000047683716
-val on:imagenet_glide, Epoch:28, Accuracy:0.9308333396911621
-val on: imagenet_midjourney
 ai accu: 0.33500000834465027
 nature accu:0.9950000047683716
-val on:imagenet_midjourney, Epoch:28, Accuracy:0.6650000214576721
-val on: imagenet_ai_0419_sdv4
-ai accu: 0.8516666889190674
-nature accu:0.9983333349227905
-val on:imagenet_ai_0419_sdv4, Epoch:28, Accuracy:0.925000011920929
-val on: imagenet_ai_0424_sdv5
-ai accu: 0.8799999952316284
-nature accu:0.9937499761581421
-val on:imagenet_ai_0424_sdv5, Epoch:28, Accuracy:0.9368749856948853
-val on: imagenet_ai_0419_vqdm
-ai accu: 0.5816667079925537
-nature accu:0.9983333349227905
-val on:imagenet_ai_0419_vqdm, Epoch:28, Accuracy:0.7900000214576721
-val on: imagenet_ai_0424_wukong
-ai accu: 0.8166666626930237
-nature accu:0.9950000047683716
-val on:imagenet_ai_0424_wukong, Epoch:28, Accuracy:0.90583336353302
-Epoch:28,Accuracy:0.8241999745368958, bestEpoch:17, bestAccu:0.8348000049591064
-2024-10-24 07:17:05.701238 Epoch [029/030], Step [0001/0267], Total_loss: 0.0174
-2024-10-24 07:17:55.792999 Epoch [029/030], Step [0200/0267], Total_loss: 0.0082
-2024-10-24 07:18:12.160628 Epoch [029/030], Step [0267/0267], Total_loss: 0.0065
-val on: imagenet_ai_0508_adm
-ai accu: 0.5516666769981384
-nature accu:0.996666669845581
-val on:imagenet_ai_0508_adm, Epoch:29, Accuracy:0.7741667032241821
-val on: imagenet_ai_0419_biggan
-ai accu: 0.24666666984558105
-nature accu:0.9983333349227905
-val on:imagenet_ai_0419_biggan, Epoch:29, Accuracy:0.6225000023841858
+val on:imagenet_ai_0419_biggan, Epoch:26, Accuracy:0.6650000214576721
 val on: imagenet_glide
-ai accu: 0.8616666793823242
-nature accu:0.9950000047683716
-val on:imagenet_glide, Epoch:29, Accuracy:0.9283333420753479
-val on: imagenet_midjourney
-ai accu: 0.3733333349227905
-nature accu:0.9950000047683716
-val on:imagenet_midjourney, Epoch:29, Accuracy:0.684166669845581
-val on: imagenet_ai_0419_sdv4
-ai accu: 0.8566666841506958
-nature accu:0.9933333396911621
-val on:imagenet_ai_0419_sdv4, Epoch:29, Accuracy:0.925000011920929
-val on: imagenet_ai_0424_sdv5
-ai accu: 0.8262499570846558
-nature accu:0.9950000047683716
-val on:imagenet_ai_0424_sdv5, Epoch:29, Accuracy:0.9106249809265137
-val on: imagenet_ai_0419_vqdm
-ai accu: 0.5833333730697632
+ai accu: 0.8700000047683716
 nature accu:0.996666669845581
-val on:imagenet_ai_0419_vqdm, Epoch:29, Accuracy:0.7900000214576721
-val on: imagenet_ai_0424_wukong
-ai accu: 0.7983333468437195
+val on:imagenet_glide, Epoch:26, Accuracy:0.9333333373069763
+val on: imagenet_midjourney
+ai accu: 0.3516666889190674
 nature accu:0.9916666746139526
-val on:imagenet_ai_0424_wukong, Epoch:29, Accuracy:0.8950000405311584
-Epoch:29,Accuracy:0.8199999928474426, bestEpoch:17, bestAccu:0.8348000049591064
-2024-10-24 07:19:13.188669 Epoch [030/030], Step [0001/0267], Total_loss: 0.0041
-2024-10-24 07:20:03.425968 Epoch [030/030], Step [0200/0267], Total_loss: 0.0272
-2024-10-24 07:20:20.204955 Epoch [030/030], Step [0267/0267], Total_loss: 0.0107
-val on: imagenet_ai_0508_adm
-ai accu: 0.5
-nature accu:0.996666669845581
-val on:imagenet_ai_0508_adm, Epoch:30, Accuracy:0.7483333349227905
-val on: imagenet_ai_0419_biggan
-ai accu: 0.24166667461395264
-nature accu:1.0
-val on:imagenet_ai_0419_biggan, Epoch:30, Accuracy:0.6208333373069763
-val on: imagenet_glide
-ai accu: 0.871666669845581
-nature accu:0.996666669845581
-val on:imagenet_glide, Epoch:30, Accuracy:0.934166669845581
-val on: imagenet_midjourney
-ai accu: 0.3449999988079071
-nature accu:1.0
-val on:imagenet_midjourney, Epoch:30, Accuracy:0.6725000143051147
+val on:imagenet_midjourney, Epoch:26, Accuracy:0.67166668176651
 val on: imagenet_ai_0419_sdv4
+ai accu: 0.84333336353302
+nature accu:0.9916666746139526
+val on:imagenet_ai_0419_sdv4, Epoch:26, Accuracy:0.9175000190734863
+val on: imagenet_ai_0424_sdv5
+ai accu: 0.856249988079071
+nature accu:0.9950000047683716
+val on:imagenet_ai_0424_sdv5, Epoch:26, Accuracy:0.9256249666213989
+val on: imagenet_ai_0419_vqdm
+ai accu: 0.6366666555404663
+nature accu:0.9933333396911621
+val on:imagenet_ai_0419_vqdm, Epoch:26, Accuracy:0.8149999976158142
+val on: imagenet_ai_0424_wukong
+ai accu: 0.8233333826065063
+nature accu:0.9900000095367432
+val on:imagenet_ai_0424_wukong, Epoch:26, Accuracy:0.9066666960716248
+Epoch:26,Accuracy:0.8317999839782715, bestEpoch:20, bestAccu:0.8467999696731567
+2024-10-24 10:10:28.458055 Epoch [027/030], Step [0001/0267], Total_loss: 0.0097
+2024-10-24 10:11:17.649004 Epoch [027/030], Step [0200/0267], Total_loss: 0.0181
+2024-10-24 10:11:34.386806 Epoch [027/030], Step [0267/0267], Total_loss: 0.0638
+val on: imagenet_ai_0508_adm
+ai accu: 0.5066666603088379
+nature accu:0.9983333349227905
+val on:imagenet_ai_0508_adm, Epoch:27, Accuracy:0.7524999976158142
+val on: imagenet_ai_0419_biggan
+ai accu: 0.3149999976158142
+nature accu:0.9950000047683716
+val on:imagenet_ai_0419_biggan, Epoch:27, Accuracy:0.6550000309944153
+val on: imagenet_glide
+ai accu: 0.8450000286102295
+nature accu:0.996666669845581
+val on:imagenet_glide, Epoch:27, Accuracy:0.9208333492279053
+val on: imagenet_midjourney
+ai accu: 0.31333333253860474
+nature accu:0.996666669845581
+val on:imagenet_midjourney, Epoch:27, Accuracy:0.6550000309944153
+val on: imagenet_ai_0419_sdv4
+ai accu: 0.8416666984558105
+nature accu:0.9983333349227905
+val on:imagenet_ai_0419_sdv4, Epoch:27, Accuracy:0.9200000166893005
+val on: imagenet_ai_0424_sdv5
+ai accu: 0.8062499761581421
+nature accu:0.9962499737739563
+val on:imagenet_ai_0424_sdv5, Epoch:27, Accuracy:0.9012500047683716
+val on: imagenet_ai_0419_vqdm
+ai accu: 0.5683333277702332
+nature accu:0.996666669845581
+val on:imagenet_ai_0419_vqdm, Epoch:27, Accuracy:0.7825000286102295
+val on: imagenet_ai_0424_wukong
+ai accu: 0.7816666960716248
+nature accu:0.9950000047683716
+val on:imagenet_ai_0424_wukong, Epoch:27, Accuracy:0.8883333802223206
+Epoch:27,Accuracy:0.8130999803543091, bestEpoch:20, bestAccu:0.8467999696731567
+2024-10-24 10:12:36.680878 Epoch [028/030], Step [0001/0267], Total_loss: 0.0182
+2024-10-24 10:13:25.638557 Epoch [028/030], Step [0200/0267], Total_loss: 0.0232
+2024-10-24 10:13:42.189368 Epoch [028/030], Step [0267/0267], Total_loss: 0.0065
+val on: imagenet_ai_0508_adm
+ai accu: 0.5733333230018616
+nature accu:0.9983333349227905
+val on:imagenet_ai_0508_adm, Epoch:28, Accuracy:0.7858333587646484
+val on: imagenet_ai_0419_biggan
+ai accu: 0.35333335399627686
+nature accu:0.9933333396911621
+val on:imagenet_ai_0419_biggan, Epoch:28, Accuracy:0.6733333468437195
+val on: imagenet_glide
+ai accu: 0.8183333277702332
+nature accu:0.996666669845581
+val on:imagenet_glide, Epoch:28, Accuracy:0.9075000286102295
+val on: imagenet_midjourney
+ai accu: 0.30666667222976685
+nature accu:0.9900000095367432
+val on:imagenet_midjourney, Epoch:28, Accuracy:0.6483333706855774
+val on: imagenet_ai_0419_sdv4
+ai accu: 0.8550000190734863
+nature accu:0.996666669845581
+val on:imagenet_ai_0419_sdv4, Epoch:28, Accuracy:0.9258333444595337
+val on: imagenet_ai_0424_sdv5
+ai accu: 0.8737499713897705
+nature accu:0.9950000047683716
+val on:imagenet_ai_0424_sdv5, Epoch:28, Accuracy:0.934374988079071
+val on: imagenet_ai_0419_vqdm
+ai accu: 0.6266666650772095
+nature accu:1.0
+val on:imagenet_ai_0419_vqdm, Epoch:28, Accuracy:0.8133333325386047
+val on: imagenet_ai_0424_wukong
+ai accu: 0.8083333373069763
+nature accu:0.9950000047683716
+val on:imagenet_ai_0424_wukong, Epoch:28, Accuracy:0.9016667008399963
+Epoch:28,Accuracy:0.8281999826431274, bestEpoch:20, bestAccu:0.8467999696731567
+2024-10-24 10:14:45.138152 Epoch [029/030], Step [0001/0267], Total_loss: 0.0151
+2024-10-24 10:15:34.838964 Epoch [029/030], Step [0200/0267], Total_loss: 0.0054
+2024-10-24 10:15:50.868443 Epoch [029/030], Step [0267/0267], Total_loss: 0.0042
+val on: imagenet_ai_0508_adm
+ai accu: 0.5566666722297668
+nature accu:0.9933333396911621
+val on:imagenet_ai_0508_adm, Epoch:29, Accuracy:0.7750000357627869
+val on: imagenet_ai_0419_biggan
+ai accu: 0.3283333480358124
+nature accu:0.9983333349227905
+val on:imagenet_ai_0419_biggan, Epoch:29, Accuracy:0.6633333563804626
+val on: imagenet_glide
 ai accu: 0.8283333778381348
 nature accu:0.9983333349227905
-val on:imagenet_ai_0419_sdv4, Epoch:30, Accuracy:0.9133333563804626
+val on:imagenet_glide, Epoch:29, Accuracy:0.9133333563804626
+val on: imagenet_midjourney
+ai accu: 0.33666667342185974
+nature accu:0.996666669845581
+val on:imagenet_midjourney, Epoch:29, Accuracy:0.6666666865348816
+val on: imagenet_ai_0419_sdv4
+ai accu: 0.8700000047683716
+nature accu:0.9916666746139526
+val on:imagenet_ai_0419_sdv4, Epoch:29, Accuracy:0.9308333396911621
 val on: imagenet_ai_0424_sdv5
-ai accu: 0.8149999976158142
-nature accu:0.9962499737739563
-val on:imagenet_ai_0424_sdv5, Epoch:30, Accuracy:0.9056249856948853
+ai accu: 0.8374999761581421
+nature accu:0.9975000023841858
+val on:imagenet_ai_0424_sdv5, Epoch:29, Accuracy:0.9174999594688416
 val on: imagenet_ai_0419_vqdm
-ai accu: 0.6066666841506958
-nature accu:1.0
-val on:imagenet_ai_0419_vqdm, Epoch:30, Accuracy:0.8033333420753479
+ai accu: 0.6166666746139526
+nature accu:0.9983333349227905
+val on:imagenet_ai_0419_vqdm, Epoch:29, Accuracy:0.8075000047683716
 val on: imagenet_ai_0424_wukong
-ai accu: 0.8116666674613953
+ai accu: 0.7950000166893005
+nature accu:0.9933333396911621
+val on:imagenet_ai_0424_wukong, Epoch:29, Accuracy:0.8941667079925537
+Epoch:29,Accuracy:0.8248999714851379, bestEpoch:20, bestAccu:0.8467999696731567
+2024-10-24 10:16:53.108923 Epoch [030/030], Step [0001/0267], Total_loss: 0.0012
+2024-10-24 10:17:43.111897 Epoch [030/030], Step [0200/0267], Total_loss: 0.0311
+2024-10-24 10:17:59.576440 Epoch [030/030], Step [0267/0267], Total_loss: 0.0306
+val on: imagenet_ai_0508_adm
+ai accu: 0.5049999952316284
 nature accu:1.0
-val on:imagenet_ai_0424_wukong, Epoch:30, Accuracy:0.90583336353302
-Epoch:30,Accuracy:0.8166999816894531, bestEpoch:17, bestAccu:0.8348000049591064
+val on:imagenet_ai_0508_adm, Epoch:30, Accuracy:0.7524999976158142
+val on: imagenet_ai_0419_biggan
+ai accu: 0.29333335161209106
+nature accu:0.9983333349227905
+val on:imagenet_ai_0419_biggan, Epoch:30, Accuracy:0.6458333730697632
+val on: imagenet_glide
+ai accu: 0.8333333730697632
+nature accu:1.0
+val on:imagenet_glide, Epoch:30, Accuracy:0.9166666865348816
+val on: imagenet_midjourney
+ai accu: 0.3016666769981384
+nature accu:1.0
+val on:imagenet_midjourney, Epoch:30, Accuracy:0.6508333683013916
+val on: imagenet_ai_0419_sdv4
+ai accu: 0.84333336353302
+nature accu:0.9983333349227905
+val on:imagenet_ai_0419_sdv4, Epoch:30, Accuracy:0.9208333492279053
+val on: imagenet_ai_0424_sdv5
+ai accu: 0.8337500095367432
+nature accu:0.9975000023841858
+val on:imagenet_ai_0424_sdv5, Epoch:30, Accuracy:0.9156249761581421
+val on: imagenet_ai_0419_vqdm
+ai accu: 0.6133333444595337
+nature accu:0.996666669845581
+val on:imagenet_ai_0419_vqdm, Epoch:30, Accuracy:0.8050000071525574
+val on: imagenet_ai_0424_wukong
+ai accu: 0.7900000214576721
+nature accu:0.9983333349227905
+val on:imagenet_ai_0424_wukong, Epoch:30, Accuracy:0.8941667079925537
+Epoch:30,Accuracy:0.8167999982833862, bestEpoch:20, bestAccu:0.8467999696731567
