@@ -1,4 +1,3 @@
-# @note import
 import os
 import torch
 # from tensorboardX import SummaryWriter
@@ -9,10 +8,10 @@ from networks.pf_cam import PF_CAM
 from utils.loss import bceLoss
 from datetime import datetime
 import numpy as np
-"""Currently assumes jpg_prob, blur_prob 0 or 1"""
 from PIL import ImageFile
-ImageFile.LOAD_TRUNCATED_IMAGES = True
+import matplotlib.pyplot as plt
 
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 def get_val_opt():
     val_opt = TrainOptions().parse(print_options=False)
@@ -27,12 +26,15 @@ def get_val_opt():
     val_opt.jpg_qual = [90]
     return val_opt
 
-
-def train(train_loader, model, optimizer, epoch, save_path, writer):
+def train(train_loader, model, optimizer, epoch, save_path):
     model.train()
     global step
     epoch_step = 0
     loss_all = 0
+    correct = 0
+    total = 0
+    train_losses = []
+    train_accuracies = []
     try:
         for i, ((images, images_f), labels) in enumerate(train_loader, start=1):
             optimizer.zero_grad()
@@ -47,6 +49,7 @@ def train(train_loader, model, optimizer, epoch, save_path, writer):
             step += 1
             epoch_step += 1
             loss_all += loss.data
+            train_losses.append(loss.data.item())
 
             # Log loss to TensorBoard
             # writer.add_scalar('Train/Loss', loss.data, step)
@@ -61,12 +64,14 @@ def train(train_loader, model, optimizer, epoch, save_path, writer):
 
     except KeyboardInterrupt:
         print('Keyboard Interrupt: save model and exit.')
+    return train_losses, train_accuracies
 
-
-def val(val_loader, model, epoch, save_path, writer):
+def val(val_loader, model, epoch, save_path):
     model.eval()
     global best_epoch, best_accu
     total_right_image = total_image = 0
+    val_losses = []
+    val_accuracies = []
     with torch.no_grad():
         for loader in val_loader:
             right_ai_image = right_nature_image = 0
@@ -79,6 +84,9 @@ def val(val_loader, model, epoch, save_path, writer):
                 labels = labels.cuda()
                 res = model(images_f, images)
                 res = torch.sigmoid(res).ravel()
+                loss1 = bceLoss()
+                loss = loss1(res, labels)
+                val_losses.append(loss.data.item())
                 right_ai_image += (((res > 0.5) & (labels == 1))
                                    | ((res < 0.5) & (labels == 0))).sum()
 
@@ -89,6 +97,9 @@ def val(val_loader, model, epoch, save_path, writer):
                 labels = labels.cuda()
                 res = model(images_f, images)
                 res = torch.sigmoid(res).ravel()
+                loss1 = bceLoss()
+                loss = loss1(res, labels)
+                val_losses.append(loss.data.item())
                 right_nature_image += (((res > 0.5) & (labels == 1))
                                        | ((res < 0.5) & (labels == 0))).sum()
             print(f'nature accu:{right_nature_image/nature_size}')
@@ -97,6 +108,7 @@ def val(val_loader, model, epoch, save_path, writer):
             total_right_image += right_ai_image + right_nature_image
             total_image += ai_size + nature_size
             print(f'val on:{name}, Epoch:{epoch}, Accuracy:{accu}')
+            val_accuracies.append(accu.item())
     total_accu = total_right_image / total_image
 
     # Log accuracy to TensorBoard
@@ -106,18 +118,18 @@ def val(val_loader, model, epoch, save_path, writer):
         best_accu = total_accu
         best_epoch = 1
         torch.save(model.state_dict(), save_path +
-                   'Net_epoch_best_freq_ablation.pth')
+                   'Net_epoch_best_pf_cam_squeeze.pth')
         print(f'Save state_dict successfully! Best epoch:{epoch}.')
     else:
         if total_accu > best_accu:
             best_accu = total_accu
             best_epoch = epoch
             torch.save(model.state_dict(), save_path +
-                       'Net_epoch_best_freq_ablation.pth')
+                       'Net_epoch_best_pf_cam_squeeze.pth')
             print(f'Save state_dict successfully! Best epoch:{epoch}.')
     print(
         f'Epoch:{epoch},Accuracy:{total_accu}, bestEpoch:{best_epoch}, bestAccu:{best_accu}')
-
+    return val_losses, val_accuracies
 
 if __name__ == '__main__':
     set_random_seed()
@@ -162,6 +174,10 @@ if __name__ == '__main__':
     step = 0
     best_epoch = 0
     best_accu = 0
+    train_losses = []
+    val_losses = []
+    train_accuracies = []
+    val_accuracies = []
     print("Start train")
     for epoch in range(1, opt.epoch + 1):
         cur_lr = poly_lr(optimizer, opt.lr, epoch, opt.epoch)
