@@ -1,1 +1,1 @@
-python -W ignore train_val.py | tee "/hexp/ly/PF_CAM/log/print_out/train_val_PF_self_CAM.txt"
+python -W ignore train_val.py | tee "/hexp/ly/PF_CAM/log/print_out/train_val_pfb_concat.txt"

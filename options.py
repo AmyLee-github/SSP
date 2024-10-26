@@ -29,9 +29,11 @@ class TrainOptions():
         parser.add_argument('--load', type=str,
                             default=None)
         parser.add_argument('--image_root', type=str,
-                            default='/hexp/data/genImage')
+                            default='/hexp/data/genImage_squeeze')
         parser.add_argument('--image_f_root', type=str,
-                            default='/hexp/data/genImage_filtered')
+                            default='/hexp/data/genImage_filtered_squeeze')
+        parser.add_argument('--image_b_root', type=str,
+                            default='/hexp/data/genImage_lbp_squeeze')
         parser.add_argument('--save_path', type=str,
                             default='./snapshot/sortnet/')
         parser.add_argument('--isPatch', action='store_false')

@@ -9,7 +9,7 @@ import numpy as np
 import cv2
 import random as rd
 from random import random, choice
-from scipy.ndimage.filters import gaussian_filter
+from scipy.ndimage import gaussian_filter
 from io import BytesIO
 mp = {0: 'imagenet_ai_0508_adm', 1: 'imagenet_ai_0419_biggan', 2: 'imagenet_glide', 3: 'imagenet_midjourney',
       4: 'imagenet_ai_0419_sdv4', 5: 'imagenet_ai_0424_sdv5', 6: 'imagenet_ai_0419_vqdm', 7: 'imagenet_ai_0424_wukong',
@@ -108,7 +108,7 @@ def compute(patch):
     return res.sum()
 
 
-def patch_img(img, img_f, patch_size, height):
+def patch_img(img, img_f, img_b, patch_size, height):
     img_width, img_height = img.size
     height = int(height)
     patch_size = int(patch_size)
@@ -119,6 +119,7 @@ def patch_img(img, img_f, patch_size, height):
     if min_len < patch_size:
         img = rz(img)
         img_f = rz(img_f)
+        img_b = rz(img_b)
     rp = transforms.RandomCrop(patch_size)
     # 随机生成num_patch个不重复随机种子
     seeds = np.random.choice(100000, num_patch, replace=False)
@@ -128,12 +129,14 @@ def patch_img(img, img_f, patch_size, height):
         rp_img = rp(img)
         torch.random.manual_seed(seed)
         rp_img_f = rp(img_f)
-        patch_list.append([rp_img, rp_img_f])
+        torch.random.manual_seed(seed)
+        rp_img_b = rp(img_b)
+        patch_list.append([rp_img, rp_img_f, rp_img_b])
     patch_list.sort(key=lambda x: compute(x), reverse=False)
-    new_img, new_img_f = patch_list[0][0], patch_list[0][1]
-    return new_img, new_img_f
+    new_img, new_img_f, new_img_b = patch_list[0][0], patch_list[0][1], patch_list[0][2]
+    return new_img, new_img_f, new_img_b
 
-def processing(img, img_f, opt):
+def processing(img, img_f, img_b, opt):
     if opt.aug:
         aug = transforms.Lambda(
             lambda img: data_augment(img, opt)
@@ -146,10 +149,11 @@ def processing(img, img_f, opt):
     img_aug = aug(img)
 
     if opt.isPatch:
-        img_aug_p, img_f_p = patch_img(img_aug, img_f, opt.patch_size, opt.trainsize)
+        img_aug_p, img_f_p, img_b_p = patch_img(img_aug, img_f, img_b, opt.patch_size, opt.trainsize)
     else:
         img_aug_p = transforms.Resize((256, 256))(img_aug)
         img_f_p = transforms.Resize((256, 256))(img_f)
+        img_b_p = transforms.Resize((256, 256))(img_b)
 
     trans_tensor = transforms.Compose([
         transforms.ToTensor(),
@@ -165,6 +169,12 @@ def processing(img, img_f, opt):
     
     img_f_p_tensor = trans_tensor(img_f_p)
 
+    # Check if img_b_p has only one channel
+    if img_b_p.mode == 'L':
+        img_b_p = img_b_p.convert('RGB')
+
+    img_b_p_tensor = trans_tensor(img_b_p)
+
     """
     trans = transforms.Compose([
         aug,
@@ -175,14 +185,15 @@ def processing(img, img_f, opt):
     ])
     """
 
-    return img_aug_p_tensor, img_f_p_tensor
+    return img_aug_p_tensor, img_f_p_tensor, img_b_p_tensor
 
 class genImageTrainDataset(Dataset):
-    def __init__(self, image_root, image_f_root, image_dir, opt):
+    def __init__(self, image_root, image_f_root, image_b_root, image_dir, opt):
         super().__init__()
         self.opt = opt
         self.image_root = image_root
         self.image_f_root = image_f_root
+        self.image_b_root = image_b_root
         self.root = os.path.join(image_root, image_dir, "train")
         self.nature_path = os.path.join(self.root, "nature")
         self.nature_list = [os.path.join(self.nature_path, f)
@@ -209,12 +220,22 @@ class genImageTrainDataset(Dataset):
         freq_image_path = os.path.join(image_dir, freq_image_filename)
         return freq_image_path
 
+    def get_lbp_image_path(self, image_path):
+        image_path_b = image_path.replace(self.image_root, self.image_b_root)
+        image_dir, image_filename = os.path.split(image_path_b)
+        image_name, image_ext = os.path.splitext(image_filename)
+        lbp_image_filename = image_name + "_b" + image_ext
+        lbp_image_path = os.path.join(image_dir, lbp_image_filename)
+        return lbp_image_path
+
     def __getitem__(self, index):
         try:
             image = self.rgb_loader(self.images[index])
             image_path = self.images[index]
             freq_image_path = self.get_freq_image_path(image_path)
             image_f = Image.open(freq_image_path)
+            lbp_image_path = self.get_lbp_image_path(image_path)
+            image_b = Image.open(lbp_image_path)
             label = self.labels[index]
         except:
             new_index = index - 1
@@ -222,20 +243,23 @@ class genImageTrainDataset(Dataset):
                 self.images[max(0, new_index)])
             freq_image_path = self.get_freq_image_path(self.images[max(0,new_index)])
             image_f = Image.open(freq_image_path)
+            lbp_image_path = self.get_lbp_image_path(self.images[max(0,new_index)])
+            image_b = Image.open(lbp_image_path)
             label = self.labels[max(0, new_index)]
-        image, image_f = processing(image, image_f, self.opt)
-        return (image, image_f), label
+        image, image_f, image_b = processing(image, image_f, image_b, self.opt)
+        return (image, image_f, image_b), label
 
     def __len__(self):
         return self.nature_size + self.ai_size
 
 
 class genImageValDataset(Dataset):
-    def __init__(self, image_root, image_f_root, image_dir, is_real, opt):
+    def __init__(self, image_root, image_f_root, image_b_root, image_dir, is_real, opt):
         super().__init__()
         self.opt = opt
         self.image_root = image_root
         self.image_f_root = image_f_root
+        self.image_b_root = image_b_root
         self.root = os.path.join(image_root, image_dir, "val")
         if is_real:
             self.img_path = os.path.join(self.root, 'nature')
@@ -263,25 +287,36 @@ class genImageValDataset(Dataset):
         freq_image_path = os.path.join(image_dir, freq_image_filename)
         return freq_image_path
 
+    def get_lbp_image_path(self, image_path):
+        image_path_b = image_path.replace(self.image_root, self.image_b_root)
+        image_dir, image_filename = os.path.split(image_path_b)
+        image_name, image_ext = os.path.splitext(image_filename)
+        lbp_image_filename = image_name + "_b" + image_ext
+        lbp_image_path = os.path.join(image_dir, lbp_image_filename)
+        return lbp_image_path
+
     def __getitem__(self, index):
         image = self.rgb_loader(self.img_list[index])
         image_path = self.img_list[index]
         freq_image_path = self.get_freq_image_path(image_path)
         image_f = Image.open(freq_image_path)
+        lbp_image_path = self.get_lbp_image_path(image_path)
+        image_b = Image.open(lbp_image_path)
         label = self.labels[index]
-        image, image_f = processing(image, image_f, self.opt)
-        return (image, image_f), label
+        image, image_f, image_b = processing(image, image_f, image_b, self.opt)
+        return (image, image_f, image_b), label
 
     def __len__(self):
         return self.img_len
 
 
 class genImageTestDataset(Dataset):
-    def __init__(self, image_root, image_f_root, image_dir, opt):
+    def __init__(self, image_root, image_f_root, image_b_root, image_dir, opt):
         super().__init__()
         self.opt = opt
         self.image_root = image_root
         self.image_f_root = image_f_root
+        self.image_b_root = image_b_root
         self.root = os.path.join(image_root, image_dir, "val")
         self.nature_path = os.path.join(self.root, "nature")
         self.nature_list = [os.path.join(self.nature_path, f)
@@ -300,12 +335,30 @@ class genImageTestDataset(Dataset):
             img = Image.open(f)
             return img.convert('RGB')
 
+    def get_freq_image_path(self, image_path):
+        image_path_f = image_path.replace(self.image_root, self.image_f_root)
+        image_dir, image_filename = os.path.split(image_path_f)
+        image_name, image_ext = os.path.splitext(image_filename)
+        freq_image_filename = image_name + "_f" + image_ext
+        freq_image_path = os.path.join(image_dir, freq_image_filename)
+        return freq_image_path
+
+    def get_lbp_image_path(self, image_path):
+        image_path_b = image_path.replace(self.image_root, self.image_b_root)
+        image_dir, image_filename = os.path.split(image_path_b)
+        image_name, image_ext = os.path.splitext(image_filename)
+        lbp_image_filename = image_name + "_b" + image_ext
+        lbp_image_path = os.path.join(image_dir, lbp_image_filename)
+        return lbp_image_path
+
     def __getitem__(self, index):
         try:
             image = self.rgb_loader(self.images[index])
             image_path = self.images[index]
             freq_image_path = self.get_freq_image_path(image_path)
             image_f = Image.open(freq_image_path)
+            lbp_image_path = self.get_lbp_image_path(image_path)
+            image_b = Image.open(lbp_image_path)
             label = self.labels[index]
         except:
             new_index = index - 1
@@ -313,9 +366,11 @@ class genImageTestDataset(Dataset):
                 self.images[max(0, new_index)])
             freq_image_path = self.get_freq_image_path(self.images[max(0,new_index)])
             image_f = Image.open(freq_image_path)
+            lbp_image_path = self.get_lbp_image_path(self.images[max(0,new_index)])
+            image_b = Image.open(lbp_image_path)
             label = self.labels[max(0, new_index)]
-        image, image_f = processing(image, image_f, self.opt)
-        return (image, image_f), label, self.images[index]
+        image, image_f, image_b = processing(image, image_f, image_b, self.opt)
+        return (image, image_f, image_b), label, self.images[index]
 
     def __len__(self):
         return self.nature_size + self.ai_size
@@ -323,7 +378,7 @@ class genImageTestDataset(Dataset):
 
 def get_single_loader(opt, image_dir, is_real):
     val_dataset = genImageValDataset(
-        opt.image_root, opt.image_f_root, image_dir=image_dir, is_real=is_real, opt=opt)
+        opt.image_root, opt.image_f_root, opt.image_b_root, image_dir=image_dir, is_real=is_real, opt=opt)
     val_loader = DataLoader(val_dataset, batch_size=opt.val_batchsize,
                             shuffle=False, num_workers=4, pin_memory=True)
     return val_loader, len(val_dataset)
@@ -348,100 +403,102 @@ def get_val_loader(opt):
 def get_loader(opt):
     choices = opt.choices
     image_root = opt.image_root
-    image_f_root= opt.image_f_root
+    image_f_root = opt.image_f_root
+    image_b_root = opt.image_b_root
 
     datasets = []
     if choices[0] == 1:
         adm_dataset = genImageTrainDataset(
-            image_root, image_f_root, "imagenet_ai_0508_adm", opt=opt)
+            image_root, image_f_root, image_b_root, "imagenet_ai_0508_adm", opt=opt)
         datasets.append(adm_dataset)
         print("train on: imagenet_ai_0508_adm")
     if choices[1] == 1:
         biggan_dataset = genImageTrainDataset(
-            image_root, image_f_root, "imagenet_ai_0419_biggan", opt=opt)
+            image_root, image_f_root, image_b_root, "imagenet_ai_0419_biggan", opt=opt)
         datasets.append(biggan_dataset)
         print("train on: imagenet_ai_0419_biggan")
     if choices[2] == 1:
         glide_dataset = genImageTrainDataset(
-            image_root, image_f_root, "imagenet_glide", opt=opt)
+            image_root, image_f_root, image_b_root, "imagenet_glide", opt=opt)
         datasets.append(glide_dataset)
         print("train on: imagenet_glide")
     if choices[3] == 1:
         midjourney_dataset = genImageTrainDataset(
-            image_root, image_f_root, "imagenet_midjourney", opt=opt)
+            image_root, image_f_root, image_b_root, "imagenet_midjourney", opt=opt)
         datasets.append(midjourney_dataset)
         print("train on: imagenet_midjourney")
     if choices[4] == 1:
         sdv14_dataset = genImageTrainDataset(
-            image_root, image_f_root, "imagenet_ai_0419_sdv4", opt=opt)
+            image_root, image_f_root, image_b_root, "imagenet_ai_0419_sdv4", opt=opt)
         datasets.append(sdv14_dataset)
         print("train on: imagenet_ai_0419_sdv4")
     if choices[5] == 1:
         sdv15_dataset = genImageTrainDataset(
-            image_root, image_f_root, "imagenet_ai_0424_sdv5", opt=opt)
+            image_root, image_f_root, image_b_root, "imagenet_ai_0424_sdv5", opt=opt)
         datasets.append(sdv15_dataset)
         print("train on: imagenet_ai_0424_sdv5")
     if choices[6] == 1:
         vqdm_dataset = genImageTrainDataset(
-            image_root, image_f_root, "imagenet_ai_0419_vqdm", opt=opt)
+            image_root, image_f_root, image_b_root, "imagenet_ai_0419_vqdm", opt=opt)
         datasets.append(vqdm_dataset)
         print("train on: imagenet_ai_0419_vqdm")
     if choices[7] == 1:
         wukong_dataset = genImageTrainDataset(
-            image_root, image_f_root, "imagenet_ai_0424_wukong", opt=opt)
+            image_root, image_f_root, image_b_root, "imagenet_ai_0424_wukong", opt=opt)
         datasets.append(wukong_dataset)
         print("train on: imagenet_ai_0424_wukong")
 
     train_dataset = torch.utils.data.ConcatDataset(datasets)
     train_loader = DataLoader(train_dataset, batch_size=opt.batchsize,
-                              shuffle=True, num_workers=4, pin_memory=True) #TODO: 这里num_workers改成1试试
+                              shuffle=True, num_workers=4, pin_memory=True)
     return train_loader
 
 
 def get_test_loader(opt):
     choices = opt.choices
     image_root = opt.image_root
-    image_f_root= opt.image_f_root
+    image_f_root = opt.image_f_root
+    image_b_root = opt.image_b_root
 
     datasets = []
     if choices[0] == 2:
         adm_dataset = genImageTestDataset(
-            image_root, image_f_root, "imagenet_ai_0508_adm", opt=opt)
+            image_root, image_f_root, image_b_root, "imagenet_ai_0508_adm", opt=opt)
         datasets.append(adm_dataset)
         print("test on: imagenet_ai_0508_adm")
     if choices[1] == 2:
         biggan_dataset = genImageTestDataset(
-            image_root, image_f_root, "imagenet_ai_0419_biggan", opt=opt)
+            image_root, image_f_root, image_b_root, "imagenet_ai_0419_biggan", opt=opt)
         datasets.append(biggan_dataset)
         print("test on: imagenet_ai_0419_biggan")
     if choices[2] == 2:
         glide_dataset = genImageTestDataset(
-            image_root, image_f_root, "imagenet_glide", opt=opt)
+            image_root, image_f_root, image_b_root, "imagenet_glide", opt=opt)
         datasets.append(glide_dataset)
         print("test on: imagenet_glide")
     if choices[3] == 2:
         midjourney_dataset = genImageTestDataset(
-            image_root, image_f_root, "imagenet_midjourney", opt=opt)
+            image_root, image_f_root, image_b_root, "imagenet_midjourney", opt=opt)
         datasets.append(midjourney_dataset)
         print("test on: imagenet_midjourney")
     if choices[4] == 2:
         sdv14_dataset = genImageTestDataset(
-            image_root, image_f_root, "imagenet_ai_0419_sdv4", opt=opt)
+            image_root, image_f_root, image_b_root, "imagenet_ai_0419_sdv4", opt=opt)
         datasets.append(sdv14_dataset)
         print("test on: imagenet_ai_0419_sdv4")
     if choices[5] == 2:
         sdv15_dataset = genImageTestDataset(
-            image_root, image_f_root, "imagenet_ai_0424_sdv5", opt=opt)
+            image_root, image_f_root, image_b_root, "imagenet_ai_0424_sdv5", opt=opt)
         datasets.append(sdv15_dataset)
         print("test on: imagenet_ai_0424_sdv5")
     if choices[6] == 2:
         vqdm_dataset = genImageTestDataset(
-            image_root, image_f_root, "imagenet_ai_0419_vqdm", opt=opt)
+            image_root, image_f_root, image_b_root, "imagenet_ai_0419_vqdm", opt=opt)
         datasets.append(vqdm_dataset)
         print("test on: imagenet_ai_0419_vqdm")
     if choices[7] == 2:
         wukong_dataset = genImageTestDataset(
-            image_root, image_f_root, "imagenet_ai_0424_wukong", opt=opt)
+            image_root, image_f_root, image_b_root, "imagenet_ai_0424_wukong", opt=opt)
         datasets.append(wukong_dataset)
         print("test on: imagenet_ai_0424_wukong")
 

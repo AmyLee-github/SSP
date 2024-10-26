@@ -1,4 +1,4 @@
-numpy==1.24.4
+numpy==1.19.5
 opencv_python==4.8.1.78
 opencv_python_headless==4.9.0.80
 Pillow==10.0.1
