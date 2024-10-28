@@ -1,9 +1,10 @@
 import torch.nn as nn
 import torch.utils.model_zoo as model_zoo
 import torch
+# from torch.utils.tensorboard import SummaryWriter
+
 __all__ = ["ResNet", "resnet18", "resnet34",
            "resnet50", "resnet101", "resnet152"]
-
 
 model_urls = {
     "resnet18": "https://download.pytorch.org/models/resnet18-5c106cde.pth",
@@ -13,16 +14,13 @@ model_urls = {
     "resnet152": "https://download.pytorch.org/models/resnet152-b121ed2d.pth",
 }
 
-
 def conv3x3(in_planes, out_planes, stride=1):
     """3x3 convolution with padding"""
     return nn.Conv2d(in_planes, out_planes, kernel_size=3, stride=stride, padding=1, bias=False)
 
-
 def conv1x1(in_planes, out_planes, stride=1):
     """1x1 convolution"""
     return nn.Conv2d(in_planes, out_planes, kernel_size=1, stride=stride, bias=False)
-
 
 class BasicBlock(nn.Module):
     expansion = 1
@@ -54,7 +52,6 @@ class BasicBlock(nn.Module):
         out = self.relu(out)
 
         return out
-
 
 class Bottleneck(nn.Module):
     expansion = 4
@@ -92,7 +89,6 @@ class Bottleneck(nn.Module):
         out = self.relu(out)
 
         return out
-
 
 class ResNet(nn.Module):
     def __init__(self, block, layers, num_classes=1000, zero_init_residual=False):
@@ -158,7 +154,6 @@ class ResNet(nn.Module):
 
         return x
 
-
 def resnet18(pretrained=False, **kwargs):
     """Constructs a ResNet-18 model.
     Args:
@@ -168,7 +163,6 @@ def resnet18(pretrained=False, **kwargs):
     if pretrained:
         model.load_state_dict(model_zoo.load_url(model_urls["resnet18"]))
     return model
-
 
 def resnet34(pretrained=False, **kwargs):
     """Constructs a ResNet-34 model.
@@ -180,7 +174,6 @@ def resnet34(pretrained=False, **kwargs):
         model.load_state_dict(model_zoo.load_url(model_urls["resnet34"]))
     return model
 
-
 def resnet50(pretrained=False, **kwargs):
     """Constructs a ResNet-50 model.
     Args:
@@ -190,7 +183,6 @@ def resnet50(pretrained=False, **kwargs):
     if pretrained:
         model.load_state_dict(model_zoo.load_url(model_urls["resnet50"]))
     return model
-
 
 def resnet101(pretrained=False, **kwargs):
     """Constructs a ResNet-101 model.
@@ -202,7 +194,6 @@ def resnet101(pretrained=False, **kwargs):
         model.load_state_dict(model_zoo.load_url(model_urls["resnet101"]))
     return model
 
-
 def resnet152(pretrained=False, **kwargs):
     """Constructs a ResNet-152 model.
     Args:
@@ -213,7 +204,18 @@ def resnet152(pretrained=False, **kwargs):
         model.load_state_dict(model_zoo.load_url(model_urls["resnet152"]))
     return model
 
-
 if __name__ == '__main__':
     net = resnet50(pretrained=True)
     print(net)
+
+    # # Initialize TensorBoard writer
+    # writer = SummaryWriter(log_dir='/hexp/ly/PF_CAM/log/tensorboard/resnet50')
+
+    # # Create a dummy input tensor with the shape of a batch of images
+    # dummy_input = torch.randn(1, 3, 224, 224)
+
+    # # Add the model graph to TensorBoard
+    # writer.add_graph(net, dummy_input)
+
+    # # Close the writer
+    # writer.close()
