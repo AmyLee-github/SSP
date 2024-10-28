@@ -159,7 +159,7 @@ if __name__ == '__main__':
         os.makedirs(save_path)
 
     # Initialize TensorBoard writer
-    log_dir = '/hexp/ly/PF_CAM/log/tensorboard'
+    log_dir = '/hexp/ly/PF_CAM/log/tensorboard/pfb_concat'
     writer = SummaryWriter(log_dir=log_dir)
 
     step = 0
