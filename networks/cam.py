@@ -10,6 +10,8 @@ import torch
 import torch.nn as nn
 import numpy as np
 from timm.models.layers import DropPath, to_2tuple, trunc_normal_
+import torch.onnx
+import netron
 
 class Padding_tensor(nn.Module):
     def __init__(self, patch_size):
@@ -276,9 +278,15 @@ class CAM(nn.Module):
         return out
             
 if __name__ == '__main__':
+
     model = CAM(img_size=32, patch_size=2, part_out=3,  
                  depth_self=1, depth_cross=1, n_heads=4, mlp_ratio=4., qkv_bias=True, p=0., attn_p=0)
     x_f = torch.randn(1, 3, 32, 32)
     x_p = torch.randn(1, 3, 32, 32)
     out = model(x_f, x_p)
     print(out.shape)
+
+    # Save model to ONNX format and visualize with Netron
+    onnx_path = '/hexp/ly/PF_CAM/log/netron/cam_model.onnx'
+    torch.onnx.export(model, (x_f, x_p), onnx_path)
+    netron.start(onnx_path)

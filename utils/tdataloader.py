@@ -108,22 +108,25 @@ def compute(patch):
     return res.sum()
 
 
-def patch_img(img, img_f, img_b, patch_size, height):
+def patch_img(img, img_f, img_b, patch_size1, patch_size2, patch_size3, height):
     img_width, img_height = img.size
     height = int(height)
-    patch_size = int(patch_size)
-    num_patch = (height // patch_size) * (height // patch_size)
-    patch_list = []
+    patch_size = int(patch_size3)
+    num_patch1 = (height // patch_size1) * (height // patch_size1)
+    num_patch2 = (height // patch_size2) * (height // patch_size2)
+    num_patch3 = (height // patch_size3) * (height // patch_size3)
+    patch_list1 = []
+    patch_list2 = []
+    patch_list3 = []
     min_len = min(img_height, img_width)
     rz = transforms.Resize((height, height))
     if min_len < patch_size:
         img = rz(img)
         img_f = rz(img_f)
         img_b = rz(img_b)
-    rp = transforms.RandomCrop(patch_size)
-    # 随机生成num_patch个不重复随机种子
-    seeds = np.random.choice(100000, num_patch, replace=False)
-    for i in range(num_patch):
+    rp = transforms.RandomCrop(patch_size1)
+    seeds = np.random.choice(100000, num_patch1, replace=False)
+    for i in range(num_patch1):
         seed = seeds[i]
         torch.random.manual_seed(seed)
         rp_img = rp(img)
@@ -131,10 +134,36 @@ def patch_img(img, img_f, img_b, patch_size, height):
         rp_img_f = rp(img_f)
         torch.random.manual_seed(seed)
         rp_img_b = rp(img_b)
-        patch_list.append([rp_img, rp_img_f, rp_img_b])
-    patch_list.sort(key=lambda x: compute(x), reverse=False)
-    new_img, new_img_f, new_img_b = patch_list[0][0], patch_list[0][1], patch_list[0][2]
-    return new_img, new_img_f, new_img_b
+        patch_list1.append([rp_img, rp_img_f, rp_img_b])
+    patch_list1.sort(key=lambda x: compute(x), reverse=False)
+    new_img1, new_img_f1, new_img_b1 = patch_list1[0][0], patch_list1[0][1], patch_list1[0][2]
+    rp = transforms.RandomCrop(patch_size2)
+    seeds = np.random.choice(100000, num_patch2, replace=False)
+    for i in range(num_patch2):
+        seed = seeds[i]
+        torch.random.manual_seed(seed)
+        rp_img = rp(img)
+        torch.random.manual_seed(seed)
+        rp_img_f = rp(img_f)
+        torch.random.manual_seed(seed)
+        rp_img_b = rp(img_b)
+        patch_list2.append([rp_img, rp_img_f, rp_img_b])
+    patch_list2.sort(key=lambda x: compute(x), reverse=False)
+    new_img2, new_img_f2, new_img_b2 = patch_list2[0][0], patch_list2[0][1], patch_list2[0][2]
+    rp = transforms.RandomCrop(patch_size3)
+    seeds = np.random.choice(100000, num_patch3, replace=False)
+    for i in range(num_patch3):
+        seed = seeds[i]
+        torch.random.manual_seed(seed)
+        rp_img = rp(img)
+        torch.random.manual_seed(seed)
+        rp_img_f = rp(img_f)
+        torch.random.manual_seed(seed)
+        rp_img_b = rp(img_b)
+        patch_list3.append([rp_img, rp_img_f, rp_img_b])
+    patch_list3.sort(key=lambda x: compute(x), reverse=False)
+    new_img3, new_img_f3, new_img_b3 = patch_list3[0][0], patch_list3[0][1], patch_list3[0][2]
+    return new_img1, new_img_f1, new_img_b1, new_img2, new_img_f2, new_img_b2, new_img3, new_img_f3, new_img_b3
 
 def processing(img, img_f, img_b, opt):
     if opt.aug:
@@ -149,11 +178,17 @@ def processing(img, img_f, img_b, opt):
     img_aug = aug(img)
 
     if opt.isPatch:
-        img_aug_p, img_f_p, img_b_p = patch_img(img_aug, img_f, img_b, opt.patch_size, opt.trainsize)
+        img_aug_p1, img_f_p1, img_b_p1, img_aug_p2, img_f_p2, img_b_p2, img_aug_p3, img_f_p3, img_b_p3 = patch_img(img_aug, img_f, img_b, opt.patch_size1, opt.patch_size2, opt.patch_size3, opt.trainsize)
     else:
-        img_aug_p = transforms.Resize((256, 256))(img_aug)
-        img_f_p = transforms.Resize((256, 256))(img_f)
-        img_b_p = transforms.Resize((256, 256))(img_b)
+        img_aug_p1 = transforms.Resize((256, 256))(img_aug)
+        img_f_p1 = transforms.Resize((256, 256))(img_f)
+        img_b_p1 = transforms.Resize((256, 256))(img_b)
+        img_aug_p2 = img_aug_p1
+        img_f_p2 = img_f_p1
+        img_b_p2 = img_b_p1
+        img_aug_p3 = img_aug_p1
+        img_f_p3 = img_f_p1
+        img_b_p3 = img_b_p1
 
     trans_tensor = transforms.Compose([
         transforms.ToTensor(),
@@ -161,19 +196,33 @@ def processing(img, img_f, img_b, opt):
                              [0.229, 0.224, 0.225]),
     ])
 
-    img_aug_p_tensor = trans_tensor(img_aug_p)
+    img_aug_p1_tensor = trans_tensor(img_aug_p1)
+    img_aug_p2_tensor = trans_tensor(img_aug_p2)
+    img_aug_p3_tensor = trans_tensor(img_aug_p3)
     
     # Check if img_f_p has only one channel
-    if img_f_p.mode == 'L':
-        img_f_p = img_f_p.convert('RGB')
+    if img_f_p1.mode == 'L':
+        img_f_p1 = img_f_p1.convert('RGB')
+    if img_f_p2.mode == 'L':
+        img_f_p2 = img_f_p2.convert('RGB')
+    if img_f_p3.mode == 'L':
+        img_f_p3 = img_f_p3.convert('RGB')
     
-    img_f_p_tensor = trans_tensor(img_f_p)
+    img_f_p1_tensor = trans_tensor(img_f_p1)
+    img_f_p2_tensor = trans_tensor(img_f_p2)
+    img_f_p3_tensor = trans_tensor(img_f_p3)
 
     # Check if img_b_p has only one channel
-    if img_b_p.mode == 'L':
-        img_b_p = img_b_p.convert('RGB')
+    if img_b_p1.mode == 'L':
+        img_b_p1 = img_b_p1.convert('RGB')
+    if img_b_p2.mode == 'L':
+        img_b_p2 = img_b_p2.convert('RGB')
+    if img_b_p3.mode == 'L':
+        img_b_p3 = img_b_p3.convert('RGB')
 
-    img_b_p_tensor = trans_tensor(img_b_p)
+    img_b_p1_tensor = trans_tensor(img_b_p1)
+    img_b_p2_tensor = trans_tensor(img_b_p2)
+    img_b_p3_tensor = trans_tensor(img_b_p3)
 
     """
     trans = transforms.Compose([
@@ -185,7 +234,7 @@ def processing(img, img_f, img_b, opt):
     ])
     """
 
-    return img_aug_p_tensor, img_f_p_tensor, img_b_p_tensor
+    return img_aug_p1_tensor, img_f_p1_tensor, img_b_p1_tensor, img_aug_p2_tensor, img_f_p2_tensor, img_b_p2_tensor, img_aug_p3_tensor, img_f_p3_tensor, img_b_p3_tensor
 
 class genImageTrainDataset(Dataset):
     def __init__(self, image_root, image_f_root, image_b_root, image_dir, opt):
@@ -246,8 +295,8 @@ class genImageTrainDataset(Dataset):
             lbp_image_path = self.get_lbp_image_path(self.images[max(0,new_index)])
             image_b = Image.open(lbp_image_path)
             label = self.labels[max(0, new_index)]
-        image, image_f, image_b = processing(image, image_f, image_b, self.opt)
-        return (image, image_f, image_b), label
+        image1, image_f1, image_b1, image2, image_f2, image_b2, image3, image_f3, image_b3 = processing(image, image_f, image_b, self.opt)
+        return (image1, image_f1, image_b1, image2, image_f2, image_b2, image3, image_f3, image_b3), label
 
     def __len__(self):
         return self.nature_size + self.ai_size
@@ -303,8 +352,8 @@ class genImageValDataset(Dataset):
         lbp_image_path = self.get_lbp_image_path(image_path)
         image_b = Image.open(lbp_image_path)
         label = self.labels[index]
-        image, image_f, image_b = processing(image, image_f, image_b, self.opt)
-        return (image, image_f, image_b), label
+        image1, image_f1, image_b1, image2, image_f2, image_b2, image3, image_f3, image_b3 = processing(image, image_f, image_b, self.opt)
+        return (image1, image_f1, image_b1, image2, image_f2, image_b2, image3, image_f3, image_b3), label
 
     def __len__(self):
         return self.img_len
@@ -369,8 +418,8 @@ class genImageTestDataset(Dataset):
             lbp_image_path = self.get_lbp_image_path(self.images[max(0,new_index)])
             image_b = Image.open(lbp_image_path)
             label = self.labels[max(0, new_index)]
-        image, image_f, image_b = processing(image, image_f, image_b, self.opt)
-        return (image, image_f, image_b), label, self.images[index]
+        image1, image_f1, image_b1, image2, image_f2, image_b2, image3, image_f3, image_b3 = processing(image, image_f, image_b, self.opt)
+        return (image1, image_f1, image_b1, image2, image_f2, image_b2, image3, image_f3, image_b3), label, self.images[index]
 
     def __len__(self):
         return self.nature_size + self.ai_size

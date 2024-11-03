@@ -2,6 +2,8 @@ import torch.nn as nn
 import torch.utils.model_zoo as model_zoo
 import torch
 # from torch.utils.tensorboard import SummaryWriter
+import netron
+import onnx
 
 __all__ = ["ResNet", "resnet18", "resnet34",
            "resnet50", "resnet101", "resnet152"]
@@ -152,7 +154,7 @@ class ResNet(nn.Module):
         x = x.view(x.size(0), -1)
         x = self.fc(x)
 
-        return x
+        return x #, x1, x2, x3, x4
 
 def resnet18(pretrained=False, **kwargs):
     """Constructs a ResNet-18 model.
@@ -208,14 +210,10 @@ if __name__ == '__main__':
     net = resnet50(pretrained=True)
     print(net)
 
-    # # Initialize TensorBoard writer
-    # writer = SummaryWriter(log_dir='/hexp/ly/PF_CAM/log/tensorboard/resnet50')
-
-    # # Create a dummy input tensor with the shape of a batch of images
-    # dummy_input = torch.randn(1, 3, 224, 224)
-
-    # # Add the model graph to TensorBoard
-    # writer.add_graph(net, dummy_input)
-
-    # # Close the writer
-    # writer.close()
+    # Save the model to a temporary file
+    model_path = '/hexp/ly/PF_CAM/log/netron/resnet50.onnx'
+    dummy_input = torch.randn(1, 3, 256, 256)
+    torch.onnx.export(net, dummy_input, model_path)
+    onnx.save(onnx.shape_inference.infer_shapes(onnx.load(model_path)), model_path)
+    # Visualize the model using Netron
+    netron.start(model_path)
