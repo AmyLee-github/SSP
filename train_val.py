@@ -127,14 +127,14 @@ def val(val_loader, model, epoch, save_path, writer):
         best_accu = total_accu
         best_epoch = 1
         torch.save(model.state_dict(), save_path +
-                   'Net_epoch_best_mul_pfb_se_squeeze.pth')
+                   'Net_epoch_best_mul_pfb.pth')
         print(f'Save state_dict successfully! Best epoch:{epoch}.')
     else:
         if total_accu > best_accu:
             best_accu = total_accu
             best_epoch = epoch
             torch.save(model.state_dict(), save_path +
-                       'Net_epoch_best_mul_pfb_se_squeeze.pth')
+                       'Net_epoch_best_mul_pfb.pth')
             print(f'Save state_dict successfully! Best epoch:{epoch}.')
     print(
         f'Epoch:{epoch},Accuracy:{total_accu}, bestEpoch:{best_epoch}, bestAccu:{best_accu}')
@@ -177,7 +177,7 @@ if __name__ == '__main__':
         os.makedirs(save_path)
 
     # Initialize TensorBoard writer
-    log_dir = '/hexp/ly/PF_CAM/log/tensorboard/mul_pfb_se_squeeze'
+    log_dir = '/hexp/ly/PF_CAM/log/tensorboard/mul_pfb'
     writer = SummaryWriter(log_dir=log_dir)
 
     step = 0

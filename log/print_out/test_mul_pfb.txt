@@ -1,0 +1,81 @@
+----------------- Options ---------------
+                 CropSize: 224                           
+                      aug: True                          
+                batchsize: 64                            
+                blur_prob: 0                             
+                 blur_sig: [0, 1]                        
+                  choices: [0, 0, 0, 0, 1, 0, 0, 0]      
+              depth_cross: 1                             
+               depth_self: 1                             
+                    epoch: 30                            
+                   gpu_id: 0                             
+             image_b_root: /hexp/data/genImage_lbp       
+             image_f_root: /hexp/data/genImage_filtered  
+               image_root: /hexp/data/genImage           
+                 img_size: 32                            
+                  isPatch: True                          
+                  isTrain: True                          	[default: None]
+                    isVal: False                         	[default: None]
+               jpg_method: ['pil', 'cv2']                
+                 jpg_prob: 0                             
+                 jpg_qual: [90, 100]                     
+                     load: /hexp/ly/PF_CAM/snapshot/sortnet/Net_epoch_best_mul_pfb.pth	[default: None]
+                 log_name: log3.log                      
+                       lr: 0.0001                        
+                     name: experiment_name               
+                 part_out: 3                             
+              patch_size1: 32                            
+              patch_size2: 64                            
+              patch_size3: 128                           
+                rz_interp: bilinear                      
+                save_path: ./snapshot/sortnet/           
+                trainsize: 256                           
+            val_batchsize: 64                            
+             val_interval: 1                             
+           vit_patch_size: 2                             
+----------------- End -------------------
+load data...
+val on: imagenet_ai_0508_adm
+val on: imagenet_ai_0419_biggan
+val on: imagenet_glide
+val on: imagenet_midjourney
+val on: imagenet_ai_0419_sdv4
+val on: imagenet_ai_0424_sdv5
+val on: imagenet_ai_0419_vqdm
+val on: imagenet_ai_0424_wukong
+USE GPU 0
+load model from /hexp/ly/PF_CAM/snapshot/sortnet/Net_epoch_best_mul_pfb.pth
+Start train
+val on: imagenet_ai_0508_adm
+ai accu: 0.9048333168029785
+nature accu:0.9716666340827942
+val on:imagenet_ai_0508_adm, Accuracy:0.9382500052452087
+val on: imagenet_ai_0419_biggan
+ai accu: 0.7975000143051147
+nature accu:0.9766666293144226
+val on:imagenet_ai_0419_biggan, Accuracy:0.8870833516120911
+val on: imagenet_glide
+ai accu: 0.8920000195503235
+nature accu:0.9753333330154419
+val on:imagenet_glide, Accuracy:0.9336666464805603
+val on: imagenet_midjourney
+ai accu: 0.784333348274231
+nature accu:0.9729999899864197
+val on:imagenet_midjourney, Accuracy:0.8786666393280029
+val on: imagenet_ai_0419_sdv4
+ai accu: 0.9851666688919067
+nature accu:0.9721666574478149
+val on:imagenet_ai_0419_sdv4, Accuracy:0.9786666631698608
+val on: imagenet_ai_0424_sdv5
+ai accu: 0.9898750185966492
+nature accu:0.9651250243186951
+val on:imagenet_ai_0424_sdv5, Accuracy:0.9775000214576721
+val on: imagenet_ai_0419_vqdm
+ai accu: 0.9108332991600037
+nature accu:0.9764999747276306
+val on:imagenet_ai_0419_vqdm, Accuracy:0.9436666369438171
+val on: imagenet_ai_0424_wukong
+ai accu: 0.9729999899864197
+nature accu:0.9616666436195374
+val on:imagenet_ai_0424_wukong, Accuracy:0.9673333168029785
+Accuracy:0.9396799802780151
