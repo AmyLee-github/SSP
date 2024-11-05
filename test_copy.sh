@@ -1,0 +1,1 @@
+python -W ignore test_copy.py --load='/hexp/ly/PF_CAM/snapshot/sortnet/Net_epoch_best_pfb_mask.pth' | tee "/hexp/ly/PF_CAM/log/print_out/test_pfb_mask.txt"
