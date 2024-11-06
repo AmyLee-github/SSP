@@ -277,7 +277,7 @@ class CAM(nn.Module):
             
 if __name__ == '__main__':
     model = CAM(img_size=32, patch_size=2, part_out=3,  
-                 depth_self=1, depth_cross=1, n_heads=6, mlp_ratio=4., qkv_bias=True, p=0., attn_p=0)
+                 depth_self=1, depth_cross=1, n_heads=4, mlp_ratio=4., qkv_bias=True, p=0., attn_p=0)
     x_f = torch.randn(1, 3, 32, 32)
     x_p = torch.randn(1, 3, 32, 32)
     out = model(x_f, x_p)

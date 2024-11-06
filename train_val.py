@@ -1,6 +1,5 @@
 import os
 import torch
-from tensorboardX import SummaryWriter
 from utils.util import set_random_seed, poly_lr
 from utils.tdataloader import get_loader, get_val_loader
 from options import TrainOptions
@@ -51,8 +50,10 @@ def train(train_loader, model, optimizer, epoch, save_path):
             loss_all += loss.data
             train_losses.append(loss.data.item())
 
-            # Log loss to TensorBoard
-            writer.add_scalar('Train/Loss', loss.data, step)
+            preds = torch.sigmoid(preds)
+            correct += ((preds > 0.5) == labels).sum().item()
+            total += labels.size(0)
+            train_accuracies.append(correct / total)
 
             if i % 200 == 0 or i == total_step or i == 1:
                 print(
@@ -111,21 +112,18 @@ def val(val_loader, model, epoch, save_path):
             val_accuracies.append(accu.item())
     total_accu = total_right_image / total_image
 
-    # Log accuracy to TensorBoard
-    writer.add_scalar('Val/Accuracy', total_accu, epoch)
-
     if epoch == 1:
         best_accu = total_accu
         best_epoch = 1
         torch.save(model.state_dict(), save_path +
-                   'Net_epoch_best_pf_cam_h6_squeeze.pth')
+                   'Net_epoch_best_pf_cam_squeeze.pth')
         print(f'Save state_dict successfully! Best epoch:{epoch}.')
     else:
         if total_accu > best_accu:
             best_accu = total_accu
             best_epoch = epoch
             torch.save(model.state_dict(), save_path +
-                       'Net_epoch_best_pf_cam_h6_squeeze.pth')
+                       'Net_epoch_best_pf_cam_squeeze.pth')
             print(f'Save state_dict successfully! Best epoch:{epoch}.')
     print(
         f'Epoch:{epoch},Accuracy:{total_accu}, bestEpoch:{best_epoch}, bestAccu:{best_accu}')
@@ -167,10 +165,6 @@ if __name__ == '__main__':
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
-    # Initialize TensorBoard writer
-    log_dir = '/hexp/ly/PF_CAM/log/tensorboard/pf_cam_h6_squeeze'
-    writer = SummaryWriter(log_dir=log_dir)
-
     step = 0
     best_epoch = 0
     best_accu = 0
@@ -181,7 +175,34 @@ if __name__ == '__main__':
     print("Start train")
     for epoch in range(1, opt.epoch + 1):
         cur_lr = poly_lr(optimizer, opt.lr, epoch, opt.epoch)
-        train(train_loader, model, optimizer, epoch, save_path, writer)
-        val(val_loader, model, epoch, save_path, writer)
+        train_loss, train_accu = train(train_loader, model, optimizer, epoch, save_path)
+        val_loss, val_accu = val(val_loader, model, epoch, save_path)
+        train_losses.extend(train_loss)
+        val_losses.extend(val_loss)
+        train_accuracies.extend(train_accu)
+        val_accuracies.extend(val_accu)
 
-    writer.close()
+    # Plotting the loss and accuracy graphs
+    epochs = range(1, opt.epoch + 1)
+    plt.figure(figsize=(12, 5))
+
+    # Plot training and validation loss
+    plt.subplot(1, 2, 1)
+    plt.plot(train_losses, label='Training Loss')
+    plt.plot(val_losses, label='Validation Loss')
+    plt.xlabel('Iterations')
+    plt.ylabel('Loss')
+    plt.title('Training and Validation Loss')
+    plt.legend()
+
+    # Plot training and validation accuracy
+    plt.subplot(1, 2, 2)
+    plt.plot(train_accuracies, label='Training Accuracy')
+    plt.plot(val_accuracies, label='Validation Accuracy')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.title('Training and Validation Accuracy')
+    plt.legend()
+
+    plt.tight_layout()
+    plt.show()

@@ -1,6 +1,0 @@
-每次需要注意修改的地方：
-0.模型修改
-1.option.py文件中注意数据集的路径
-2.tensorboard的文件夹名
-3.best_epoch文件名
-4.train_val.sh和test.sh的log文件的文件名
