@@ -8,7 +8,6 @@ from utils.loss import bceLoss
 from datetime import datetime
 import numpy as np
 from PIL import ImageFile
-import matplotlib.pyplot as plt
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -116,14 +115,14 @@ def val(val_loader, model, epoch, save_path):
         best_accu = total_accu
         best_epoch = 1
         torch.save(model.state_dict(), save_path +
-                   'Net_epoch_best_pf_cam_squeeze.pth')
+                   'Net_epoch_best_pf_cam2_squeeze.pth')
         print(f'Save state_dict successfully! Best epoch:{epoch}.')
     else:
         if total_accu > best_accu:
             best_accu = total_accu
             best_epoch = epoch
             torch.save(model.state_dict(), save_path +
-                       'Net_epoch_best_pf_cam_squeeze.pth')
+                       'Net_epoch_best_pf_cam2_squeeze.pth')
             print(f'Save state_dict successfully! Best epoch:{epoch}.')
     print(
         f'Epoch:{epoch},Accuracy:{total_accu}, bestEpoch:{best_epoch}, bestAccu:{best_accu}')
@@ -156,7 +155,7 @@ if __name__ == '__main__':
         print('USE GPU 3')
 
     # load model
-    model = PF_CAM(opt.img_size, opt.vit_patch_size, opt.part_out, opt.depth_self, opt.depth_cross).cuda()
+    model = PF_CAM().cuda()
     if opt.load is not None:
         model.load_state_dict(torch.load(opt.load))
         print('load model from', opt.load)
@@ -175,34 +174,5 @@ if __name__ == '__main__':
     print("Start train")
     for epoch in range(1, opt.epoch + 1):
         cur_lr = poly_lr(optimizer, opt.lr, epoch, opt.epoch)
-        train_loss, train_accu = train(train_loader, model, optimizer, epoch, save_path)
-        val_loss, val_accu = val(val_loader, model, epoch, save_path)
-        train_losses.extend(train_loss)
-        val_losses.extend(val_loss)
-        train_accuracies.extend(train_accu)
-        val_accuracies.extend(val_accu)
-
-    # Plotting the loss and accuracy graphs
-    epochs = range(1, opt.epoch + 1)
-    plt.figure(figsize=(12, 5))
-
-    # Plot training and validation loss
-    plt.subplot(1, 2, 1)
-    plt.plot(train_losses, label='Training Loss')
-    plt.plot(val_losses, label='Validation Loss')
-    plt.xlabel('Iterations')
-    plt.ylabel('Loss')
-    plt.title('Training and Validation Loss')
-    plt.legend()
-
-    # Plot training and validation accuracy
-    plt.subplot(1, 2, 2)
-    plt.plot(train_accuracies, label='Training Accuracy')
-    plt.plot(val_accuracies, label='Validation Accuracy')
-    plt.xlabel('Epochs')
-    plt.ylabel('Accuracy')
-    plt.title('Training and Validation Accuracy')
-    plt.legend()
-
-    plt.tight_layout()
-    plt.show()
+        train(train_loader, model, optimizer, epoch, save_path)
+        val(val_loader, model, epoch, save_path)
