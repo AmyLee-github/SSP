@@ -8,7 +8,7 @@ import torch.nn.functional as F
 
 
 class PF_CAM(nn.Module):
-    def __init__(self, img_size, vit_patch_size, part_out, depth_self, depth_cross, n_heads=4, mlp_ratio=4., qkv_bias=True, p=0., attn_p=0., pretrain=True):
+    def __init__(self, img_size, vit_patch_size, part_out, depth_self, depth_cross, n_heads=3, mlp_ratio=4., qkv_bias=True, p=0., attn_p=0., pretrain=True):
         super().__init__()
         self.cam = CAM(img_size, vit_patch_size, part_out, depth_self, depth_cross, n_heads, mlp_ratio, qkv_bias, p, attn_p)
         self.srm = SRMConv2d_simple()

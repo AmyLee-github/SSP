@@ -9,8 +9,9 @@ from datetime import datetime
 import numpy as np
 from PIL import ImageFile
 import matplotlib.pyplot as plt
-
+import wandb
 ImageFile.LOAD_TRUNCATED_IMAGES = True
+IS_WANDB = True
 
 def get_val_opt():
     val_opt = TrainOptions().parse(print_options=False)
@@ -48,13 +49,8 @@ def train(train_loader, model, optimizer, epoch, save_path):
             step += 1
             epoch_step += 1
             loss_all += loss.data
-            train_losses.append(loss.data.item())
-
-            preds = torch.sigmoid(preds)
-            correct += ((preds > 0.5) == labels).sum().item()
-            total += labels.size(0)
-            train_accuracies.append(correct / total)
-
+            if IS_WANDB:
+                wandb.log({'train_loss': loss.data})
             if i % 200 == 0 or i == total_step or i == 1:
                 print(
                     f'{datetime.now()} Epoch [{epoch:03d}/{opt.epoch:03d}], Step [{i:04d}/{total_step:04d}], Total_loss: {loss.data:.4f}')
@@ -65,14 +61,11 @@ def train(train_loader, model, optimizer, epoch, save_path):
 
     except KeyboardInterrupt:
         print('Keyboard Interrupt: save model and exit.')
-    return train_losses, train_accuracies
 
 def val(val_loader, model, epoch, save_path):
     model.eval()
     global best_epoch, best_accu
     total_right_image = total_image = 0
-    val_losses = []
-    val_accuracies = []
     with torch.no_grad():
         for loader in val_loader:
             right_ai_image = right_nature_image = 0
@@ -85,9 +78,6 @@ def val(val_loader, model, epoch, save_path):
                 labels = labels.cuda()
                 res = model(images_f, images)
                 res = torch.sigmoid(res).ravel()
-                loss1 = bceLoss()
-                loss = loss1(res, labels)
-                val_losses.append(loss.data.item())
                 right_ai_image += (((res > 0.5) & (labels == 1))
                                    | ((res < 0.5) & (labels == 0))).sum()
 
@@ -98,9 +88,6 @@ def val(val_loader, model, epoch, save_path):
                 labels = labels.cuda()
                 res = model(images_f, images)
                 res = torch.sigmoid(res).ravel()
-                loss1 = bceLoss()
-                loss = loss1(res, labels)
-                val_losses.append(loss.data.item())
                 right_nature_image += (((res > 0.5) & (labels == 1))
                                        | ((res < 0.5) & (labels == 0))).sum()
             print(f'nature accu:{right_nature_image/nature_size}')
@@ -109,9 +96,7 @@ def val(val_loader, model, epoch, save_path):
             total_right_image += right_ai_image + right_nature_image
             total_image += ai_size + nature_size
             print(f'val on:{name}, Epoch:{epoch}, Accuracy:{accu}')
-            val_accuracies.append(accu.item())
     total_accu = total_right_image / total_image
-
     if epoch == 1:
         best_accu = total_accu
         best_epoch = 1
@@ -125,11 +110,26 @@ def val(val_loader, model, epoch, save_path):
             torch.save(model.state_dict(), save_path +
                        'Net_epoch_best_pf_cam_squeeze.pth')
             print(f'Save state_dict successfully! Best epoch:{epoch}.')
+    if IS_WANDB:
+        wandb.log({'val_accu': total_accu})
     print(
         f'Epoch:{epoch},Accuracy:{total_accu}, bestEpoch:{best_epoch}, bestAccu:{best_accu}')
-    return val_losses, val_accuracies
+    if IS_WANDB:
+        if epoch == opt.epoch:
+            wandb.log({'best_epoch': best_epoch, 'best_accu': best_accu})
 
 if __name__ == '__main__':
+    if IS_WANDB:
+        wandb.init(project='Paper1', name='pf_cam_squeeze')
+        wandb.config.update(
+            {'model': 'pf_cam', 
+             'dataset': 'squeeze',
+             'p': 0.,
+             'patch_size': 48,
+             'vit_patch_size': 3,
+             'n_heads': 3   
+            }
+        )
     set_random_seed()
     # train and val options
     opt = TrainOptions().parse()
@@ -168,41 +168,11 @@ if __name__ == '__main__':
     step = 0
     best_epoch = 0
     best_accu = 0
-    train_losses = []
-    val_losses = []
-    train_accuracies = []
-    val_accuracies = []
     print("Start train")
     for epoch in range(1, opt.epoch + 1):
         cur_lr = poly_lr(optimizer, opt.lr, epoch, opt.epoch)
-        train_loss, train_accu = train(train_loader, model, optimizer, epoch, save_path)
-        val_loss, val_accu = val(val_loader, model, epoch, save_path)
-        train_losses.extend(train_loss)
-        val_losses.extend(val_loss)
-        train_accuracies.extend(train_accu)
-        val_accuracies.extend(val_accu)
-
-    # Plotting the loss and accuracy graphs
-    epochs = range(1, opt.epoch + 1)
-    plt.figure(figsize=(12, 5))
-
-    # Plot training and validation loss
-    plt.subplot(1, 2, 1)
-    plt.plot(train_losses, label='Training Loss')
-    plt.plot(val_losses, label='Validation Loss')
-    plt.xlabel('Iterations')
-    plt.ylabel('Loss')
-    plt.title('Training and Validation Loss')
-    plt.legend()
-
-    # Plot training and validation accuracy
-    plt.subplot(1, 2, 2)
-    plt.plot(train_accuracies, label='Training Accuracy')
-    plt.plot(val_accuracies, label='Validation Accuracy')
-    plt.xlabel('Epochs')
-    plt.ylabel('Accuracy')
-    plt.title('Training and Validation Accuracy')
-    plt.legend()
-
-    plt.tight_layout()
-    plt.show()
+        train(train_loader, model, optimizer, epoch, save_path)
+        val(val_loader, model, epoch, save_path)
+    if IS_WANDB:
+        wandb.alert(title='Train Finished', text='Train Finished')
+        wandb.finish()
