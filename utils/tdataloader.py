@@ -130,7 +130,24 @@ def patch_img(img, img_f, patch_size, height):
         rp_img_f = rp(img_f)
         patch_list.append([rp_img, rp_img_f])
     patch_list.sort(key=lambda x: compute(x), reverse=False)
-    new_img, new_img_f = patch_list[0][0], patch_list[0][1]
+    new_img1, new_img_f1 = patch_list[0][0], patch_list[0][1]
+    new_img2, new_img_f2 = patch_list[1][0], patch_list[1][1]
+    new_img3, new_img_f3 = patch_list[2][0], patch_list[2][1]
+    new_img4, new_img_f4 = patch_list[3][0], patch_list[3][1]
+
+    new_img = Image.new('RGB', (patch_size * 2, patch_size * 2))
+    new_img_f = Image.new('RGB', (patch_size * 2, patch_size * 2))
+
+    new_img.paste(new_img1, (0, 0))
+    new_img.paste(new_img2, (patch_size, 0))
+    new_img.paste(new_img3, (0, patch_size))
+    new_img.paste(new_img4, (patch_size, patch_size))
+
+    new_img_f.paste(new_img_f1, (0, 0))
+    new_img_f.paste(new_img_f2, (patch_size, 0))
+    new_img_f.paste(new_img_f3, (0, patch_size))
+    new_img_f.paste(new_img_f4, (patch_size, patch_size))
+
     return new_img, new_img_f
 
 def processing(img, img_f, opt):
