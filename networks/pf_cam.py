@@ -15,8 +15,8 @@ class PF_CAM(nn.Module):
         self.disc = resnet50(pretrained=True)
         self.disc.fc = nn.Linear(2048, 1)
 
-    def forward(self, x_f, x_p):
-        x = self.cam(x_f, x_p)
+    def forward(self, x_b, x_p):
+        x = self.cam(x_b, x_p)
         x = F.interpolate(x, (256, 256), mode='bilinear')
         # patch块与频域块concat
         # x_f = x_f[:, :1, :, :]
