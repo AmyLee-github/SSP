@@ -120,7 +120,7 @@ def val(val_loader, model, epoch, save_path):
 
 if __name__ == '__main__':
     if IS_WANDB:
-        wandb.init(project='Paper1', name='4pf_8_cam_squeeze')
+        wandb.init(project='Paper1', name='4pf_6_cam_squeeze')
     set_random_seed()
     # train and val options
     opt = TrainOptions().parse()
