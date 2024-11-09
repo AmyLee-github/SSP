@@ -23,7 +23,7 @@ class TrainOptions():
         parser.add_argument('--batchsize', type=int,
                             default=64, help='input batch size')
         parser.add_argument('--choices', default=[0, 0, 0, 0, 1, 0, 0, 0])
-        parser.add_argument('--epoch', type=int, default=80)
+        parser.add_argument('--epoch', type=int, default=30)
         parser.add_argument('--lr', default=1e-4)
         parser.add_argument('--trainsize', type=int, default=256)
         parser.add_argument('--load', type=str,
@@ -31,11 +31,11 @@ class TrainOptions():
         parser.add_argument('--image_root', type=str,
                             default='/hexp/data/genImage_squeeze')
         parser.add_argument('--image_f_root', type=str,
-                            default='/hexp/data/genImage_filtered_squeeze')
+                            default='/hexp/data/genImage_filtered_8_squeeze')
         parser.add_argument('--save_path', type=str,
                             default='./snapshot/sortnet/')
         parser.add_argument('--isPatch', action='store_false')
-        parser.add_argument('--patch_size', default=48)
+        parser.add_argument('--patch_size', default=32)
         parser.add_argument('--aug', action='store_false')
         parser.add_argument('--gpu_id', type=str, default='0')
         parser.add_argument('--log_name', default='log3.log',
@@ -44,8 +44,8 @@ class TrainOptions():
                             type=int, help='val per interval')
         parser.add_argument('--val_batchsize', default=64, type=int)
         # cam setting
-        parser.add_argument('--img_size', default=48, type=int) # 可以不用定义了，就是patch_size
-        parser.add_argument('--vit_patch_size', default=3, type=int)
+        parser.add_argument('--img_size', default=64, type=int) # 可以不用定义了，就是patch_size
+        parser.add_argument('--vit_patch_size', default=2, type=int)
         parser.add_argument('--part_out', default=3, type=int)
         parser.add_argument('--depth_self', default=1, type=int)
         parser.add_argument('--depth_cross', default=1, type=int)

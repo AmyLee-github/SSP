@@ -40,8 +40,8 @@ def train(train_loader, model, optimizer, epoch, save_path):
             optimizer.zero_grad()
             images = images.cuda()
             images_f = images_f.cuda()
-            preds = model(images_f, images).ravel()
             labels = labels.cuda()
+            preds = model(images_f, images).ravel()
             loss1 = bceLoss()
             loss = loss1(preds, labels)
             loss.backward()
@@ -101,14 +101,14 @@ def val(val_loader, model, epoch, save_path):
         best_accu = total_accu
         best_epoch = 1
         torch.save(model.state_dict(), save_path +
-                   'Net_epoch_best_pf_cam2_squeeze.pth')
+                   'Net_epoch_best_4pf_8_cam_squeeze.pth')
         print(f'Save state_dict successfully! Best epoch:{epoch}.')
     else:
         if total_accu > best_accu:
             best_accu = total_accu
             best_epoch = epoch
             torch.save(model.state_dict(), save_path +
-                       'Net_epoch_best_pf_cam2_squeeze.pth')
+                       'Net_epoch_best_4pf_8_cam_squeeze.pth')
             print(f'Save state_dict successfully! Best epoch:{epoch}.')
     if IS_WANDB:
         wandb.log({'val_accu': total_accu})
@@ -120,17 +120,7 @@ def val(val_loader, model, epoch, save_path):
 
 if __name__ == '__main__':
     if IS_WANDB:
-        wandb.init(project='Paper1', name='pf_cam_squeeze_2')
-        wandb.config.update(
-            {'model': 'pf_cam', 
-             'dataset': 'squeeze',
-             'p': 0.,
-             'patch_size': 48,
-             'vit_patch_size': 2,
-             'n_heads': 4,
-             'epoch': 80   
-            }
-        )
+        wandb.init(project='Paper1', name='4pf_8_cam_squeeze')
     set_random_seed()
     # train and val options
     opt = TrainOptions().parse()
@@ -157,7 +147,7 @@ if __name__ == '__main__':
         print('USE GPU 3')
 
     # load model
-    model = PF_CAM().cuda()
+    model = PF_CAM(opt.img_size, opt.vit_patch_size, opt.part_out, opt.depth_self, opt.depth_cross).cuda()
     if opt.load is not None:
         model.load_state_dict(torch.load(opt.load))
         print('load model from', opt.load)
