@@ -120,14 +120,15 @@ def val(val_loader, model, epoch, save_path):
 
 if __name__ == '__main__':
     if IS_WANDB:
-        wandb.init(project='Paper1', name='pf_cam_squeeze')
+        wandb.init(project='Paper1', name='pf_cam_squeeze_2')
         wandb.config.update(
             {'model': 'pf_cam', 
              'dataset': 'squeeze',
              'p': 0.,
              'patch_size': 48,
-             'vit_patch_size': 3,
-             'n_heads': 3   
+             'vit_patch_size': 2,
+             'n_heads': 4,
+             'epoch': 80   
             }
         )
     set_random_seed()

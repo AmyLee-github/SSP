@@ -23,7 +23,7 @@ class TrainOptions():
         parser.add_argument('--batchsize', type=int,
                             default=64, help='input batch size')
         parser.add_argument('--choices', default=[0, 0, 0, 0, 1, 0, 0, 0])
-        parser.add_argument('--epoch', type=int, default=30)
+        parser.add_argument('--epoch', type=int, default=80)
         parser.add_argument('--lr', default=1e-4)
         parser.add_argument('--trainsize', type=int, default=256)
         parser.add_argument('--load', type=str,
