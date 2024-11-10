@@ -58,6 +58,6 @@ def process_images(input_dir, output_dir):
     print("Processing complete.")
 
 if __name__ == "__main__":
-    input_directory = '/hexp/data/genImage_squeeze'
-    output_directory = '/hexp/data/genImage_filtered_6_squeeze'
+    input_directory = '/hexp/data/genImage'
+    output_directory = '/hexp/data/genImage_filtered_6'
     process_images(input_directory, output_directory)
