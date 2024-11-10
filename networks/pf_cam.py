@@ -9,7 +9,7 @@ import torch.nn.functional as F
 class PF_CAM(nn.Module):
     def __init__(self, img_size, vit_patch_size, part_out, depth_self, depth_cross, n_heads=4, mlp_ratio=4., qkv_bias=True, p=0., attn_p=0., pretrain=True):
         super().__init__()
-        self.cam = CrossAttention(num_channels=3, num_heads=1)
+        self.cam = CrossAttention(num_channels=3, num_heads=3)
         self.srm = SRMConv2d_simple()
         self.disc = resnet50(pretrained=True)
         self.disc.fc = nn.Linear(2048, 1)

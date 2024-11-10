@@ -11,7 +11,7 @@ from PIL import ImageFile
 import matplotlib.pyplot as plt
 import wandb
 ImageFile.LOAD_TRUNCATED_IMAGES = True
-IS_WANDB = True
+IS_WANDB = False
 
 def get_val_opt():
     val_opt = TrainOptions().parse(print_options=False)
@@ -101,14 +101,14 @@ def val(val_loader, model, epoch, save_path):
         best_accu = total_accu
         best_epoch = 1
         torch.save(model.state_dict(), save_path +
-                   'Net_epoch_best_4pf_8_cam_squeeze.pth')
+                   'Net_epoch_best_4pf_6_cam_h3_squeeze.pth')
         print(f'Save state_dict successfully! Best epoch:{epoch}.')
     else:
         if total_accu > best_accu:
             best_accu = total_accu
             best_epoch = epoch
             torch.save(model.state_dict(), save_path +
-                       'Net_epoch_best_4pf_8_cam_squeeze.pth')
+                       'Net_epoch_best_4pf_6_cam_h3_squeeze.pth')
             print(f'Save state_dict successfully! Best epoch:{epoch}.')
     if IS_WANDB:
         wandb.log({'val_accu': total_accu})
@@ -120,7 +120,7 @@ def val(val_loader, model, epoch, save_path):
 
 if __name__ == '__main__':
     if IS_WANDB:
-        wandb.init(project='Paper1', name='4pf_6_cam_squeeze')
+        wandb.init(project='Paper1', name='4pf_6_cam_h3_squeeze')
     set_random_seed()
     # train and val options
     opt = TrainOptions().parse()
