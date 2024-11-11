@@ -11,7 +11,7 @@ from PIL import ImageFile
 import matplotlib.pyplot as plt
 import wandb
 ImageFile.LOAD_TRUNCATED_IMAGES = True
-IS_WANDB = False
+IS_WANDB = True
 
 def get_val_opt():
     val_opt = TrainOptions().parse(print_options=False)
@@ -58,7 +58,7 @@ def train(train_loader, model, optimizer, epoch, save_path):
     except KeyboardInterrupt:
         print('Keyboard Interrupt: save model and exit.')
 
-def val(val_loader, model, epoch, save_path):
+def val(val_loader, model, epoch, save_path, opt):
     model.eval()
     global best_epoch, best_accu
     total_right_image = total_image = 0
@@ -100,27 +100,31 @@ def val(val_loader, model, epoch, save_path):
         best_accu = total_accu
         best_epoch = 1
         torch.save(model.state_dict(), save_path +
-                   'Net_epoch_best_pb_cam_squeeze.pth')
+                   f'Net_epoch_best_{opt.name}.pth')
         print(f'Save state_dict successfully! Best epoch:{epoch}.')
     else:
         if total_accu > best_accu:
             best_accu = total_accu
             best_epoch = epoch
             torch.save(model.state_dict(), save_path +
-                       'Net_epoch_best_pb_cam_squeeze.pth')
+                       f'Net_epoch_best_{opt.name}.pth')
             print(f'Save state_dict successfully! Best epoch:{epoch}.')
-    if IS_WANDB:
-        wandb.log({'best_accu': best_accu},{'best_epoch': best_epoch})
     print(
         f'Epoch:{epoch},Accuracy:{total_accu}, bestEpoch:{best_epoch}, bestAccu:{best_accu}')
+    if IS_WANDB:
+        if epoch == opt.epoch:
+            wandb.log({'best_accu': best_accu, 'best_epoch': best_epoch})
 
 if __name__ == '__main__':
-    if IS_WANDB:
-        wandb.init(project='Paper1', name='pb_cam_squeeze')
     set_random_seed()
     # train and val options
     opt = TrainOptions().parse()
     val_opt = get_val_opt()
+    if IS_WANDB:
+        wandb.init(
+            project='Paper1', 
+            name=opt.name
+        )
 
     # load data
     print('load data...')
@@ -143,7 +147,7 @@ if __name__ == '__main__':
         print('USE GPU 3')
 
     # load model
-    model = PF_CAM(opt.img_size, opt.vit_patch_size, opt.part_out, opt.depth_self, opt.depth_cross).cuda()
+    model = PF_CAM(opt).cuda()
     if opt.load is not None:
         model.load_state_dict(torch.load(opt.load))
         print('load model from', opt.load)
@@ -159,7 +163,7 @@ if __name__ == '__main__':
     for epoch in range(1, opt.epoch + 1):
         cur_lr = poly_lr(optimizer, opt.lr, epoch, opt.epoch)
         train(train_loader, model, optimizer, epoch, save_path)
-        val(val_loader, model, epoch, save_path)
+        val(val_loader, model, epoch, save_path, opt)
     if IS_WANDB:
         wandb.alert(title='Train Finished', text='Train Finished')
         wandb.finish()
