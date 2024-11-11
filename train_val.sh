@@ -1,1 +1,1 @@
-python -W ignore train_val.py | tee "/hexp/ly/PF_CAM/log/print_out/train_val_pfb_concat.txt"
+python -W ignore train_val.py --name 4pfb_cam_squeeze

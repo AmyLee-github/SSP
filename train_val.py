@@ -1,7 +1,5 @@
-# @note import
 import os
 import torch
-from tensorboardX import SummaryWriter
 from utils.util import set_random_seed, poly_lr
 from utils.tdataloader import get_loader, get_val_loader
 from options import TrainOptions
@@ -9,9 +7,10 @@ from networks.pf_cam import PF_CAM
 from utils.loss import bceLoss
 from datetime import datetime
 import numpy as np
-"""Currently assumes jpg_prob, blur_prob 0 or 1"""
 from PIL import ImageFile
+import wandb
 ImageFile.LOAD_TRUNCATED_IMAGES = True
+IS_WANDB = True
 
 
 def get_val_opt():
@@ -27,8 +26,7 @@ def get_val_opt():
     val_opt.jpg_qual = [90]
     return val_opt
 
-
-def train(train_loader, model, optimizer, epoch, save_path, writer):
+def train(train_loader, model, optimizer, epoch, save_path):
     model.train()
     global step
     epoch_step = 0
@@ -39,8 +37,8 @@ def train(train_loader, model, optimizer, epoch, save_path, writer):
             images = images.cuda()
             images_f = images_f.cuda()
             images_b = images_b.cuda()
-            preds = model(images_b, images_f, images).ravel()
             labels = labels.cuda()
+            preds = model(images_b, images_f, images).ravel()
             loss1 = bceLoss()
             loss = loss1(preds, labels)
             loss.backward()
@@ -48,10 +46,8 @@ def train(train_loader, model, optimizer, epoch, save_path, writer):
             step += 1
             epoch_step += 1
             loss_all += loss.data
-
-            # Log loss to TensorBoard
-            writer.add_scalar('Train/Loss', loss.data, step)
-
+            if IS_WANDB:
+                wandb.log({'train_loss': loss.data})
             if i % 200 == 0 or i == total_step or i == 1:
                 print(
                     f'{datetime.now()} Epoch [{epoch:03d}/{opt.epoch:03d}], Step [{i:04d}/{total_step:04d}], Total_loss: {loss.data:.4f}')
@@ -63,8 +59,7 @@ def train(train_loader, model, optimizer, epoch, save_path, writer):
     except KeyboardInterrupt:
         print('Keyboard Interrupt: save model and exit.')
 
-
-def val(val_loader, model, epoch, save_path, writer):
+def val(val_loader, model, epoch, save_path, opt):
     model.eval()
     global best_epoch, best_accu
     total_right_image = total_image = 0
@@ -101,32 +96,39 @@ def val(val_loader, model, epoch, save_path, writer):
             total_image += ai_size + nature_size
             print(f'val on:{name}, Epoch:{epoch}, Accuracy:{accu}')
     total_accu = total_right_image / total_image
-
-    # Log accuracy to TensorBoard
-    writer.add_scalar('Val/Accuracy', total_accu, epoch)
-
+    if IS_WANDB:
+        wandb.log({'val_accu': total_accu})
     if epoch == 1:
         best_accu = total_accu
         best_epoch = 1
         torch.save(model.state_dict(), save_path +
-                   'Net_epoch_best_pfb_concat.pth')
+                   f'Net_epoch_best_{opt.name}.pth')
         print(f'Save state_dict successfully! Best epoch:{epoch}.')
     else:
         if total_accu > best_accu:
             best_accu = total_accu
             best_epoch = epoch
             torch.save(model.state_dict(), save_path +
-                       'Net_epoch_best_pfb_concat.pth')
+                       f'Net_epoch_best_{opt.name}.pth')
             print(f'Save state_dict successfully! Best epoch:{epoch}.')
+    if IS_WANDB:
+        wandb.log({'val_accu': total_accu})
     print(
         f'Epoch:{epoch},Accuracy:{total_accu}, bestEpoch:{best_epoch}, bestAccu:{best_accu}')
-
+    if IS_WANDB:
+        if epoch == opt.epoch:
+            wandb.log({'best_epoch': best_epoch, 'best_accu': best_accu})
 
 if __name__ == '__main__':
     set_random_seed()
     # train and val options
     opt = TrainOptions().parse()
     val_opt = get_val_opt()
+    if IS_WANDB:
+        wandb.init(
+            project='Paper1', 
+            name=opt.name,
+        )
 
     # load data
     print('load data...')
@@ -149,7 +151,7 @@ if __name__ == '__main__':
         print('USE GPU 3')
 
     # load model
-    model = PF_CAM(opt.img_size, opt.vit_patch_size, opt.part_out, opt.depth_self, opt.depth_cross).cuda()
+    model = PF_CAM(opt).cuda()
     if opt.load is not None:
         model.load_state_dict(torch.load(opt.load))
         print('load model from', opt.load)
@@ -158,17 +160,14 @@ if __name__ == '__main__':
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
-    # Initialize TensorBoard writer
-    log_dir = '/hexp/ly/PF_CAM/log/tensorboard'
-    writer = SummaryWriter(log_dir=log_dir)
-
     step = 0
     best_epoch = 0
     best_accu = 0
     print("Start train")
     for epoch in range(1, opt.epoch + 1):
         cur_lr = poly_lr(optimizer, opt.lr, epoch, opt.epoch)
-        train(train_loader, model, optimizer, epoch, save_path, writer)
-        val(val_loader, model, epoch, save_path, writer)
-
-    writer.close()
+        train(train_loader, model, optimizer, epoch, save_path)
+        val(val_loader, model, epoch, save_path, opt)
+    if IS_WANDB:
+        wandb.alert(title='Train Finished', text='Train Finished')
+        wandb.finish()
