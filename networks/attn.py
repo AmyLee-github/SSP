@@ -1,9 +1,9 @@
 import torch
 import torch.nn as nn
 
-class CrossAttention(nn.Module):
+class Attention(nn.Module):
     def __init__(self, num_channels, num_heads):
-        super(CrossAttention, self).__init__()
+        super(Attention, self).__init__()
         self.num_channels = num_channels
         self.num_heads = num_heads
         self.query_conv = nn.Conv2d(num_channels, num_channels, kernel_size=1)
