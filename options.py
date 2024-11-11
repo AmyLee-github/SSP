@@ -49,6 +49,7 @@ class TrainOptions():
         parser.add_argument('--part_out', default=3, type=int)
         parser.add_argument('--depth_self', default=1, type=int)
         parser.add_argument('--depth_cross', default=1, type=int)
+        parser.add_argument('--n_heads',default=1,type=int)
         return parser
 
     def gather_options(self):
