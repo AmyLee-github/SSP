@@ -100,7 +100,7 @@ if __name__ == '__main__': #@note if_main
         print('USE GPU 3')
 
     # load model
-    model = PF_CAM(opt.img_size,opt.patch_size, opt.part_out, opt.depth_self, opt.depth_cross).cuda()
+    model = PF_CAM(opt).cuda()
     if opt.load is not None:
         model.load_state_dict(torch.load(opt.load))
         print('load model from', opt.load)
