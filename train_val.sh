@@ -1,1 +1,1 @@
-python -W ignore train_val.py --name 4pfb_cam_squeeze
+python -W ignore train_val.py --name 4pfb_cam_res6_squeeze
