@@ -10,7 +10,8 @@ import torch.nn.functional as F
 class PF_CAM(nn.Module):
     def __init__(self, pretrain=True):
         super().__init__()
-        self.cam = CrossAttention(num_channels=3, num_heads=1)
+        self.cam1 = CrossAttention(num_channels=3, num_heads=1)
+        self.cam3 = CrossAttention(num_channels=3, num_heads=3)
         self.se = SEAttention(channel=6,reduction=2)
         self.srm = SRMConv2d_simple()
         self.disc = resnet50(pretrained=True)
@@ -18,8 +19,8 @@ class PF_CAM(nn.Module):
         self.disc.fc = nn.Linear(2048, 1)
 
     def forward(self, x_b, x_f, x_p):
-        x_f_p = self.cam(x_f, x_p)
-        x_b_p = self.cam(x_b, x_p)
+        x_f_p = self.cam1(x_f, x_p)
+        x_b_p = self.cam3(x_b, x_p)
         x = torch.cat((x_f_p, x_b_p), dim=1)
         x = self.se(x)
         x_f_p = x[:, :3, :, :]
