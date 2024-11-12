@@ -32,7 +32,7 @@ def train(train_loader, model, optimizer, epoch, save_path):
     epoch_step = 0
     loss_all = 0
     try:
-        for i, ((images1, images_f1, images_b1, images2, images_f2, images_b2, images3, images_f3, images_b3), labels) in enumerate(train_loader, start=1):
+        for i, ((images, images_f, images_b), labels) in enumerate(train_loader, start=1):
             optimizer.zero_grad()
             images = images.cuda()
             images_f = images_f.cuda()
@@ -69,35 +69,23 @@ def val(val_loader, model, epoch, save_path, opt):
             name, val_ai_loader, ai_size, val_nature_loader, nature_size = loader['name'], loader[
                 'val_ai_loader'], loader['ai_size'], loader['val_nature_loader'], loader['nature_size']
             print("val on:", name)
-            for (images1, images_f1, images_b1, images2, images_f2, images_b2, images3, images_f3, images_b3), labels in val_ai_loader:
-                images1 = images1.cuda()
-                images_f1 = images_f1.cuda()
-                images_b1 = images_b1.cuda()
-                images2 = images2.cuda()
-                images_f2 = images_f2.cuda()
-                images_b2 = images_b2.cuda()
-                images3 = images3.cuda()
-                images_f3 = images_f3.cuda()
-                images_b3 = images_b3.cuda()
+            for (images, images_f, images_b), labels in val_ai_loader:
+                images = images.cuda()
+                images_f = images_f.cuda()
+                images_b = images_b.cuda()
                 labels = labels.cuda()
-                res = model(images1, images_f1, images_b1, images2, images_f2, images_b2, images3, images_f3, images_b3)
+                res = model(images_b, images_f, images)
                 res = torch.sigmoid(res).ravel()
                 right_ai_image += (((res > 0.5) & (labels == 1))
                                    | ((res < 0.5) & (labels == 0))).sum()
 
             print(f'ai accu: {right_ai_image/ai_size}')
-            for (images1, images_f1, images_b1, images2, images_f2, images_b2, images3, images_f3, images_b3), labels in val_nature_loader:
-                images1 = images1.cuda()
-                images_f1 = images_f1.cuda()
-                images_b1 = images_b1.cuda()
-                images2 = images2.cuda()
-                images_f2 = images_f2.cuda()
-                images_b2 = images_b2.cuda()
-                images3 = images3.cuda()
-                images_f3 = images_f3.cuda()
-                images_b3 = images_b3.cuda()
+            for (images, images_f, images_b), labels in val_nature_loader:
+                images = images.cuda()
+                images_f = images_f.cuda()
+                images_b = images_b.cuda()
                 labels = labels.cuda()
-                res = model(images1, images_f1, images_b1, images2, images_f2, images_b2, images3, images_f3, images_b3)
+                res = model(images_b, images_f, images)
                 res = torch.sigmoid(res).ravel()
                 right_nature_image += (((res > 0.5) & (labels == 1))
                                        | ((res < 0.5) & (labels == 0))).sum()
