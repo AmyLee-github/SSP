@@ -1,1 +1,1 @@
-python -W ignore train_val.py --name 4pb_cam_squeeze
+python -W ignore train_val.py --name 4pb_cam_h3_squeeze --n_heads 3
