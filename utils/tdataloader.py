@@ -124,9 +124,10 @@ def patch_img(img, img_f, img_b, patch_size1, patch_size2, patch_size3, height):
         img = rz(img)
         img_f = rz(img_f)
         img_b = rz(img_b)
-    rp = transforms.RandomCrop(patch_size1)
-    seeds = np.random.choice(100000, num_patch1, replace=False)
-    for i in range(num_patch1):
+    rp = transforms.RandomCrop(patch_size)
+    # 随机生成num_patch个不重复随机种子
+    seeds = np.random.choice(100000, num_patch, replace=False)
+    for i in range(num_patch):
         seed = seeds[i]
         torch.random.manual_seed(seed)
         rp_img = rp(img)
@@ -134,36 +135,33 @@ def patch_img(img, img_f, img_b, patch_size1, patch_size2, patch_size3, height):
         rp_img_f = rp(img_f)
         torch.random.manual_seed(seed)
         rp_img_b = rp(img_b)
-        patch_list1.append([rp_img, rp_img_f, rp_img_b])
-    patch_list1.sort(key=lambda x: compute(x), reverse=False)
-    new_img1, new_img_f1, new_img_b1 = patch_list1[0][0], patch_list1[0][1], patch_list1[0][2]
-    rp = transforms.RandomCrop(patch_size2)
-    seeds = np.random.choice(100000, num_patch2, replace=False)
-    for i in range(num_patch2):
-        seed = seeds[i]
-        torch.random.manual_seed(seed)
-        rp_img = rp(img)
-        torch.random.manual_seed(seed)
-        rp_img_f = rp(img_f)
-        torch.random.manual_seed(seed)
-        rp_img_b = rp(img_b)
-        patch_list2.append([rp_img, rp_img_f, rp_img_b])
-    patch_list2.sort(key=lambda x: compute(x), reverse=False)
-    new_img2, new_img_f2, new_img_b2 = patch_list2[0][0], patch_list2[0][1], patch_list2[0][2]
-    rp = transforms.RandomCrop(patch_size3)
-    seeds = np.random.choice(100000, num_patch3, replace=False)
-    for i in range(num_patch3):
-        seed = seeds[i]
-        torch.random.manual_seed(seed)
-        rp_img = rp(img)
-        torch.random.manual_seed(seed)
-        rp_img_f = rp(img_f)
-        torch.random.manual_seed(seed)
-        rp_img_b = rp(img_b)
-        patch_list3.append([rp_img, rp_img_f, rp_img_b])
-    patch_list3.sort(key=lambda x: compute(x), reverse=False)
-    new_img3, new_img_f3, new_img_b3 = patch_list3[0][0], patch_list3[0][1], patch_list3[0][2]
-    return new_img1, new_img_f1, new_img_b1, new_img2, new_img_f2, new_img_b2, new_img3, new_img_f3, new_img_b3
+        patch_list.append([rp_img, rp_img_f, rp_img_b])
+    patch_list.sort(key=lambda x: compute(x), reverse=False)
+    new_img1, new_img_f1, new_img_b1 = patch_list[0][0], patch_list[0][1], patch_list[0][2]
+    new_img2, new_img_f2, new_img_b2 = patch_list[1][0], patch_list[1][1], patch_list[1][2]
+    new_img3, new_img_f3, new_img_b3 = patch_list[2][0], patch_list[2][1], patch_list[2][2]
+    new_img4, new_img_f4, new_img_b4 = patch_list[3][0], patch_list[3][1], patch_list[3][2]
+
+    new_img = Image.new('RGB', (patch_size * 2, patch_size * 2))
+    new_img_f = Image.new('RGB', (patch_size * 2, patch_size * 2))
+    new_img_b = Image.new('RGB', (patch_size * 2, patch_size * 2))
+
+    new_img.paste(new_img1, (0, 0))
+    new_img.paste(new_img2, (patch_size, 0))
+    new_img.paste(new_img3, (0, patch_size))
+    new_img.paste(new_img4, (patch_size, patch_size))
+
+    new_img_f.paste(new_img_f1, (0, 0))
+    new_img_f.paste(new_img_f2, (patch_size, 0))
+    new_img_f.paste(new_img_f3, (0, patch_size))
+    new_img_f.paste(new_img_f4, (patch_size, patch_size))
+
+    new_img_b.paste(new_img_b1, (0, 0))
+    new_img_b.paste(new_img_b2, (patch_size, 0))
+    new_img_b.paste(new_img_b3, (0, patch_size))
+    new_img_b.paste(new_img_b4, (patch_size, patch_size))
+
+    return new_img, new_img_f, new_img_b
 
 def processing(img, img_f, img_b, opt):
     if opt.aug:

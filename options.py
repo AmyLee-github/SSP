@@ -31,7 +31,7 @@ class TrainOptions():
         parser.add_argument('--image_root', type=str,
                             default='/hexp/data/genImage')
         parser.add_argument('--image_f_root', type=str,
-                            default='/hexp/data/genImage_filtered')
+                            default='/hexp/data/genImage_filtered_6_squeeze')
         parser.add_argument('--image_b_root', type=str,
                             default='/hexp/data/genImage_lbp')
         parser.add_argument('--save_path', type=str,
