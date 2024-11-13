@@ -115,11 +115,16 @@ def patch_img(img, img_f, img_b, patch_size, height):
     num_patch = (height // patch_size) * (height // patch_size)
     patch_list = []
     min_len = min(img_height, img_width)
-    rz = transforms.Resize((height, height))
+    rz1 = transforms.Resize((height, int(height * img_width / img_height)))
+    rz3 = transforms.Resize((3 * height, int(3 * height * img_width / img_height)))
+    if min_len >= 3 * height:
+        img = rz3(img)
+        img_f = rz3(img_f)
+        img_b = rz3(img_b)
     if min_len < patch_size:
-        img = rz(img)
-        img_f = rz(img_f)
-        img_b = rz(img_b)
+        img = rz1(img)
+        img_f = rz1(img_f)
+        img_b = rz1(img_b)
     rp = transforms.RandomCrop(patch_size)
     # 随机生成num_patch个不重复随机种子
     seeds = np.random.choice(100000, num_patch, replace=False)
