@@ -21,7 +21,7 @@ class TrainOptions():
                             default=224, help='scale images to this size')
         # train setting
         parser.add_argument('--batchsize', type=int,
-                            default=64, help='input batch size')
+                            default=1, help='input batch size')
         parser.add_argument('--choices', default=[0, 0, 0, 0, 1, 0, 0, 0])
         parser.add_argument('--epoch', type=int, default=30)
         parser.add_argument('--lr', default=1e-4)
@@ -29,11 +29,11 @@ class TrainOptions():
         parser.add_argument('--load', type=str,
                             default=None)
         parser.add_argument('--image_root', type=str,
-                            default='/hexp/data/genImage_squeeze')
+                            default='/hexp/data/genImage_examples')
         parser.add_argument('--image_f_root', type=str,
-                            default='/hexp/data/genImage_filtered_6_squeeze')
+                            default='/hexp/data/genImage_examples_filtered')
         parser.add_argument('--image_b_root', type=str,
-                            default='/hexp/data/genImage_lbp_squeeze')
+                            default='/hexp/data/genImage_examples_lbp')
         parser.add_argument('--save_path', type=str,
                             default='./snapshot/sortnet/')
         parser.add_argument('--isPatch', action='store_false')

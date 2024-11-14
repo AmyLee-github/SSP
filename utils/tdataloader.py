@@ -326,8 +326,14 @@ class genImageValDataset(Dataset):
         lbp_image_path = self.get_lbp_image_path(image_path)
         image_b = Image.open(lbp_image_path)
         label = self.labels[index]
-        image, image_f, image_b = processing(image, image_f, image_b, self.opt)
-        return (image, image_f, image_b), label
+        image_p, image_f_p, image_b_p = processing(image, image_f, image_b, self.opt)
+        image = transforms.Resize((256, 256))(image)
+        image_f = transforms.Resize((256, 256))(image_f)
+        image_b = transforms.Resize((256, 256))(image_b)
+        image = transforms.ToTensor()(image)
+        image_f = transforms.ToTensor()(image_f)
+        image_b = transforms.ToTensor()(image_b)
+        return (image, image_f, image_b, image_p, image_f_p, image_b_p), label
 
     def __len__(self):
         return self.img_len

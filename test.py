@@ -10,6 +10,7 @@ import numpy as np
 """Currently assumes jpg_prob, blur_prob 0 or 1"""
 from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
+import wandb
 
 
 def get_val_opt():
@@ -32,8 +33,34 @@ def get_val_opt():
 
     return val_opt
 
-
-def val(val_loader, model, save_path):
+def item(name, labels, images, images_f, images_b, images_p, images_f_p, images_b_p, cam_f_p, cam_b_p, srm_f_p, srm_b_p, res, table):
+    name = name.rsplit('_', 1)[-1]
+    label = labels.cpu().numpy()
+    img = np.moveaxis(images.cpu().numpy(), 1, -1)
+    img_p = np.moveaxis(images_p.cpu().numpy(), 1, -1)
+    img_f = np.moveaxis(images_f.cpu().numpy(), 1, -1)
+    img_f_p = np.moveaxis(images_f_p.cpu().numpy(), 1, -1)
+    img_b = np.moveaxis(images_b.cpu().numpy(), 1, -1)
+    img_b_p = np.moveaxis(images_b_p.cpu().numpy(), 1, -1)
+    cam_f_p = np.moveaxis(cam_f_p.cpu().numpy(), 1, -1)
+    cam_b_p = np.moveaxis(cam_b_p.cpu().numpy(), 1, -1)
+    srm_f_p = np.moveaxis(srm_f_p.cpu().numpy(), 1, -1)
+    srm_b_p = np.moveaxis(srm_b_p.cpu().numpy(), 1, -1)
+    res = res.cpu().numpy()
+    for label, img, img_p, img_f, img_f_p, img_b, img_b_p, cam_f_p, cam_b_p, srm_f_p, srm_b_p, res in zip(label, img, img_p, img_f, img_f_p, img_b, img_b_p, cam_f_p, cam_b_p, srm_f_p, srm_b_p, res):
+        img = wandb.Image(img)
+        img_p = wandb.Image(img_p)
+        img_f = wandb.Image(img_f)
+        img_f_p = wandb.Image(img_f_p)
+        img_b = wandb.Image(img_b)
+        img_b_p = wandb.Image(img_b_p)
+        cam_f_p = wandb.Image(cam_f_p)
+        cam_b_p = wandb.Image(cam_b_p)
+        srm_f_p = wandb.Image(srm_f_p)
+        srm_b_p = wandb.Image(srm_b_p)
+        table.add_data(name, label, img, img_p, img_f, img_f_p, img_b, img_b_p, cam_f_p, cam_b_p, srm_f_p, srm_b_p, res, res > 0.5)
+    
+def val(val_loader, model, save_path, table):
     model.eval()
     total_right_image = total_image = 0
     with torch.no_grad():
@@ -43,25 +70,27 @@ def val(val_loader, model, save_path):
                 'val_ai_loader'], loader['ai_size'], loader['val_nature_loader'], loader['nature_size']
             print("val on:", name)
             # for images, labels in tqdm(val_ai_loader, desc='val_ai'):
-            for (images, images_f, images_b), labels in val_ai_loader:
-                images = images.cuda()
-                images_f = images_f.cuda()
-                images_b = images_b.cuda()
+            for (images, images_f, images_b, images_p, images_f_p, images_b_p), labels in val_ai_loader:
+                images_p = images_p.cuda()
+                images_f_p = images_f_p.cuda()
+                images_b_p = images_b_p.cuda()
                 labels = labels.cuda()
-                res = model(images_b, images_f, images)
+                cam_f_p, cam_b_p, srm_f_p, srm_b_p, res = model(images_b_p, images_f_p, images_p)
                 res = torch.sigmoid(res).ravel()
+                item(name, labels, images, images_f, images_b, images_p, images_f_p, images_b_p, cam_f_p, cam_b_p, srm_f_p, srm_b_p, res, table)
                 right_ai_image += (((res > 0.5) & (labels == 1))
                                    | ((res < 0.5) & (labels == 0))).sum()
 
             print(f'ai accu: {right_ai_image/ai_size}')
             # for images,labels in tqdm(val_nature_loader,desc='val_nature'):
-            for (images, images_f, images_b), labels in val_nature_loader:
-                images = images.cuda()
-                images_f = images_f.cuda()
-                images_b = images_b.cuda()
+            for (images, images_f, images_b, images_p, images_f_p, images_b_p), labels in val_nature_loader:
+                images_p = images_p.cuda()
+                images_f_p = images_f_p.cuda()
+                images_b_p = images_b_p.cuda()
                 labels = labels.cuda()
-                res = model(images_b, images_f, images)
+                cam_f_p, cam_b_p, srm_f_p, srm_b_p, res = model(images_b_p, images_f_p, images_p)
                 res = torch.sigmoid(res).ravel()
+                item(name, labels, images, images_f, images_b, images_p, images_f_p, images_b_p, cam_f_p, cam_b_p, srm_f_p, srm_b_p, res, table)
                 right_nature_image += (((res > 0.5) & (labels == 1))
                                        | ((res < 0.5) & (labels == 0))).sum()
             print(f'nature accu:{right_nature_image/nature_size}')
@@ -79,11 +108,14 @@ if __name__ == '__main__': #@note if_main
     # train and val options
     opt = TrainOptions().parse()
     val_opt = get_val_opt()
-
+    wandb.init(project="Paper1")
     # load data
     print('load data...')
 
-
+    table = wandb.Table(
+        columns=["name", "label", "img", "img_p", "img_f", "img_f_p", "img_b", "img_b_p", \
+            "cam_f_p", "cam_b_p", "srm_f_p" , "srm_b_p", "pred_sigmoid", "pred"]
+        )
     val_loader = get_val_loader(val_opt)
 
     # cuda config
@@ -111,4 +143,6 @@ if __name__ == '__main__': #@note if_main
     if not os.path.exists(save_path):
         os.makedirs(save_path)
     print("Start train")
-    val(val_loader, model, save_path)
+    val(val_loader, model, save_path, table)
+    wandb.log({"visualization": table})
+    wandb.finish()

@@ -20,7 +20,9 @@ class PF_CAM(nn.Module):
 
     def forward(self, x_b, x_f, x_p):
         x_f_p = self.cam1(x_f, x_p)
+        cam_f_p = x_f_p
         x_b_p = self.cam3(x_b, x_p)
+        cam_b_p = x_b_p
         x = torch.cat((x_f_p, x_b_p), dim=1)
         x = self.se(x)
         x_f_p = x[:, :3, :, :]
@@ -28,10 +30,12 @@ class PF_CAM(nn.Module):
         x_f_p = F.interpolate(x_f_p, (256, 256), mode='bilinear')
         x_b_p = F.interpolate(x_b_p, (256, 256), mode='bilinear')
         x_f_p = self.srm(x_f_p)
+        srm_f_p = x_f_p
         x_b_p = self.srm(x_b_p)
+        srm_b_p = x_b_p
         x = torch.cat((x_f_p, x_b_p), dim=1)
         x = self.disc(x)
-        return x
+        return cam_f_p, cam_b_p, srm_f_p, srm_b_p, x
 
 
 if __name__ == '__main__':
