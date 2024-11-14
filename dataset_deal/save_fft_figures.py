@@ -3,7 +3,7 @@ import numpy as np
 from PIL import Image
 from scipy.fft import fft2, ifft2, fftshift, ifftshift
 
-def high_pass_filter(image, cutoff_ratio=4):
+def high_pass_filter(image, cutoff_ratio=6):
     rows, cols = image.shape
     crow, ccol = rows // 2, cols // 2
 
@@ -58,6 +58,6 @@ def process_images(input_dir, output_dir):
     print("Processing complete.")
 
 if __name__ == "__main__":
-    input_directory = '/hexp/data/genImage'
-    output_directory = '/hexp/data/genImage_filtered'
+    input_directory = '/hexp/data/genImage_examples'
+    output_directory = '/hexp/data/genImage_examples_filtered'
     process_images(input_directory, output_directory)

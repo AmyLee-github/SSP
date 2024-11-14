@@ -37,6 +37,6 @@ def save_lbp_images(input_dir, output_dir):
                 cv2.imwrite(output_file, lbp_image)
                 print(f"Saved LBP image to: {output_file}")
 
-input_dir = '/hexp/data/genImage'
-output_dir = '/hexp/data/genImage_lbp'
+input_dir = '/hexp/data/genImage_examples'
+output_dir = '/hexp/data/genImage_examples_lbp'
 save_lbp_images(input_dir, output_dir)
